@@ -30,6 +30,8 @@ import {
   FaRobot,
   FaCog,
   FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { ChatDots } from "react-bootstrap-icons";
@@ -128,13 +130,13 @@ export const Header = () => {
   ];
 
   const profileMenuOptions = [
-    { icon: <FaUser />, text: "Profile" },
-    { icon: <FaShoppingCart />, text: "Saved" },
-    { icon: <FaEnvelope />, text: "Balance" },
-    { icon: <FaBell />, text: "Settings" },
-    { icon: <FaUser />, text: "Edit my account" },
-    { icon: <FaTruck />, text: "Help" },
-    { icon: <FaUser />, text: "Logout" },
+    { icon: <FaUser />, text: "Profile", to: `/profile/${user?.id}` },
+    { icon: <FaShoppingCart />, text: "Saved", to: "/saved" },
+    { icon: <FaEnvelope />, text: "Balance", to: "/balance" },
+    { icon: <FaCog />, text: "Settings", to: "/settings" }, // Changed icon and added route
+    { icon: <FaUser />, text: "Edit my account", to: `/profile/edit/${user?.id}` },
+    { icon: <FaTruck />, text: "Help", to: "/help" }, // Added route
+    { icon: <FaSignOutAlt />, text: "Logout" },
   ];
 
   const expandMenuOptions = [
@@ -195,7 +197,7 @@ export const Header = () => {
   // Function to render notification badge
   const renderBadge = (items) => {
     const count = items.filter((item) => item.unread).length;
-    return 0 ? (
+    return count > 0 ? (
       <Badge
         bg="danger"
         pill
@@ -258,7 +260,8 @@ export const Header = () => {
             </Navbar.Brand>
           </div>
 
-          <Nav className="me-auto main-nav">
+          {/* Main Nav Links - Hide on small screens */}
+          <Nav className="me-auto main-nav d-none d-lg-flex">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -287,7 +290,6 @@ export const Header = () => {
               }>
               About Us
             </NavLink>
-            {/* add robot icon */}
             <NavLink
               to="/chatBot/"
               className={({ isActive }) =>
@@ -305,10 +307,8 @@ export const Header = () => {
           />
 
           {/* Right section: Search, cart, notifications, etc. */}
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-end">
-            <Nav className="align-items-center nav-icons-container">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+            <Nav className="align-items-center justify-content-center nav-icons-container flex-row  gap-3">
               {/* Login/Signup buttons for not logged in users */}
               {!isLoggedIn && (
                 <div className="d-flex align-items-center auth-buttons">
@@ -332,16 +332,18 @@ export const Header = () => {
               {/* Logged in user features */}
               {isLoggedIn && (
                 <>
-                  {/* post prject or service  */}
-                  {renderActionButton()}
-                  {/* Notifications Dropdown */}
-                  <div
-                    ref={refs.notifications}
-                    className="position-relative icon-wrapper">
+                  {/* Post Project/Service Button - always visible on large screens, optional on small */}
+                  <div className="d-none d-lg-block">
+                    {renderActionButton()}
+                  </div>
+
+                  {/* Notifications Icon */}
+                  <div ref={refs.notifications} className="position-relative icon-wrapper">
                     <Nav.Link
                       onClick={() => toggleDropdown("notifications")}
                       className="nav-icon"
-                      aria-label="Notifications">
+                      aria-label="Notifications"
+                    >
                       <FaBell />
                       {renderBadge(notifications)}
                     </Nav.Link>
@@ -406,35 +408,40 @@ export const Header = () => {
                     </Overlay>
                   </div>
 
-                  {/* Messages Dropdown */}
-                  <div
-                    ref={refs.messages}
-                    className="position-relative icon-wrapper">
+                  {/* Messages Icon */}
+                  <div ref={refs.messages} className="position-relative icon-wrapper">
                     <NavLink
-                      // onClick={() => toggleDropdown("messages")}
                       className="nav-icon"
                       aria-label="Messages"
                       to={isLoggedIn ? "/chat" : "/chat"}>
                       <FaEnvelope />
-                      {/* {renderBadge(messages)} */}
                     </NavLink>
                   </div>
 
-                  {/* Incoming Requests - Hide on smaller screens */}
-                  {/* <div className="icon-wrapper d-none d-lg-block">
-                    <Nav.Link
-                      href="#incoming"
-                      className="nav-icon incoming-requests">
-                      <span className="d-none d-xl-inline ms-1">
-                        Incoming requests
-                      </span>
-                    </Nav.Link>
-                  </div> */}
+                  {/* Theme Toggle Button */}
+                  <div className="icon-wrapper">
+                    <button
+                      className="theme-toggle-btn"
+                      onClick={handleToggleTheme}
+                      aria-label="Toggle theme"
+                      title={
+                        theme === "light"
+                          ? "Switch to dark mode"
+                          : "Switch to light mode"
+                      }>
+                      {theme === "light" ? (
+                        <FaMoon size={26} />
+                      ) : (
+                        <FaSun size={26} />
+                      )}
+                    </button>
+                  </div>
 
-                  {/* Profile Picture with Dropdown */}
+                  {/* Profile Picture with Dropdown - hide on small screens */}
                   <div
                     ref={refs.profileMenu}
-                    className="position-relative icon-wrapper">
+                    className="position-relative icon-wrapper d-none d-lg-block"
+                  >
                     <Nav.Link
                       onClick={() => toggleDropdown("profileMenu")}
                       className="p-0 profile-link"
@@ -449,97 +456,51 @@ export const Header = () => {
                       />
                     </Nav.Link>
 
-
+                    {/* Profile Menu Popover */}
                     <Overlay
-  show={dropdowns.expandMenu}
-  target={refs.expandMenu.current}
-  placement="bottom-end"
-  container={refs.expandMenu.current}
-  containerPadding={20}>
-  <Popover
-    id="expand-menu-popover"
-    className="border-0 shadow-custom expandable-menu">
-    <Popover.Body className="p-0">
-      <Nav className="flex-column">
-        {expandMenuOptions.map((option, idx) => (
-          <Nav.Link
-            key={idx}
-            as={option.onClick ? 'button' : Link}
-            to={!option.onClick ? option.path : undefined}
-            onClick={(e) => {
-              if (option.onClick) {
-                e.preventDefault();
-                option.onClick();
-              }
-              toggleDropdown("expandMenu");
-            }}
-            className="px-3 py-2 text-dark menu-item d-flex align-items-center"
-          >
-            <span className="menu-icon me-2">
-              {option.icon}
-            </span>
-            {option.text}
-          </Nav.Link>
-        ))}
-        {!isLoggedIn && (
-          <>
-            <Nav.Link
-              as={Link}
-              to="/login"
-              className="px-3 py-2 text-dark menu-item d-flex align-items-center"
-              onClick={() => toggleDropdown("expandMenu")}
-            >
-              <span className="menu-icon me-2">
-                <FaSignInAlt />
-              </span>
-              Login
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/register"
-              className="px-3 py-2 text-dark menu-item d-flex align-items-center"
-              onClick={() => toggleDropdown("expandMenu")}
-            >
-              <span className="menu-icon me-2">
-                <FaUserPlus />
-              </span>
-              Register
-            </Nav.Link>
-          </>
-        )}
-      </Nav>
-    </Popover.Body>
-  </Popover>
-</Overlay>
+                      show={dropdowns.profileMenu}
+                      target={refs.profileMenu.current}
+                      placement="bottom-end"
+                      container={refs.profileMenu.current}
+                      containerPadding={20}>
+                      <Popover
+                        id="profile-menu-popover"
+                        className="border-0 shadow-custom profile-menu-popover">
+                        <Popover.Body className="p-0">
+                          <Nav className="flex-column">
+                            {profileMenuOptions.map((option, idx) => (
+                              <Nav.Link
+                                key={idx}
+                                as={option.text === "Logout" ? 'button' : Link}
+                                to={option.to}
+                                onClick={option.text === "Logout"
+                                  ? (e) => {
+                                      e.preventDefault();
+                                      handleLogout();
+                                      toggleDropdown("profileMenu");
+                                    }
+                                  : () => toggleDropdown("profileMenu")}
+                                className="px-3 py-2 text-dark menu-item d-flex align-items-center"
+                              >
+                                <span className="menu-icon me-2">
+                                  {option.icon}
+                                </span>
+                                {option.text}
+                              </Nav.Link>
+                            ))}
+                          </Nav>
+                        </Popover.Body>
+                      </Popover>
+                    </Overlay>
                   </div>
                 </>
               )}
-              {/* Theme Toggle Button */}
-              <div className="me-3">
-                <button
-                  className="theme-toggle-btn"
-                  onClick={handleToggleTheme}
-                  aria-label="Toggle theme"
-                  title={
-                    theme === "light"
-                      ? "Switch to dark mode"
-                      : "Switch to light mode"
-                  }>
-                  {theme === "light" ? (
-                    <FaMoon size={26} />
-                  ) : (
-                    <FaSun size={26} />
-                  )}
-                </button>
-              </div>
-              {/* Expand Menu Button */}
-              <div
-                ref={refs.expandMenu}
-                className="position-relative icon-wrapper">
+              {/* Expand Menu Button - only on small screens */}
+              <div ref={refs.expandMenu} className="position-relative icon-wrapper d-lg-none">
                 <Button
                   variant="outline-light"
                   size="sm"
-                  className="py-1 px-2 d-lg-none expand-menu-btn"
+                  className="py-1 px-2 expand-menu-btn"
                   onClick={() => toggleDropdown("expandMenu")}
                   aria-expanded={dropdowns.expandMenu}>
                   <FaBars />
@@ -559,15 +520,47 @@ export const Header = () => {
                         {expandMenuOptions.map((option, idx) => (
                           <Nav.Link
                             key={idx}
-                            href={option.path}
-                            onClick={option.onClick}
-                            className="px-3 py-2 text-dark menu-item">
+                            as={option.onClick ? 'button' : Link}
+                            to={!option.onClick ? option.path : undefined}
+                            onClick={option.onClick ? (e) => {
+                              e.preventDefault();
+                              option.onClick();
+                              toggleDropdown("expandMenu");
+                            } : () => toggleDropdown("expandMenu")}
+                            className="px-3 py-2 text-dark menu-item d-flex align-items-center"
+                          >
                             <span className="menu-icon me-2">
                               {option.icon}
                             </span>
                             {option.text}
                           </Nav.Link>
                         ))}
+                        {!isLoggedIn && (
+                          <>
+                            <Nav.Link
+                              as={Link}
+                              to="/login"
+                              className="px-3 py-2 text-dark menu-item d-flex align-items-center"
+                              onClick={() => toggleDropdown("expandMenu")}
+                            >
+                              <span className="menu-icon me-2">
+                                <FaSignInAlt />
+                              </span>
+                              Login
+                            </Nav.Link>
+                            <Nav.Link
+                              as={Link}
+                              to="/register"
+                              className="px-3 py-2 text-dark menu-item d-flex align-items-center"
+                              onClick={() => toggleDropdown("expandMenu")}
+                            >
+                              <span className="menu-icon me-2">
+                                <FaUserPlus />
+                              </span>
+                              Register
+                            </Nav.Link>
+                          </>
+                        )}
                       </Nav>
                     </Popover.Body>
                   </Popover>
