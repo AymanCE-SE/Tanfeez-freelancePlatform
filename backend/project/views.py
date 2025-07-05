@@ -1,5 +1,3 @@
-# Create your views here.
-# views.py
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework import generics, status
@@ -16,22 +14,21 @@ from .models import Project
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-# Create
-
-
 class ProjectCreateView(generics.CreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            # Print or log errors for debugging
+            print("Project creation errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         user = self.request.user
-        print("User Type:", user.user_type)  # Debugging line
-
-        if user.user_type != "client":
-            raise PermissionDenied("Only clients can create projects.")
-
-        project = serializer.save(clientId=user)
+        serializer.save(clientId=user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 # List

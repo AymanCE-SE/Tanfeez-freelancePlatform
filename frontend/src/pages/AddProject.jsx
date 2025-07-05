@@ -16,13 +16,13 @@ function AddProject() {
     type: "Fixed Price",
     budget: "",
     hourlyRate: "",
-    estimatedHours: "",
+    // estimatedHours: "",
     duration: "",
     experience_level: "",
 
     location: "",
     status: "open",
-    skills: "",
+    skills: [],
     progress: "not_started",
   });
 
@@ -53,9 +53,9 @@ function AddProject() {
       setFormData((prev) => ({
         ...prev,
         type: value,
-        budget: value === "Fixed Price" ? prev.budget : "",
-        hourlyRate: value === "Hourly" ? prev.hourlyRate : "",
-        estimatedHours: value === "Hourly" ? prev.estimatedHours : "",
+        budget: value === "Fixed Price" ? prev.budget : 0,
+        hourlyRate: value === "Hourly" ? prev.hourlyRate : 0,
+        // estimatedHours: value === "Hourly" ? prev.estimatedHours : 0,
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -133,13 +133,11 @@ function AddProject() {
         progress: formData.progress || "not_started",
         experience_level: levelMap[formData.experience_level] || formData.experience_level,
         type: typeMap[formData.type] || formData.type,
-        budget: formData.type === "Fixed Price" ? String(formData.budget) : null,
-        hourly_rate: formData.type === "Hourly" ? String(formData.hourlyRate) : null,
-        estimated_hours: formData.type === "Hourly" ? Number(formData.estimatedHours) : null,
+        budget: formData.type === "Fixed Price" ? Number(formData.budget) : null,
+        hourly_rate: formData.type === "Hourly" ? Number(formData.hourlyRate) : null,
+        // estimated_hours: formData.type === "Hourly" ? Number(formData.estimatedHours) : null,
         location: formData.location,
-        skills: formData.skills
-          ? formData.skills.split(",").map((s) => s.trim())
-          : [],
+        skills: formData.skills,
         status: formData.status || "open",
         start_date: "2025-04-09",
         end_date: "2026-04-09",
@@ -187,7 +185,7 @@ function AddProject() {
         type: "Fixed Price",
         budget: "",
         hourlyRate: "",
-        estimatedHours: "",
+        estimatedHours: estimatedHours,
         location: "",
         status: "open",
       }); // reset form
@@ -239,18 +237,17 @@ function AddProject() {
                 typeOptions={typeOptions}
               />
 
-              <ProjectRequirements
-                formData={formData}
-                handleChange={handleChange}
-                errors={errors}
-                levelOpen={levelOpen}
-                setLevelOpen={setLevelOpen}
-                handleLevelToggle={handleLevelToggle}
-                levelOptions={levelOptions}
-                skillSuggestions={skillSuggestions}
-                handleSkillClick={handleSkillClick}
-                suggestionsRef={suggestionsRef}
-              />
+            <ProjectRequirements
+              formData={formData}
+              setFormData={setFormData}
+              errors={errors}
+              levelOptions={levelOptions}
+              handleLevelToggle={handleLevelToggle}
+              skillSuggestions={skillSuggestions}
+              handleSkillClick={handleSkillClick}
+              suggestionsRef={suggestionsRef}
+              handleChange={handleChange}  
+            />
             </Col>
 
             <Col lg={4}>
