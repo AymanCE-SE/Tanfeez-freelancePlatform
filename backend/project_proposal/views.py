@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 
 # Create your views here.
 from rest_framework import generics, permissions, status
@@ -45,6 +46,12 @@ class ApplyToProjectView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         freelancer = Freelancer.objects.get(uid=self.request.user)
+        project = serializer.validated_data["project"]
+
+        # Prevent duplicate proposals
+        if ProjectProposal.objects.filter(freelancer=freelancer, project=project, is_deleted=False).exists():
+            raise PermissionDenied("You have already submitted a proposal for this project.")
+
         proposal = serializer.save(freelancer=freelancer)
 
         chatroom, _ = ChatRoom.objects.get_or_create(
@@ -112,11 +119,14 @@ class ApproveProposalView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Assign freelancer and mark both as approved
+        # Assign freelancer, mark as approved, set start_date
         project.freelancerId = proposal.freelancer.uid
         project.progress = Progress.IN_PROGRESS
         proposal.is_approved = True
+        project.start_date = proposal.created_at  # <-- Set start_date here!
         project.save()
+        proposal.save()
+
         # Create chat room now that freelancer is officially assigned
         chatroom, created = ChatRoom.objects.get_or_create(
             client=project.clientId,
@@ -125,7 +135,6 @@ class ApproveProposalView(APIView):
             project_proposal=proposal,
             defaults={"is_negotiation": False},
         )
-        proposal.save()
 
         return Response(
             {
@@ -184,3 +193,30 @@ class AllProposalsView(generics.ListAPIView):
     queryset = ProjectProposal.objects.filter(is_deleted=False)
     serializer_class = ProposalSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class FinishProjectView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            proposal = ProjectProposal.objects.get(id=pk, is_deleted=False)
+        except ProjectProposal.DoesNotExist:
+            return Response(
+                {"detail": "Proposal not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        project = proposal.project
+
+        # Only allow if project is in progress and user is owner
+        if project.clientId != request.user:
+            return Response(
+                {"detail": "You are not the project owner."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        project.progress = Progress.COMPLETED
+        project.end_date = timezone.now()  # <-- Set end_date here!
+        project.save()
+
+        return Response({"detail": "Project marked as completed."})
