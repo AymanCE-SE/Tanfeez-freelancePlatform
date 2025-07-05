@@ -139,8 +139,8 @@ function AddProject() {
         location: formData.location,
         skills: formData.skills,
         status: formData.status || "open",
-        start_date: "2025-04-09",
-        end_date: "2026-04-09",
+        start_date: "",
+        end_date: "",
       };
 
       dispatch(createProjectAction(projectData));
