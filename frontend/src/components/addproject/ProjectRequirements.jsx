@@ -2,7 +2,8 @@
 
 import { Form, Card, ButtonGroup, ToggleButton, InputGroup, Button, Badge, CloseButton } from "react-bootstrap";
 import { FiChevronDown } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchSkills } from "../../api/skill"; // adjust path as needed
 
 const ProjectRequirements = ({
   formData,
@@ -10,12 +11,38 @@ const ProjectRequirements = ({
   errors,
   levelOptions,
   handleLevelToggle,
-  skillSuggestions,
-  handleSkillClick,
   suggestionsRef,
   handleChange
 }) => {
   const [skillInput, setSkillInput] = useState("");
+  const [skillSuggestions, setSkillSuggestions] = useState([]);
+
+  // Fetch skills from backend as user types
+  useEffect(() => {
+    if (skillInput.trim().length === 0) {
+      setSkillSuggestions([]);
+      return;
+    }
+    let isMounted = true;
+    fetchSkills()
+      .then((skills) => {
+        if (isMounted) {
+          // Filter suggestions based on input and exclude already selected
+          const filtered = skills
+            .filter(
+              (skill) =>
+                skill.skill_name.toLowerCase().includes(skillInput.toLowerCase()) &&
+                !formData.skills.includes(skill.skill_name)
+            )
+            .map((skill) => skill.skill_name);
+          setSkillSuggestions(filtered);
+        }
+      })
+      .catch(() => setSkillSuggestions([]));
+    return () => {
+      isMounted = false;
+    };
+  }, [skillInput, formData.skills]);
 
   const handleAddSkill = () => {
     const skill = skillInput.trim();
