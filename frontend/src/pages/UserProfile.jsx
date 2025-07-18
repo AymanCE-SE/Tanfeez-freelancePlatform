@@ -27,7 +27,6 @@ import {
   getMyProfileAction,
 } from "../store/slices/userSlice";
 
-
 const UserProfile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -39,7 +38,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     dispatch(getMyProfileAction());
-  }, [ dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (id && (!profile || String(profile.id) !== String(id))) {
@@ -63,18 +62,8 @@ const UserProfile = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Container className="py-5">
-        <Alert variant="danger" className="text-center">
-          {error}
-        </Alert>
-      </Container>
-    );
-  }
-
-  // Only show "not found" if NOT loading and NOT error
-  if (!isLoading && !error && !profile) {
+  // Only show "not found" if NOT loading and error is 404 or not found
+  if (!isLoading && error && (error?.status === 404 || error?.data === "User profile not found")) {
     return (
       <Container className="py-5">
         <Alert variant="warning" className="text-center">
@@ -82,6 +71,11 @@ const UserProfile = () => {
         </Alert>
       </Container>
     );
+  }
+
+  // If profileData is still null (and not loading or not found), don't render tabs/UI
+  if (!profile) {
+    return null;
   }
 
   // Only use user to check if this is your own profile
@@ -106,8 +100,9 @@ const UserProfile = () => {
         icon: <Star className="me-2" />,
         component: (
           <ReviewsTab
-          reviews={profileData.reviews || []}
-          isMyProfile={isMyProfile} />
+            reviews={profileData.reviews || []}
+            isMyProfile={isMyProfile}
+          />
         ),
       },
     ];
@@ -119,8 +114,8 @@ const UserProfile = () => {
         icon: <Briefcase className="me-2" />,
         component: (
           <ServicesTab
-          services={profileData.services || []}
-          isMyProfile={isMyProfile}
+            services={profileData.services || []}
+            isMyProfile={isMyProfile}
           />
         ),
       },
@@ -133,11 +128,7 @@ const UserProfile = () => {
         eventKey: "projects",
         title: "Projects",
         icon: <Briefcase className="me-2" />,
-        component: (
-          <ProjectsTab
-          isMyProfile={isMyProfile}
-          />
-        ),
+        component: <ProjectsTab isMyProfile={isMyProfile} />,
       },
       ...commonTabs,
     ];
@@ -170,6 +161,13 @@ const UserProfile = () => {
           ))}
         </Tabs>
       </Container>
+      {!isLoading && error && (
+        <Alert variant="danger" className="text-center">
+          {typeof error === "string"
+            ? error
+            : error?.data?.detail || error?.data || error?.status || "An error occurred."}
+        </Alert>
+      )}
     </div>
   );
 };
