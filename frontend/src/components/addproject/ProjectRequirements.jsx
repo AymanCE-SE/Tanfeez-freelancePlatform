@@ -1,52 +1,100 @@
 /** @format */
 
-import { Form, Card, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Form, Card, ButtonGroup, ToggleButton, InputGroup, Button, Badge, CloseButton } from "react-bootstrap";
 import { FiChevronDown } from "react-icons/fi";
+import { useState } from "react";
 
 const ProjectRequirements = ({
   formData,
-  handleChange,
+  setFormData,
   errors,
   levelOptions,
   handleLevelToggle,
   skillSuggestions,
   handleSkillClick,
   suggestionsRef,
-}) => (
-  <Card className="custom-card">
-    <div className="card-header-custom">
-      <h5 className="mb-0 text-light">Requirements</h5>
-    </div>
-    <Card.Body className="card-body-custom">
-      {/* Skills Section */}
-      <Form.Group className="mb-3 position-relative">
-        <Form.Label>Skills Required</Form.Label>
-        <Form.Control
-          name="skills"
-          value={formData.skills}
-          onChange={handleChange}
-          isInvalid={!!errors.skills}
-          placeholder="Enter required skills (e.g., React, JavaScript)"
-        />
-        <Form.Control.Feedback type="invalid">
-          {errors.skills}
-        </Form.Control.Feedback>
-        {skillSuggestions.length > 0 && (
-          <div ref={suggestionsRef} className="level-options">
-            {skillSuggestions.map((skill, idx) => (
-              <div
-                key={idx}
-                className="level-option"
-                onClick={() => handleSkillClick(skill)}>
+  handleChange
+}) => {
+  const [skillInput, setSkillInput] = useState("");
+
+  const handleAddSkill = () => {
+    const skill = skillInput.trim();
+    if (skill && !formData.skills.includes(skill)) {
+      setFormData((prev) => ({
+        ...prev,
+        skills: [...prev.skills, skill],
+      }));
+    }
+    setSkillInput("");
+  };
+
+  const handleRemoveSkill = (skill) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((s) => s !== skill),
+    }));
+  };
+
+  return (
+    <Card className="custom-card">
+      <div className="card-header-custom">
+        <h5 className="mb-0 text-light">Requirements</h5>
+      </div>
+      <Card.Body className="card-body-custom">
+        {/* Skills Section */}
+        <Form.Group className="mb-3 position-relative">
+          <Form.Label>Skills Required</Form.Label>
+          <InputGroup>
+            <Form.Control
+              name="skills"
+              value={skillInput}
+              onChange={(e) => setSkillInput(e.target.value)}
+              isInvalid={!!errors.skills}
+              placeholder="Type a skill and press Add"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddSkill();
+                }
+              }}
+            />
+            <Button variant="outline-primary" onClick={handleAddSkill}>
+              Add
+            </Button>
+          </InputGroup>
+          <Form.Control.Feedback type="invalid">
+            {errors.skills}
+          </Form.Control.Feedback>
+          {skillSuggestions.length > 0 && (
+            <div ref={suggestionsRef} className="level-options">
+              {skillSuggestions.map((skill, idx) => (
+                <div
+                  key={idx}
+                  className="level-option"
+                  onClick={() => {
+                    setSkillInput(skill);
+                  }}>
+                  {skill}
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Display selected skills as badges */}
+          <div className="d-flex flex-wrap gap-2 mt-2">
+            {formData.skills.map((skill, idx) => (
+              <Badge key={idx} bg="primary" className="d-flex align-items-center">
                 {skill}
-              </div>
+                <CloseButton
+                  onClick={() => handleRemoveSkill(skill)}
+                  className="ms-2"
+                />
+              </Badge>
             ))}
           </div>
-        )}
-      </Form.Group>
+        </Form.Group>
 
-      {/* Improved Experience Level Section */}
-      <Form.Group className="mb-3">
+        {/* Improved Experience Level Section */}
+        <Form.Group className="mb-3">
       <Form.Label className="mb-2 me-5">Experience Level</Form.Label>
       <div className="mt-2">
       <ButtonGroup>
@@ -96,6 +144,7 @@ const ProjectRequirements = ({
       </Form.Group>
     </Card.Body>
   </Card>
-);
+  );
+};
 
 export default ProjectRequirements;

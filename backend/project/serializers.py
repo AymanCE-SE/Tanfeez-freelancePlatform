@@ -1,30 +1,18 @@
 # serializers.py
 from rest_framework import serializers
 from .models import Project
+from skill.models import Skill
+from skill.serializers import SkillSerializer
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     client_id = serializers.SerializerMethodField()
     user_id = serializers.SerializerMethodField()
+    skills = SkillSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
-        fields = [
-            "id",
-            "name",
-            "description",
-            "start_date",
-            "end_date",
-            "freelancerId",
-            "clientId",
-            "duration",
-            "progress",
-            "client_id",
-            "user_id",
-            "experience_level",
-            "type",
-            "budget",
-        ]
+        fields = "__all__"
 
     def get_client_id(self, obj):
         return obj.clientId.id if obj.clientId else None
@@ -34,6 +22,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
+    skills = serializers.ListField(
+        child=serializers.CharField(), required=False, write_only=True
+    )
+
     class Meta:
         model = Project
         fields = [
@@ -46,11 +38,19 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             "experience_level",
             "type",
             "budget",
+            "hourly_rate",
+            "location",
+            "status",
+            "skills",
         ]
 
     def create(self, validated_data):
-        validated_data["clientId"] = self.context["request"].user
-        return super().create(validated_data)
+        skills_data = validated_data.pop("skills", [])
+        project = Project.objects.create(**validated_data)
+        for skill_name in skills_data:
+            skill, _ = Skill.objects.get_or_create(skill_name=skill_name)
+            project.skills.add(skill)
+        return project
 
 
 class ProjectUpdateSerializer(serializers.ModelSerializer):

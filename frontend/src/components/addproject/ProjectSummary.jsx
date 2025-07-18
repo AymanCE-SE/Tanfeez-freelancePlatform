@@ -41,7 +41,15 @@ const ProjectSummary = ({ formData, handleSubmit, isLoading }) => {
 </div>
 <div className="summary-item">
   <small className="text-muted">Skills:</small>
-  <span>{formData.skills || "Not specified"}</span>
+  <span>
+    {formData.skills && formData.skills.length > 0
+      ? formData.skills.map((skill, idx) => (
+          <span key={idx} className="badge bg-primary me-1">
+            {skill}
+          </span>
+        ))
+      : "Not specified"}
+  </span>
 </div>
           <hr />
           <div className="d-grid gap-2">

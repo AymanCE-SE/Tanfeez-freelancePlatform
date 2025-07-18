@@ -1,9 +1,22 @@
 /** @format */
 
 import React from "react";
-import { Card, Badge, Button } from "react-bootstrap";
+import { Card, Badge, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Calendar3, GeoAlt, Cash, People } from "react-bootstrap-icons";
+import { Cash } from "react-bootstrap-icons";
+import { formatDistanceToNow } from "date-fns";
+
+// Map progress to badge color
+const progressColor = {
+  not_started: "secondary",
+  in_progress: "info",
+  completed: "success",
+  cancelled: "danger",
+  open: "primary",
+};
+
+const truncate = (text, maxLength) =>
+  text && text.length > maxLength ? text.slice(0, maxLength - 1) + "…" : text;
 
 const ProjectCard = ({ project }) => {
   const navigate = useNavigate();
@@ -11,11 +24,13 @@ const ProjectCard = ({ project }) => {
     id,
     name,
     description,
-    start_date,
-    end_date,
+    created_at,
     duration,
     progress,
-    // Add more fields if your backend provides them
+    budget,
+    type,
+    experience_level,
+    location,
   } = project;
 
   const handleViewDetails = () => {
@@ -23,31 +38,97 @@ const ProjectCard = ({ project }) => {
   };
 
   return (
-    <Card className="h-100 project-card">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-start mb-2">
-          <Card.Title className="project-title">{name}</Card.Title>
-          <Badge bg={progress === "not_started" ? "secondary" : "success"}>
-            {progress}
+    <Card className="h-100 project-card shadow-sm border-0">
+      <Card.Body className="d-flex flex-column">
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>{name}</Tooltip>}
+          >
+            <Card.Title
+              className="project-title mb-0"
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: 600,
+                maxWidth: "70%",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={name}
+            >
+              {truncate(name, 40)}
+            </Card.Title>
+          </OverlayTrigger>
+          <Badge bg={progressColor[progress] || "secondary"} className="text-capitalize">
+            {progress.replace("_", " ")}
           </Badge>
         </div>
 
-        <Card.Text className="project-description text-truncate mb-3">
-          {description}
-        </Card.Text>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>{description}</Tooltip>}
+        >
+          <Card.Text
+            className="project-description mb-3"
+            style={{
+              minHeight: "2.5em",
+              maxHeight: "3.2em",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              cursor: "pointer",
+            }}
+            title={description}
+          >
+            {truncate(description, 100)}
+          </Card.Text>
+        </OverlayTrigger>
 
-        <div className="project-meta text-muted mb-3">
-          <div className="d-flex align-items-center mb-2">
-            <Calendar3 className="me-2" />
-            <small>
-              {start_date} - {end_date} ({duration} days)
-            </small>
-          </div>
+        <div className="mb-3">
+          <Badge bg="info" className="me-2 text-capitalize">{type}</Badge>
+          <Badge bg="secondary" className="me-2 text-capitalize">{experience_level}</Badge>
+          {location && (
+            <Badge bg="light" text="dark" className="me-2">{location}</Badge>
+          )}
         </div>
 
-        <Button variant="primary" onClick={handleViewDetails} className="w-100">
-          View Details
-        </Button>
+        <div className="mb-2 d-flex align-items-center">
+          <Cash className="me-2" />
+        <span>
+          {type === "hourly"
+            ? (project.hourly_rate != null
+                ? `$${project.hourly_rate}/hr`
+                : "Hourly rate not set")
+            : (project.budget != null
+                ? `$${project.budget}`
+                : "Budget not set")}
+        </span>
+        </div>
+        <div className="mb-2">
+          <small className="text-muted">Duration: {duration} days</small>
+        </div>
+        <div className="mb-3">
+          <small className="text-muted">
+            Posted:{" "}
+            {created_at
+              ? formatDistanceToNow(new Date(created_at), { addSuffix: true })
+              : "Unknown"}
+          </small>
+        </div>
+
+        <div className="mt-auto pt-2">
+          <Button
+            variant="primary"
+            onClick={handleViewDetails}
+            className="w-100"
+            style={{ fontWeight: 500 }}
+          >
+            View Details
+          </Button>
+        </div>
       </Card.Body>
     </Card>
   );

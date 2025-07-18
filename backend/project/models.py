@@ -7,12 +7,17 @@ from client.models import Client
 from freelancer.models import Freelancer
 from project.enums import ExperienceLevel, Progress, Type
 
+class ProjectStatus(models.TextChoices):
+    OPEN = 'open', 'Open'
+    IN_PROGRESS = 'in_progress', 'In Progress'
+    COMPLETED = 'completed', 'Completed'
+    CANCELLED = 'cancelled', 'Cancelled'
 
 class Project(models.Model):
 
     name = models.CharField(max_length=255)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True,null=True) #after proposal accepted
+    end_date = models.DateField(blank=True,null=True)   #after proposal ends
 
     freelancerId = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -36,8 +41,13 @@ class Project(models.Model):
     experience_level = models.CharField(max_length=20, choices=ExperienceLevel.choices)
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=20, choices=Type.choices)
-    budget = models.DecimalField(max_digits=10, decimal_places=2)
+    budget = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    location = models.CharField(max_length=255,blank=True, null=True)
+    hourly_rate = models.DecimalField(max_digits=10,decimal_places=2,blank=True,null=True)
+    skills = models.ManyToManyField('skill.Skill', blank=True, related_name='projects')    
+    status = models.CharField(max_length=20, choices=ProjectStatus.choices, default=ProjectStatus.OPEN)
 
     def __str__(self):
         return self.name
+
