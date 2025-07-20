@@ -21,7 +21,8 @@ const CreateService = () => {
     tags: [],
     price: '',
     description: '',
-    photo: null,
+    photo: null,           // Thumbnail image
+    galleryImages: [],     // Multiple gallery images
     video: ''
   });
 
@@ -150,17 +151,21 @@ const CreateService = () => {
 
     const serviceData = new FormData();
     serviceData.append('service_name', formData.service_name);
-
     serviceData.append('category', formData.category);
     serviceData.append('price', formData.price);
     serviceData.append('description', formData.description);
     serviceData.append('video', formData.video);
+
     if (formData.photo instanceof File) {
       serviceData.append('photo', formData.photo);
     }
-
+    formData.galleryImages.forEach(img => {
+      if (img instanceof File) {
+        serviceData.append('gallery_images', img);
+      }
+    });
     formData.tags.forEach(tag => serviceData.append('tags', tag));
-    
+
 
 
     const action = id !== "0"
@@ -407,6 +412,48 @@ const CreateService = () => {
                           </div>
                         </div>
                       )}
+                    </div>
+                  </Form.Group>
+
+                  <Form.Group className="mb-4">
+                    <Form.Label>Gallery Images</Form.Label>
+                    <div className="mb-3">
+                      <label htmlFor="gallery-upload" className="gallery-container">
+                        <FiImage size={32} className="text-muted mb-2" />
+                        <span className="text-muted mb-0">Click to upload gallery images</span>
+                        <input
+                          id="gallery-upload"
+                          type="file"
+                          multiple
+                          className="d-none"
+                          accept="image/*"
+                          onChange={e => setFormData({
+                            ...formData,
+                            galleryImages: Array.from(e.target.files)
+                          })}
+                        />
+                      </label>
+                      <div className="gallery-grid mt-2">
+                        {formData.galleryImages.map((img, idx) => (
+                          <div key={idx} className="gallery-item">
+                            <img
+                              src={img instanceof File ? URL.createObjectURL(img) : img}
+                              alt={`Gallery ${idx + 1}`}
+                              className="gallery-image"
+                            />
+                            <Button
+                              variant="light"
+                              className="remove-button"
+                              onClick={() => setFormData({
+                                ...formData,
+                                galleryImages: formData.galleryImages.filter((_, i) => i !== idx)
+                              })}
+                            >
+                              <FiX size={16} />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </Form.Group>
                 </Card.Body>

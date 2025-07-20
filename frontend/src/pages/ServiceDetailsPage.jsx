@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Badge, Alert } from "react-bootstrap";
 import { FiTag, FiYoutube } from "react-icons/fi";
-import { servicesData } from "../mock/servicesData";
+// import { servicesData } from "../mock/servicesData";
 import ImageGallery from "../components/serviceDetails/ImageGallery";
 import ServiceDetails from "../components/serviceDetails/ServiceDetails";
 import SellerInfo from "../components/serviceDetails/SellerInfo";
@@ -17,7 +17,6 @@ import { fetchUserProfile } from "../store/slices/userSlice";
 export function ServiceDetailsPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const serviceData = servicesData[1];
   const { service, isLoading } = useSelector((myStore) => myStore.serviceSlice);
   const { profile } = useSelector((myStore) => myStore.userSlice);
 
@@ -51,21 +50,18 @@ export function ServiceDetailsPage() {
     );
   }
 
-
   const youtubeVideoId =
-  isLoading || !service?.video || !service.video.includes("v=")
-    ? ""
-    : service.video.split("v=")[1];
+    isLoading || !service?.video || !service.video.includes("v=")
+      ? ""
+      : service.video.split("v=")[1];
 
-  
   return (
-    
     <div className="service-details-page">
       <Container fluid className="p-0">
         {/* Main Image Gallery */}
         <ImageGallery
           mainImage={service.photo}
-          galleryImages={serviceData.galleryImages}
+          galleryImages={service.gallery_images || []}
         />
 
         <Container className="py-4">
@@ -78,10 +74,10 @@ export function ServiceDetailsPage() {
                   <h1 className="service-title mb-4">{service.service_name}</h1>
 
                   <div className="service-tags mb-4">
-                    <Badge bg="primary" className="category-badge me-2">
+                    <Badge bg="info" className="category-badge me-2 p-2">
                       {service.category}
                     </Badge>
-                    {serviceData.tags.map((tag, index) => (
+                    {service.tags?.map((tag, index) => (
                       <Badge key={index} className="tag-badge me-2">
                         <FiTag className="me-1" /> {tag}
                       </Badge>
@@ -151,7 +147,7 @@ export function ServiceDetailsPage() {
               <div className="sticky-sidebar">
                 <PricingBox
                   price={service.price}
-                  deliveryTime={serviceData.deliveryTime}
+                  // deliveryTime={serviceData.deliveryTime}
                 />
               </div>
             </Col>

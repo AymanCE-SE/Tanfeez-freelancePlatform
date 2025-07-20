@@ -237,10 +237,9 @@ const userSlice = createSlice(
             }).addCase(updateUserImageAction.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
-
-                const updatedUser = { ...state.user, photo: `http://127.0.0.1:8000${action.payload.photo}` };
-                state.user = updatedUser;
-                saveUserToLocalStorage(updatedUser);
+                const photoUrl = `http://127.0.0.1:8000${action.payload.photo}`;
+                if (state.user) state.user.photo = photoUrl;
+                if (state.profile) state.profile.photo = photoUrl; // <-- Add this line
             }).addCase(updateUserImageAction.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;

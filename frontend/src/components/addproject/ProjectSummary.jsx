@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectSummary = ({ formData, handleSubmit, isLoading }) => {
   const navigate = useNavigate();
-
+c
   return (
     <div className="sticky-sidebar">
       <Card className="custom-card">

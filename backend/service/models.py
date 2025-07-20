@@ -16,7 +16,7 @@ class Service(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     video = models.TextField(null=True, blank=True)
     photo = models.ImageField(
-        upload_to="profile_photos/", blank=True, null=True
+        upload_to="service_photos/", blank=True, null=True
     )  # Allow null for profile photos
     category = models.CharField(max_length=255, null=False, blank=True)
 
@@ -24,3 +24,11 @@ class Service(models.Model):
 
     def __str__(self):
         return self.service_name
+
+
+class ServiceImage(models.Model):
+    service = models.ForeignKey(
+        Service, on_delete=models.CASCADE, related_name="gallery_images"
+    )
+    image = models.ImageField(upload_to="service_gallery/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)

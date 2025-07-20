@@ -63,10 +63,10 @@ const ProfileHeader = ({ profileData, isMyProfile }) => {
       // Prepare form data for API
       const formData = new FormData();
       formData.append("photo", file);
-      dispatch(updateUserImageAction(formData))
-      window.location.reload();
-      profileData.address
 
+      // Upload image and re-fetch profile
+      await dispatch(updateUserImageAction(formData)).unwrap();
+      dispatch(getMyProfileAction());
     }
   };
 

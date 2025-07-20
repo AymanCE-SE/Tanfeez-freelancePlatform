@@ -4,7 +4,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from service.serializer import (
     ServiceCreateUpdateSerializer,
     ServiceRetriveDeleteSerializer,
@@ -46,7 +46,7 @@ class ServiceListView(generics.ListAPIView):
 class ServiceDetailView(generics.RetrieveAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceRetriveDeleteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     lookup_field = "id"
 
     def get_object(self):
