@@ -9,7 +9,7 @@ export default function ImageGallery({ mainImage, galleryImages }) {
   const [showModal, setShowModal] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-const allImages = [mainImage, ...galleryImages.map(img => img.image)];
+const allImages = [mainImage, ...galleryImages];
   const handleImageSelect = (image, index) => {
     setSelectedImage(image);
     setCurrentIndex(index);

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Badge, Alert } from "react-bootstrap";
 import { FiTag, FiYoutube } from "react-icons/fi";
+import { formatDistanceToNow } from "date-fns";
 // import { servicesData } from "../mock/servicesData";
 import ImageGallery from "../components/serviceDetails/ImageGallery";
 import ServiceDetails from "../components/serviceDetails/ServiceDetails";
@@ -50,10 +51,13 @@ export function ServiceDetailsPage() {
     );
   }
 
-  const youtubeVideoId =
-    isLoading || !service?.video || !service.video.includes("v=")
-      ? ""
-      : service.video.split("v=")[1];
+function extractYoutubeId(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+const youtubeVideoId = extractYoutubeId(service?.video);
 
   return (
     <div className="service-details-page">
@@ -61,7 +65,7 @@ export function ServiceDetailsPage() {
         {/* Main Image Gallery */}
         <ImageGallery
           mainImage={service.photo}
-          galleryImages={service.gallery_images || []}
+          galleryImages={service.gallery_images ? service.gallery_images.map(img => img.image) : []}
         />
 
         <Container className="py-4">
@@ -72,6 +76,11 @@ export function ServiceDetailsPage() {
               <div className="custom-card mb-4">
                 <div className="card-body-custom">
                   <h1 className="service-title mb-4">{service.service_name}</h1>
+
+                  {/* Posted date */}
+                  <div className="text-muted mb-3" style={{ fontSize: "1rem" }}>
+                    Posted {service.created_at ? formatDistanceToNow(new Date(service.created_at), { addSuffix: true }) : "Unknown"}
+                  </div>
 
                   <div className="service-tags mb-4">
                     <Badge bg="info" className="category-badge me-2 p-2">

@@ -35,7 +35,10 @@ const CreateService = () => {
             ...data,
             tags: Array.isArray(data.tags) ? data.tags : [],
             photo: data.photo || null,
-            video: data.video || ''
+            video: data.video || '',
+            galleryImages: Array.isArray(data.gallery_images)
+              ? data.gallery_images.map(img => img.image)
+              : [],  
           });
         })
         .catch((error) => {
@@ -429,7 +432,10 @@ const CreateService = () => {
                           accept="image/*"
                           onChange={e => setFormData({
                             ...formData,
-                            galleryImages: Array.from(e.target.files)
+                            galleryImages: [
+                              ...(formData.galleryImages || []),
+                              ...Array.from(e.target.files)
+                            ]
                           })}
                         />
                       </label>
