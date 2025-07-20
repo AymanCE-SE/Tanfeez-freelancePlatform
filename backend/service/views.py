@@ -60,7 +60,14 @@ class ServiceDetailView(generics.RetrieveAPIView):
 
         return service
 
+#latest services 
+class LatestServicesView(generics.ListAPIView):
+    serializer_class = ServiceRetriveDeleteSerializer
+    permission_classes = [permissions.AllowAny]
 
+    def get_queryset(self):
+        return Service.objects.filter(is_deleted=False).order_by('-created_at')[:5]
+      
 # update service
 class ServiceUpdateView(generics.UpdateAPIView):
     serializer_class = ServiceCreateUpdateSerializer

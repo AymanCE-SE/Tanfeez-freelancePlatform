@@ -33,7 +33,7 @@ export function ServiceDetailsPage() {
       });
   }, [id, dispatch]);
 
-  if (!service) {
+  if (!service && !isLoading) {
     return (
       <Container className="py-5">
         <Alert variant="danger">Service not found</Alert>

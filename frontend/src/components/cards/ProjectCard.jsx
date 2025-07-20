@@ -24,10 +24,11 @@ const ProjectCard = ({ project }) => {
     id,
     name,
     description,
+    budget,
     created_at,
     duration,
-    progress,
-    budget,
+    status,
+    client_id, // <-- use 'client_id' from API
     type,
     experience_level,
     location,
@@ -38,8 +39,8 @@ const ProjectCard = ({ project }) => {
   };
 
   return (
-    <Card className="h-100 project-card shadow-sm border-0">
-      <Card.Body className="d-flex flex-column">
+    <Card className="project-card h-100 border-0">
+      <Card.Body>
         <div className="d-flex justify-content-between align-items-center mb-2">
           <OverlayTrigger
             placement="top"
@@ -60,8 +61,8 @@ const ProjectCard = ({ project }) => {
               {truncate(name, 40)}
             </Card.Title>
           </OverlayTrigger>
-          <Badge bg={progressColor[progress] || "secondary"} className="text-capitalize">
-            {progress.replace("_", " ")}
+          <Badge bg={progressColor[status] || "secondary"} className="text-capitalize">
+            {status.replace("_", " ")}
           </Badge>
         </div>
 

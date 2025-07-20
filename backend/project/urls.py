@@ -8,8 +8,7 @@ from .views import (
     ProjectDeleteView,
     ProjectsByCurrentClientView,
     ProjectsByUserIdView,
-    # ProjectsByClientView,
-    # ProjectsByFreelancerView,
+    LatestProjectsView,
 )
 
 urlpatterns = [
@@ -17,18 +16,10 @@ urlpatterns = [
     path("create/", ProjectCreateView.as_view(), name="project-create"),
     path("<int:pk>/", ProjectRetrieveView.as_view(), name="project-retrieve"),
     path("update/<int:pk>/", ProjectUpdateView.as_view(), name="project-update"),
-    path(
-        "delete/<int:pk>/",
-        ProjectDeleteView.as_view(),
-        name="project-delete",
-    ),
-    # routes to get user projects
+    path("delete/<int:pk>/", ProjectDeleteView.as_view(), name="project-delete"),
     path("my-projects/", ProjectsByCurrentClientView.as_view(), name="my-projects"),
-    path(
-        "users/<int:user_id>/",
-        ProjectsByUserIdView.as_view(),
-        name="projects-by-user",
-    ),
+    path("users/<int:user_id>/", ProjectsByUserIdView.as_view(), name="projects-by-user"),
+    path("latest/", LatestProjectsView.as_view(), name="latest-projects"),
 ]
 
 

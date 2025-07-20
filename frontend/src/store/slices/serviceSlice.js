@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addService, getAllServices, getMyServices, getServiceById, updateService, getServicesByTag, getUserServices } from "../../api/service";
+import axios from 'axios';
 
 const initialState = {
     services: [],
     myServices: [],
     service: null,
+    latestServices: [],
     isLoading: false,
     error: null,
 
@@ -137,6 +139,18 @@ export const getUserServicesAction = createAsyncThunk(
     }
 );
 
+export const getLatestServicesAction = createAsyncThunk(
+    'service/getLatestServices',
+    async (_, thunkAPI) => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/service/latest/');
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
 const serviceSlice = createSlice(
     {
         name: "services",
@@ -247,6 +261,19 @@ const serviceSlice = createSlice(
                     state.error = null;
                 })
                 .addCase(getUserServicesAction.rejected, (state, action) => {
+                    state.isLoading = false;
+                    state.error = action.payload;
+                });
+            builder
+                .addCase(getLatestServicesAction.pending, (state) => {
+                    state.isLoading = true;
+                    state.error = null;
+                })
+                .addCase(getLatestServicesAction.fulfilled, (state, action) => {
+                    state.isLoading = false;
+                    state.latestServices = Array.isArray(action.payload) ? action.payload : [];
+                })
+                .addCase(getLatestServicesAction.rejected, (state, action) => {
                     state.isLoading = false;
                     state.error = action.payload;
                 });

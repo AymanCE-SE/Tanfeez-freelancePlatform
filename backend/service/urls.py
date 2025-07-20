@@ -8,6 +8,7 @@ from .views import (
     ServiceUpdateView,
     ServiceDeleteView,
     ServicesByUserIdView,
+    LatestServicesView,
 )
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
         ServicesByUserIdView.as_view(),
         name="services-by-user",
     ),
+    path("latest/", LatestServicesView.as_view(), name="latest-services"),
 ]

@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound, PermissionDenied
-from rest_framework import generics, status
+from rest_framework import generics, status,permissions
 from rest_framework.response import Response
 from chatroom.models import ChatRoom
 from user.models import CustomUser
@@ -40,6 +40,14 @@ class ProjectListView(generics.ListAPIView):
     def get_queryset(self):
         return Project.objects.exclude(progress=Progress.CANCELLED)
 
+# latest projects 
+# In your Django view
+class LatestProjectsView(generics.ListAPIView):
+    serializer_class = ProjectSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Project.objects.filter(is_deleted=False).order_by('-created_at')[:5]
 
 # Retrieve (get one)
 class ProjectRetrieveView(generics.RetrieveAPIView):

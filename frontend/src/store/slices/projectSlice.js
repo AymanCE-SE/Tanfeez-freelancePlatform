@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addProject, getAllProject, getMyProjects, getProjectById } from "../../api/project";
+import axios from 'axios';
 
 const initialState = {
   projectList: [],
@@ -10,6 +11,7 @@ const initialState = {
   isLoading: false,
   error: null,
   projectDetails: null,
+  latestProjects: [],
 };
 
 const getProjectByIdAction = createAsyncThunk(
@@ -87,6 +89,17 @@ const createProjectAction = createAsyncThunk(
   }
 );
 
+ const getLatestProjectsAction = createAsyncThunk(
+  'project/getLatestProjects',
+  async (_, thunkAPI) => {
+    try {
+    const response = await axios.get('http://127.0.0.1:8000/api/project/latest/');      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState,
@@ -156,9 +169,21 @@ const projectSlice = createSlice({
       .addCase(getMyProjectsAction.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(getLatestProjectsAction.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getLatestProjectsAction.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.latestProjects = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(getLatestProjectsAction.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
 export const projectReducer = projectSlice.reducer;
-export { createProjectAction, getAllProjectAction, getProjectByIdAction };
+export { createProjectAction, getAllProjectAction, getProjectByIdAction, getLatestProjectsAction };
