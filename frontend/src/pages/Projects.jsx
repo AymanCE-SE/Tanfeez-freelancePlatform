@@ -34,9 +34,43 @@ const Projects = () => {
         (project.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           project.description?.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      // You may want to adjust these filters based on your backend data
-      // For now, only search is applied since backend data doesn't have price/type/level/status
-      return matchesSearch;
+      // Status filter
+      const matchesStatus =
+        filters.status === "all" ||
+        project.status === filters.status;
+
+      // Type filter
+      const typeMap = {
+        "Fixed Price": "fixed_price",
+        "Hourly": "hourly",
+        all: "all"
+      };
+      const matchesType =
+        filters.type === "all" ||
+        project.type === typeMap[filters.type];
+
+      // Level filter
+      const levelMap = {
+        Beginner: "junior",
+        Intermediate: "mid",
+        Expert: "senior",
+        all: "all"
+      };
+      const matchesLevel =
+        filters.level === "all" ||
+        project.experience_level === levelMap[filters.level];
+
+      // Budget filter
+      const matchesBudget =
+        !project.budget || project.budget <= filters.priceRange;
+
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesType &&
+        matchesLevel &&
+        matchesBudget
+      );
     });
 
     setFilteredProjects(filtered);

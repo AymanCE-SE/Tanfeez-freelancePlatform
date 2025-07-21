@@ -16,7 +16,8 @@ const ServicesPage = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredServices, setFilteredServices] = useState(servicesData);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [selectedTag, setSelectedTag] = useState(""); // Add to your filter state and UI as needed
 
   const handleCategoryClick = (categoryName) => {
     if (categoryName === "All Services") {
@@ -40,24 +41,55 @@ const ServicesPage = () => {
   }, [services]);
 
   useEffect(() => {
-    const filtered = services.filter((service) => {
-      // const matchesCategory =
-      //   selectedCategory === "All Services" ||
-      //   service.category === selectedCategory;
-      // const matchesSubcategory =
-      //   !selectedSubcategory || service.subcategory === selectedSubcategory;
-      const matchesSearch =
-        service.service_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchTerm.toLowerCase());
-      // const matchesPrice =
-      //   service.price >= priceRange[0] && service.price <= priceRange[1];
+    let filtered = services;
 
-      return (
-        matchesSearch
+    // Search filter: by service_name, description, or tags
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (service) =>
+          service.service_name.toLowerCase().includes(term) ||
+          service.description.toLowerCase().includes(term) ||
+          (Array.isArray(service.tags) &&
+            service.tags.some((tag) => tag.toLowerCase().includes(term)))
       );
-    });
+    }
+
+    // Category filter
+    if (selectedCategory !== "All Services") {
+      filtered = filtered.filter(
+        (service) => service.category === selectedCategory
+      );
+    }
+
+    // Subcategory filter
+    if (selectedSubcategory) {
+      filtered = filtered.filter(
+        (service) =>
+          service.subcategory && service.subcategory === selectedSubcategory
+      );
+    }
+
+    // Price range filter
+    filtered = filtered.filter(
+      (service) =>
+        Number(service.price) >= priceRange[0] &&
+        Number(service.price) <= priceRange[1]
+    );
+
+    // Tag filter (if you want a separate tag filter)
+    if (selectedTag) {
+      filtered = filtered.filter(
+        (service) =>
+          Array.isArray(service.tags) &&
+          service.tags.some((tag) =>
+            tag.toLowerCase().includes(selectedTag.toLowerCase())
+          )
+      );
+    }
+
     setFilteredServices(filtered);
-  }, [selectedCategory, selectedSubcategory, searchTerm, priceRange]);
+  }, [services, searchTerm, selectedCategory, selectedSubcategory, priceRange, selectedTag]);
 
   // Handle search input with Enter key
   const handleSearch = (e) => {
