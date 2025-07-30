@@ -28,7 +28,7 @@ export function LatestProjectsSlider() {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (!Array.isArray(latestProjects) || latestProjects.length === 0) return <div>No recent projects found.</div>;
+  if (!Array.isArray(latestProjects) || latestProjects.length === 0) return <div className="alert alert-info p-2 m-4 text-center">No recent projects found.</div>;
 
   return (
     <div className="latest-projects-slider py-4">

@@ -328,7 +328,25 @@ export const Header = () => {
                   </Link>
                 </div>
               )}
-
+                                {/* Theme Toggle Button */}
+                  <div className="icon-wrapper">
+                    <button
+                      className="theme-toggle-btn"
+                      onClick={handleToggleTheme}
+                      aria-label="Toggle theme"
+                      title={
+                        theme === "light"
+                          ? "Switch to dark mode"
+                          : "Switch to light mode"
+                      }>
+                      {theme === "light" ? (
+                        <FaMoon size={26} />
+                      ) : (
+                        <FaSun size={26} />
+                      )}
+                    </button>
+                  </div>
+                  
               {/* Logged in user features */}
               {isLoggedIn && (
                 <>
@@ -418,24 +436,7 @@ export const Header = () => {
                     </NavLink>
                   </div>
 
-                  {/* Theme Toggle Button */}
-                  <div className="icon-wrapper">
-                    <button
-                      className="theme-toggle-btn"
-                      onClick={handleToggleTheme}
-                      aria-label="Toggle theme"
-                      title={
-                        theme === "light"
-                          ? "Switch to dark mode"
-                          : "Switch to light mode"
-                      }>
-                      {theme === "light" ? (
-                        <FaMoon size={26} />
-                      ) : (
-                        <FaSun size={26} />
-                      )}
-                    </button>
-                  </div>
+
 
                   {/* Profile Picture with Dropdown - hide on small screens */}
                   <div

@@ -28,7 +28,7 @@ export function LatestServicesSlider() {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (!Array.isArray(latestServices) || latestServices.length === 0) return <div>No recent services found.</div>;
+  if (!Array.isArray(latestServices) || latestServices.length === 0) return <div className="alert alert-info p-2 m-4 text-center">No recent services found.</div>;
 
   return (
     <div className="latest-services-slider py-4">
