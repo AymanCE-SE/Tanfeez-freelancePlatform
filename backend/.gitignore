@@ -6,7 +6,7 @@
 __pycache__
 db.sqlite3  # SQLite database file, if you are using SQLite
 *.log
-client_rating/
+media/
 
 # Virtual environment
 venv/
