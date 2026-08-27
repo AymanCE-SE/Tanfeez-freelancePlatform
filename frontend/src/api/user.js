@@ -1,18 +1,8 @@
-import axios from "axios";
+import apiClient from "./client";
 
-
-
-const baseURL = "http://127.0.0.1:8000/api/"; // Now it routes through Vite proxy
 export const addService = async (service) => {
-    // send brear token
-    const token = localStorage.getItem("authToken");
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    };
     try {
-        const response = await axios.post(`${baseURL}user/create/`, service, config);
+        const response = await apiClient.post("user/create/", service);
         return response
     } catch (error) {
         throw error;
@@ -22,11 +12,7 @@ export const addService = async (service) => {
 
 export const getMyProfile = async () => {
     try {
-        const response = await axios.get(`${baseURL}user/user-profile/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.get("user/user-profile/");
         return response
     } catch (error) {
         throw error;
@@ -36,11 +22,7 @@ export const getMyProfile = async () => {
 
 export const getMyFreelancerProfile = async () => {
     try {
-        const response = await axios.get(`${baseURL}freelancers/detail/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.get("freelancers/detail/");
         return response
     } catch (error) {
         throw error;
@@ -48,11 +30,7 @@ export const getMyFreelancerProfile = async () => {
 };
 export const getMyClientProfile = async () => {
     try {
-        const response = await axios.get(`${baseURL}clients/detail/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.get("clients/detail/");
         return response
     } catch (error) {
         throw error;
@@ -63,11 +41,8 @@ export const getMyClientProfile = async () => {
 
 export const updateUserImage = async (formData) => {
     try {
-        const response = await axios.patch(`${baseURL}user/photo/update/`, formData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                "Content-Type": "multipart/form-data",
-            },
+        const response = await apiClient.patch("user/photo/update/", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
         });
         return response.data
     } catch (error) {
@@ -78,11 +53,7 @@ export const updateUserImage = async (formData) => {
 
 export const updateUserProfile = async (formData) => {
     try {
-        const response = await axios.patch(`${baseURL}user/update/`, formData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.patch("user/update/", formData);
         return response.data
     } catch (error) {
         throw error;
@@ -90,11 +61,7 @@ export const updateUserProfile = async (formData) => {
 }
 export const updateFreelancerProfile = async (formData) => {
     try {
-        const response = await axios.patch(`${baseURL}freelancers/update/`, formData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.patch("freelancers/update/", formData);
         return response.data
     } catch (error) {
         throw error;
@@ -102,11 +69,7 @@ export const updateFreelancerProfile = async (formData) => {
 }
 export const updateClientProfile = async (formData) => {
     try {
-        const response = await axios.patch(`${baseURL}clients/update/`, formData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.patch("clients/update/", formData);
         return response.data
     } catch (error) {
         throw error;
@@ -117,25 +80,16 @@ export const updateClientProfile = async (formData) => {
 export const getAllUsers = async () => {
 
     try {
-        const response = await axios.get(`${baseURL}user/all/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.get("user/all/");
         return response
     } catch (error) {
         throw error;
     }
 }
 
-//delete http://127.0.0.1:8000/api/user/delete/14/
-export const deleteUser = async (userId) => {
+export const deleteUser = async () => {
     try {
-        const response = await axios.delete(`${baseURL}user/delete/${userId}/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.delete(`user/delete/`);
         return response
     } catch (error) {
         throw error;
@@ -144,11 +98,7 @@ export const deleteUser = async (userId) => {
 
 export const getUserProfile = async (userId) => {
     try {
-        const response = await axios.get(`${baseURL}user/user-profile/${userId}/`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-        });
+        const response = await apiClient.get(`user/user-profile/${userId}/`);
         return response.data
     } catch (error) {
         throw error;

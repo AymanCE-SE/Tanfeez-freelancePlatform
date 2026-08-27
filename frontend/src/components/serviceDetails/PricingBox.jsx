@@ -3,7 +3,6 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 
 export default function PricingBox({price}) {
-  console.log(price)
   return (
     <Card className="shadow-sm p-4 border-0 mb-3" style={{ background: '#f8fffa' }}>
       <h4 className="fw-bold mb-3 color-inverse">${price} <span className="fw-normal fs-6 text-secondary">USD</span></h4>

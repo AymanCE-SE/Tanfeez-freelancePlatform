@@ -1,22 +1,10 @@
 // api/skill.js
-import axios from "axios";
-
-const baseURL = "http://127.0.0.1:8000/api/";
-
-// Utility function to get token from localStorage
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  console.log("Auth Token:", token); 
-
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import apiClient from "./client";
 
 // Fetch all skills
 export const fetchSkills = async () => {
   try {
-    const response = await axios.get(`${baseURL}skills/all/`, {
-      headers: getAuthHeaders(),
-    });
+    const response = await apiClient.get("skills/all/");
     return response.data;
   } catch (error) {
     throw error;
@@ -26,11 +14,7 @@ export const fetchSkills = async () => {
 // Create a new skill
 export const createSkill = async (name) => {
   try {
-    const response = await axios.post(
-        `${baseURL}skills/create/`,
-        { skill_name: name }, 
-        { headers: getAuthHeaders() }
-      );
+    const response = await apiClient.post("skills/create/", { skill_name: name });
     return response.data;
   } catch (error) {
     throw error;

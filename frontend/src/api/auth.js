@@ -1,13 +1,11 @@
 /** @format */
 
-import axios from "axios";
+import apiClient from "./client";
 
-const baseURL = "http://127.0.0.1:8000/api/user/"; // Now it routes through Vite proxy
 // Function to authenticate user
 export const loginUser = async (credentials) => {
   try {
-    console.log(credentials)
-    const response = await axios.post(`${baseURL}login/`, credentials);
+    const response = await apiClient.post("user/login/", credentials);
     return response;
   } catch (error) {
     throw error;
@@ -21,8 +19,8 @@ export const registerUser = async (newUser) => {
     for (const key in newUser) {
       formData.append(key, newUser[key]);
     }
-    const createUserResponse = await axios.post(
-      `${baseURL}register/`,
+    const createUserResponse = await apiClient.post(
+      "user/register/",
       formData,
       {
         headers: {
@@ -53,18 +51,15 @@ export const updatePassword = async (passwordData) => {
       throw new Error("New passwords do not match");
     }
 
-    const response = await axios.put(
-      `${baseURL}password/update/`,
+    const response = await apiClient.put(
+      "user/password/update/",
       {
         old_password: passwordData.old_password,
         new_password: passwordData.new_password,
         new_password_confirm: passwordData.new_password_confirm,
       },
       {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
 
@@ -115,11 +110,7 @@ export const updatePassword = async (passwordData) => {
 // Function to get user profile data
 export const getUserProfile = async (id) => {
   try {
-    const response = await axios.get(`${baseURL}user-profile/${id}/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
+    const response = await apiClient.get(`user/user-profile/${id}/`);
     return response.data;
   } catch (error) {
     if (error.response) {

@@ -15,10 +15,8 @@ let profile = {};
 
 const AboutTab = ({ profileData, isProfileOwner, userRole }) => {
   let role = profileData.user_type || userRole;
-  console.log(role)
 
 
-  console.log(profileData.user_type);
   if (role === "freelancer") {
     profile = profileData.freelancer_profile || {};
   } else if (role === "client") {

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addService, getAllServices, getMyServices, getServiceById, updateService, getServicesByTag, getUserServices } from "../../api/service";
-import axios from 'axios';
+import apiClient, { apiOrigin } from '../../api/client';
 
 const initialState = {
     services: [],
@@ -38,7 +38,6 @@ export const getMyServicesAction = createAsyncThunk(
         const { rejectWithValue } = thunkAPI;
         try {
             const response = await getMyServices();
-            console.log(response.data);
             return response.data;
 
         } catch (error) {
@@ -75,7 +74,6 @@ export const getServiceByIdAction = createAsyncThunk(
         const { rejectWithValue } = thunkAPI;
         try {
             const response = await getServiceById(args);
-            console.log(response.data);
             return response.data;
 
         } catch (error) {
@@ -93,9 +91,7 @@ export const updateServiceAction = createAsyncThunk(
     async (args, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            console.log(args)
             const response = await updateService(args.id, args.data);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             const serializedError = {
@@ -143,7 +139,7 @@ export const getLatestServicesAction = createAsyncThunk(
     'service/getLatestServices',
     async (_, thunkAPI) => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/service/latest/');
+            const response = await apiClient.get('service/latest/');
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -242,7 +238,7 @@ const serviceSlice = createSlice(
                         photo: service.photo ?
                             (service.photo.startsWith('http') ?
                                 service.photo :
-                                `http://127.0.0.1:8000${service.photo}`
+                                `${apiOrigin}${service.photo}`
                             ) : null
                     }));
                 })

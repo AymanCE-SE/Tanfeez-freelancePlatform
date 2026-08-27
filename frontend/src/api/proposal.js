@@ -1,24 +1,12 @@
-import axios from "axios";
-
-const baseURL = "http://127.0.0.1:8000/api/project-proposal/";
+import apiClient from "./client";
 
 export const addProposal = async (proposal) => {
-  const token = localStorage.getItem("authToken");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-console.log("efdfd",proposal)
-  return axios.post(`${baseURL}apply/`, proposal, config);
+  return apiClient.post("project-proposal/apply/", proposal);
 };
 
 export const getProposalsByProject = async (projectId) => {
   try{
-    const token = localStorage.getItem("authToken");
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    const response = await axios.get(`${baseURL}proposals/${projectId}/`, config);
-    console.log(response)
+    const response = await apiClient.get(`project-proposal/proposals/${projectId}/`);
     return response;
   }
   catch(error){
@@ -29,20 +17,12 @@ export const getProposalsByProject = async (projectId) => {
 
 export const approveProposal = async (proposalId) => {
 
-  // console.log(proposalId)
-  return axios.post(`${baseURL}approve/${proposalId}/`,{}, {
-    headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
-  });
+  return apiClient.post(`project-proposal/approve/${proposalId}/`, {});
 };
 
 export const getMyProposals = async () => {
   try{
-  const token = localStorage.getItem("authToken");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  const response = axios.get(`${baseURL}my-proposals/`, config);
-  console.log(response.data)
+  const response = apiClient.get("project-proposal/my-proposals/");
   return response;}
   catch(error){
     console.error("Error fetching proposals:", error);
@@ -51,9 +31,5 @@ export const getMyProposals = async () => {
 };
 
 export const updateProposalStatus = async (proposalId, status) => {
-  const token = localStorage.getItem("authToken");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return axios.patch(`${baseURL}${proposalId}/`, { status }, config);
+  return apiClient.patch(`project-proposal/${proposalId}/`, { status });
 };

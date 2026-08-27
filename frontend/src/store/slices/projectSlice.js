@@ -2,7 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addProject, getAllProject, getMyProjects, getProjectById } from "../../api/project";
-import axios from 'axios';
+import apiClient from '../../api/client';
 
 const initialState = {
   projectList: [],
@@ -19,7 +19,6 @@ const getProjectByIdAction = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await getProjectById(id);
-      console.log("getProjectById response", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -37,7 +36,6 @@ export const getMyProjectsAction = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await getMyProjects();
-      console.log(response.data);
       return response.data;
 
     } catch (error) {
@@ -53,11 +51,8 @@ export const getMyProjectsAction = createAsyncThunk(
 const getAllProjectAction = createAsyncThunk(
   "project/getAllProjectAction",
   async (_, { rejectWithValue }) => {
-    console.log("getAllProject response in thunk");
     try {
-      console.log("getAllProject response in try");
       const response = await getAllProject(); // This should call your backend
-      console.log("getAllProject response in try after response", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -71,12 +66,8 @@ const getAllProjectAction = createAsyncThunk(
 const createProjectAction = createAsyncThunk(
   "project/createProjectAction",
   async (projectData, { rejectWithValue }) => {
-    console.log("addProject response in thunk");
     try {
-      console.log("addProject response in try");
-      console.log("projectData", projectData);
       const response = await addProject(projectData);
-      console.log("addProject response in try after response");
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -93,7 +84,7 @@ const createProjectAction = createAsyncThunk(
   'project/getLatestProjects',
   async (_, thunkAPI) => {
     try {
-    const response = await axios.get('http://127.0.0.1:8000/api/project/latest/');      return response.data;
+    const response = await apiClient.get('project/latest/');      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }

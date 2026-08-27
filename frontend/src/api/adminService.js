@@ -1,33 +1,6 @@
-import axios from 'axios';
+import apiClient from './client';
 
-// Base URL for API requests
-const API_URL = 'http://localhost:8000/api/admin_dashboard/';
-
-// Get auth token from localStorage
-const getAuthToken = () => {
-  const token = localStorage.getItem('authToken');
-  return token;
-};
-
-// Configure axios instance with authentication
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add request interceptor to include auth token in all requests
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = getAuthToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+const adminPath = (path) => `admin_dashboard/${path}`;
 
 // Admin Dashboard API Services
 const adminService = {
@@ -36,7 +9,7 @@ const adminService = {
     try {
       // In a real implementation, you would have a dedicated endpoint for admin to get all users
       // For now, we'll use the existing endpoint
-      const response = await axiosInstance.get('users/');
+      const response = await apiClient.get(adminPath('users/'));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -45,7 +18,7 @@ const adminService = {
 
   getUserById: async (userId) => {
     try {
-      const response = await axiosInstance.get(`/user/${userId}`);
+      const response = await apiClient.get(adminPath(`user/${userId}`));
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -54,7 +27,7 @@ const adminService = {
 
   updateUser: async (userId, userData) => {
     try {
-      const response = await axiosInstance.put(`/user/${userId}`, userData);
+      const response = await apiClient.put(adminPath(`user/${userId}`), userData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -63,7 +36,7 @@ const adminService = {
 
   deleteUser: async (userId) => {
     try {
-      const response = await axiosInstance.delete(`/users/${userId}/`);
+      const response = await apiClient.delete(adminPath(`users/${userId}/`));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -73,7 +46,7 @@ const adminService = {
   // Projects
   getProjects: async () => {
     try {
-      const response = await axiosInstance.get('/projects');
+      const response = await apiClient.get(adminPath('projects'));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -82,7 +55,7 @@ const adminService = {
 
   getProjectById: async (projectId) => {
     try {
-      const response = await axiosInstance.get(`/project/${projectId}`);
+      const response = await apiClient.get(adminPath(`project/${projectId}`));
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -91,7 +64,7 @@ const adminService = {
 
   updateProject: async (projectId, projectData) => {
     try {
-      const response = await axiosInstance.put(`/project/${projectId}`, projectData);
+      const response = await apiClient.put(adminPath(`project/${projectId}`), projectData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -100,11 +73,9 @@ const adminService = {
 
   deleteProject: async (projectId) => {
     try {
-      const response = await axiosInstance.delete(`projects/${projectId}/`);
-      console.log(response)
+      const response = await apiClient.delete(adminPath(`projects/${projectId}/`));
       return response;
     } catch (error) {
-      console.log(error)
       throw error.response?.data || error.message;
     }
   },
@@ -112,8 +83,7 @@ const adminService = {
   // Services
   getServices: async () => {
     try {
-      const response = await axiosInstance.get('services/');
-      console.log(response.data)
+      const response = await apiClient.get(adminPath('services/'));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -122,7 +92,7 @@ const adminService = {
 
   getServiceById: async (serviceId) => {
     try {
-      const response = await axiosInstance.get(`/service/${serviceId}`);
+      const response = await apiClient.get(adminPath(`service/${serviceId}`));
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -131,7 +101,7 @@ const adminService = {
 
   updateService: async (serviceId, serviceData) => {
     try {
-      const response = await axiosInstance.put(`/service/${serviceId}`, serviceData);
+      const response = await apiClient.put(adminPath(`service/${serviceId}`), serviceData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -140,7 +110,7 @@ const adminService = {
 
   deleteService: async (serviceId) => {
     try {
-      const response = await axiosInstance.delete(`/services/${serviceId}/`);
+      const response = await apiClient.delete(adminPath(`services/${serviceId}/`));
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -149,7 +119,7 @@ const adminService = {
 
   getProposals: async () => {
     try {
-      const response = await axiosInstance.get('project-proposals/');
+      const response = await apiClient.get(adminPath('project-proposals/'));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -158,7 +128,7 @@ const adminService = {
 
   deleteProposal: async (proposalId) => {
     try {
-      const response = await axiosInstance.delete(`project-proposals/${proposalId}/`);
+      const response = await apiClient.delete(adminPath(`project-proposals/${proposalId}/`));
       return response;
     } catch (error) {
       throw error.response?.data || error.message;

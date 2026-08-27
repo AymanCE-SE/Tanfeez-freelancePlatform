@@ -68,6 +68,7 @@ class LoginView(APIView):
         return Response(
             {
                 "access_token": str(refresh.access_token),
+                "refresh_token": str(refresh),
                 "token_type": "bearer",
                 "user": user_data,
             }
@@ -128,14 +129,10 @@ class UserDeleteView(APIView):
         """
         Soft-delete a user by marking them as deleted.
         """
-        try:
-            user = CustomUser.objects.get(id=id, is_deleted=False)
-        except CustomUser.DoesNotExist:
-            return Response({"detail": "User not found"}, status=404)
+        user = request.user
         user.is_deleted = True
         user.save()
-        return Response({"msg": f"User {id} marked as deleted"})
-
+        return Response({"msg": "Your account has been marked as deleted"})
 
 # Extra views for user password and photo update
 

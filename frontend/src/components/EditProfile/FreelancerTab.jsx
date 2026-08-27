@@ -246,7 +246,6 @@ useEffect(() => {
         qualities_list: formData.qualities.split(",").map(q => q.trim()).filter(Boolean)
       };
   
-      console.log("Submitting Payload:", payload); // Debugging
   
       await dispatch(updateFreelancerProfileAction(payload))
         .unwrap()

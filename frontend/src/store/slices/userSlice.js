@@ -1,3 +1,4 @@
+import { apiOrigin } from '../../api/client';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deleteUser, getAllUsers, getMyClientProfile, getMyFreelancerProfile, getMyProfile, updateClientProfile, updateFreelancerProfile, updateUserImage, updateUserProfile } from "../../api/user";
 import { getUserProfile } from "../../api/auth";
@@ -168,9 +169,7 @@ export const getAllUsersAction = createAsyncThunk(
     async (args, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            console.log("first")
             const response = await getAllUsers();
-            console.log(response.data)
             return response.data;
 
         } catch (error) {
@@ -191,7 +190,6 @@ export const getAllUsersAction = createAsyncThunk(
                 return response.data;
     
             } catch (error) {
-                console.log("dd",error)
                 const serializedError = {
                     status: error.response?.status,
                     data: error.response?.data,
@@ -237,7 +235,7 @@ const userSlice = createSlice(
             }).addCase(updateUserImageAction.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
-                const photoUrl = `http://127.0.0.1:8000${action.payload.photo}`;
+                const photoUrl = `${apiOrigin}${action.payload.photo}`;
                 if (state.user) state.user.photo = photoUrl;
                 if (state.profile) state.profile.photo = photoUrl; // <-- Add this line
             }).addCase(updateUserImageAction.rejected, (state, action) => {

@@ -7,12 +7,18 @@ import { loginUser, registerUser } from "../../api/auth";
 const saveTokenToLocalStorage = (access_token) => {
     localStorage.setItem('authToken', access_token);
 };
+const saveRefreshTokenToLocalStorage = (refresh_token) => {
+    localStorage.setItem('refreshToken', refresh_token);
+};
 const saveUserToLocalStorage = (user) => {
     localStorage.setItem('user', JSON.stringify(user));
 };
 
 const removeTokenFromLocalStorage = () => {
     localStorage.removeItem('authToken');
+};
+const removeRefreshTokenFromLocalStorage = () => {
+    localStorage.removeItem('refreshToken');
 };
 const removeUserFromLocalStorage = () => {
     localStorage.removeItem('user');
@@ -78,6 +84,7 @@ const authSlice = createSlice(
                 state.token = null;
                 state.isLoggedIn = false;
                 removeTokenFromLocalStorage();
+                removeRefreshTokenFromLocalStorage();
                 removeUserFromLocalStorage();
             },
         },
@@ -93,6 +100,7 @@ const authSlice = createSlice(
                 state.user = action.payload.user;
                 state.isLoggedIn = true;
                 saveTokenToLocalStorage(action.payload.access_token);
+                saveRefreshTokenToLocalStorage(action.payload.refresh_token);
                 saveUserToLocalStorage(action.payload.user);
             });
             builder.addCase(loginAction.rejected, (state, action) => {

@@ -25,7 +25,6 @@ export const getProposalsByProjectAction = createAsyncThunk(
   async (projectId, { rejectWithValue }) => {
     try {
       const response = await getProposalsByProject(projectId);
-      console.log("herer",response.data)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -48,7 +47,6 @@ export const getMyProposalsAction = createAsyncThunk(
     'proposal/approveProposal',
     async (proposalId, { rejectWithValue }) => {
       try {
-        console.log(proposalId)
         const response = await approveProposal(proposalId);
         return response.data;
       } catch (error) {

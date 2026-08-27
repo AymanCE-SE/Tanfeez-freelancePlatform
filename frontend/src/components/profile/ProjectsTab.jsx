@@ -13,7 +13,7 @@ const ProjectsTab = ({isMyProfile }) => {
   const {myProjectList} = useSelector((myStore)  => myStore.projectSlice);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getMyProjectsAction()).then((data) => console.log(data));
+    dispatch(getMyProjectsAction());
   },[])
   const projects = myProjectList;
   const hasProjects = projects.length > 0;

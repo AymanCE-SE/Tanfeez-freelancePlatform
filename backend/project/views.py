@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework import generics, status,permissions
@@ -13,6 +15,8 @@ from project.serializers import (
 from .models import Project
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
+logger = logging.getLogger(__name__)
+
 
 class ProjectCreateView(generics.CreateAPIView):
     queryset = Project.objects.all()
@@ -22,8 +26,7 @@ class ProjectCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            # Print or log errors for debugging
-            print("Project creation errors:", serializer.errors)
+            logger.warning("Project creation validation failed: %s", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         user = self.request.user
         serializer.save(clientId=user)
@@ -71,6 +74,8 @@ class ProjectUpdateView(generics.UpdateAPIView):
 
     # Optional: customize update behavior by overriding perform_update()
     def perform_update(self, serializer):
+        if serializer.instance.clientId != self.request.user:
+            raise PermissionDenied("You are not the owner of this project.")
         serializer.save()
 
 
@@ -78,8 +83,11 @@ class ProjectUpdateView(generics.UpdateAPIView):
 class ProjectDeleteView(generics.DestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_destroy(self, instance):
+        if instance.clientId != self.request.user:
+            raise PermissionDenied("You are not the owner of this project.")
         instance.progress = Progress.CANCELLED
         instance.save()
 

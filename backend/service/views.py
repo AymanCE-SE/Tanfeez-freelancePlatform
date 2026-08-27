@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import render
 from rest_framework.exceptions import NotFound, ValidationError
 
@@ -14,6 +16,8 @@ from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
+logger = logging.getLogger(__name__)
+
 
 # Create Service
 class CreateServiceView(generics.CreateAPIView):
@@ -23,7 +27,7 @@ class CreateServiceView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        print(user.user_type)
+        logger.debug("Service creation requested by user %s", user.pk)
         if user.user_type != "freelancer" or not hasattr(user, "freelancer_profile"):
             raise PermissionDenied("Only freelancers can create a service.")
         serializer.save(freelancerId=user)

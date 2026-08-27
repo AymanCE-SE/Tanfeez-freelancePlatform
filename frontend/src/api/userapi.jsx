@@ -1,11 +1,9 @@
-import axios from "axios";
+import apiClient from "./client";
 
-const baseURL = "http://127.0.0.1:8000/api/user/";
-
-const getAllUsers = () => axios.get(baseURL);
-const getUserById = (userId) => axios.get(`${baseURL}${userId}`);
-const addNewUser = (user) => axios.post(`${baseURL}`, user);
-const editUser = (userId, user) => axios.put(`${baseURL}/${userId}`, user);
-const deleteUser = (userId) => axios.delete(`${baseURL}/${userId}`);
+const getAllUsers = () => apiClient.get("user/");
+const getUserById = (userId) => apiClient.get(`user/${userId}`);
+const addNewUser = (user) => apiClient.post("user/", user);
+const editUser = (userId, user) => apiClient.put(`user/${userId}`, user);
+const deleteUser = (userId) => apiClient.delete(`user/${userId}`);
 
 export { getAllUsers, getUserById, addNewUser, editUser, deleteUser };

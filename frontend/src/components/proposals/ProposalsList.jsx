@@ -3,7 +3,6 @@ import { Card, Badge, Button } from 'react-bootstrap';
 import { formatDistanceToNow } from 'date-fns';
 
 const ProposalsList = ({ proposals, onApprove, isClientView , projectStatus}) => {
-    console.log(projectStatus)
 
     return (
         <div className="proposals-section mt-4">

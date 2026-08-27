@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Container, Row, Col, Form, Button, Card, Spinner, Alert, InputGroup, Navbar } from 'react-bootstrap';
-
-// Configuration
-const API_BASE_URL = 'http://127.0.0.1:8000/api'; // Adjust if your Django API is hosted elsewhere
-const AUTH_TOKEN = localStorage.getItem('authToken'); // Replace with actual token or token retrieval logic
+import apiClient from '../api/client';
 
 // Bubble colors
 const BUBBLE_COLORS = {
@@ -169,24 +166,10 @@ export const ChatbotInterface = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/chat/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AUTH_TOKEN}`, // Example for JWT
-        },
-        body: JSON.stringify({
+      const { data } = await apiClient.post('chat/', {
           prompt: userMessage.content,
           conversation_id: conversationId,
-        }),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: 'Network response was not ok.' }));
-        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
 
       if (data.model_response) {
         setMessages(prevMessages => [data.model_response, ...prevMessages]); // Reverse the order
@@ -202,7 +185,6 @@ export const ChatbotInterface = () => {
         setConversationId(data.conversation_id);
       }
       if (data.new_conversation_created) {
-        console.log("New conversation started, ID:", data.conversation_id);
       }
 
     } catch (err) {
@@ -219,7 +201,6 @@ export const ChatbotInterface = () => {
     setConversationId(null);
     setError(null);
     setInputValue('');
-    console.log("Started a new conversation.");
   };
 
   // Function to render the send button with icon

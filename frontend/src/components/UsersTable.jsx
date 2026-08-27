@@ -31,7 +31,6 @@ const UsersTable = () => {
     if (!users) {
 
       dispatch(getAllUsersAction()).unwrap()
-      console.log(users)
     }
 
 
@@ -117,7 +116,6 @@ const UsersTable = () => {
 
     setShowModal(false);
   };
-  console.log(users)
   return (
 
     <div className="orders-container p-3">
