@@ -32,12 +32,14 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="")
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "channels",
     ###
     "rest_framework",
     "corsheaders",
@@ -51,7 +53,6 @@ INSTALLED_APPS = [
     "service_proposal",
     "project_proposal",
     "admin_dashboard",
-    "channels",
     "chatroom",
     "chatbot",
 
@@ -189,7 +190,7 @@ SIMPLE_JWT = {
 }
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-ASGI_APPLICATION = "your_project_name.asgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {

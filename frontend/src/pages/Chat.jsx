@@ -1,184 +1,110 @@
 /** @format */
-
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  ListGroup,
-  Badge,
-  InputGroup,
+  Container, Row, Col, Card, Form, Button, ListGroup, Badge, InputGroup,
 } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Search,
-  ChatDots,
-  Send,
-  Paperclip,
-  EmojiSmile,
-  Clock,
-  CheckCircleFill,
-  ThreeDots,
-} from "react-bootstrap-icons";
-import { mockChatData } from "../mock/chatData";
+import { useSelector } from "react-redux";
+import { Search, ChatDots, Send, Paperclip } from "react-bootstrap-icons";
 import "../styles/components/Chat.css";
 import DateDivider from "../components/chat/DateDivider";
 import Message from "../components/chat/Message";
 import ChatHeader from "../components/chat/ChatHeader";
 import EmojiPickerButton from "../components/chat/EmojiPickerButton";
+import { getChatRooms, getMessages } from "../api/chatroom";
+import { useChatSocket } from "../hooks/useChatSocket";
+
+// بتحول شكل الرسالة القادمة من الـ REST (history) لنفس شكل الرسالة القادمة من الـ WebSocket (live)
+// عشان الـ <Message /> component ياخدهم بنفس الطريقة من غير ما يعرف الفرق
+const normalizeRestMessage = (m) => ({
+  id: m.id,
+  content: m.text,
+  senderId: m.sender,
+  timestamp: m.timestamp,
+});
+const normalizeLiveMessage = (m) => ({
+  id: `${m.sender_id}-${m.timestamp}`, // مفيش id حقيقي من الـ socket، بنعمل واحد فريد
+  content: m.message,
+  senderId: m.sender_id,
+  timestamp: m.timestamp,
+});
 
 const Chat = () => {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
-
-  // Local state instead of Redux
-  const [currentUser] = useState(mockChatData.currentUser);
+  const currentUser = useSelector((state) => state.authSlice.user);
   const [conversations, setConversations] = useState([]);
-  const [currentConversation, setCurrentConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [historyMessages, setHistoryMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messageText, setMessageText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fix 1: Only load conversations once on mount
-  useEffect(() => {
-    setConversations(mockChatData.conversations);
-    setLoading(false);
-  }, []); // Empty dependency array
+  const currentConversation = useMemo(
+    () => conversations.find((c) => c.id.toString() === conversationId),
+    [conversations, conversationId]
+  );
 
-  // Fix 2: Modify the conversation effect to prevent infinite loops
-  useEffect(() => {
-    if (!conversationId || !conversations.length) return;
+  // الـ hook بيفتح اتصال جديد أوتوماتيك كل ما conversationId يتغير
+  const { liveMessages, sendMessage, status } = useChatSocket(conversationId);
 
-    const conversation = conversations.find(
-      (c) => c.id.toString() === conversationId
+  // 1. هات ليست الأوض مرة واحدة لما الصفحة تفتح
+  useEffect(() => {
+    getChatRooms()
+      .then((rooms) => {
+        setConversations(rooms);
+        if (!conversationId && rooms.length > 0) {
+          navigate(`/chat/${rooms[0].id}`, { replace: true });
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 2. هات الـ history بتاع الأوضة دي بس لما تتفتح
+  useEffect(() => {
+    if (!conversationId) return;
+    getMessages(conversationId).then((msgs) =>
+      setHistoryMessages(msgs.map(normalizeRestMessage))
     );
+  }, [conversationId]);
 
-    if (conversation) {
-      setCurrentConversation(conversation);
-      // Only set messages if they've changed
-      const conversationMessages = mockChatData.messages[conversationId] || [];
-      setMessages(conversationMessages);
+  // 3. ادمج الـ history + الرسايل اللايف الجديدة في ليست واحدة للعرض
+  const messages = useMemo(
+    () => [...historyMessages, ...liveMessages.map(normalizeLiveMessage)],
+    [historyMessages, liveMessages]
+  );
 
-      // Update unread count only if needed
-      if (conversation.unreadCount > 0) {
-        setConversations((prev) =>
-          prev.map((conv) =>
-            conv.id.toString() === conversationId
-              ? { ...conv, unreadCount: 0 }
-              : conv
-          )
-        );
-      }
-    } else if (conversations.length > 0) {
-      // Navigate only if no conversation is selected
-      navigate(`/chat/${conversations[0].id}`);
-    }
-  }, [conversationId, conversations.length]); // Reduced dependencies
-
-  // Update the scroll effect
   useEffect(() => {
-    if (messages.length && currentConversation) {
-      // Only scroll if new message is added
-      const lastMessage = messages[messages.length - 1];
-      const isNewMessage = lastMessage.senderId === currentUser.id;
-
-      if (isNewMessage) {
-        scrollToBottom();
-      }
-    }
-  }, [messages.length, currentConversation]);
-
-  // Update the scroll function to be smoother
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages.length]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!messageText.trim()) return;
+    sendMessage(messageText); // بس كده — مفيش setState يدوي للرسالة الجديدة،
+    setMessageText("");        // هتيجي أوتوماتيك من onmessage بتاع الـ hook زي أي حد تاني
+  };
 
-    const newMessage = {
-      id: Date.now(),
-      conversationId: currentConversation.id,
-      senderId: currentUser.id,
-      content: messageText,
-      timestamp: new Date().toISOString(),
-      read: true,
+  const formatTime = (timestamp) =>
+    new Date(timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  const getParticipantInfo = (conversation) => {
+    if (!conversation) return { id: null, name: "Unknown", avatar: "", isOnline: false };
+    const isMeClient = currentUser?.id === conversation.client;
+    const other = isMeClient ? conversation.freelancer_detail : conversation.client_detail;
+    const name = other?.name || "Unknown";
+    return {
+      id: other?.id,
+      name,
+      avatar: other?.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+      isOnline: false,
     };
-
-    setMessages((prev) => [...prev, newMessage]);
-    setMessageText("");
-
-    // Update last message in conversations list
-    setConversations((prev) =>
-      prev.map((conv) =>
-        conv.id === currentConversation.id
-          ? {
-              ...conv,
-              lastMessage: messageText,
-              lastMessageTime: new Date().toISOString(),
-            }
-          : conv
-      )
-    );
   };
 
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString([], {
-      weekday: "long",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  // Filter conversations based on search term
-  const filteredConversations = conversations.filter((conversation) => {
-    // In a real app, you would filter based on the other participant's name
-    // For now, we'll just return all conversations since we don't have that data
-    return true;
+  const filteredConversations = conversations.filter((c) => {
+    const p = getParticipantInfo(c);
+    return p.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
-
-  // Get other participant's info
-  const getParticipantInfo = React.useCallback((conversation) => {
-    if (!conversation) return null;
-
-    return (
-      conversation.participantInfo || {
-        id: null,
-        name: "Unknown",
-        avatar: "innovative-methods.jpg",
-        isOnline: false,
-      }
-    );
-  }, []);
-
-  const handleMessageChange = (e) => {
-    setMessageText(e.target.value);
-  };
-
-  const handleSelectConversation = (id) => {
-    navigate(`/chat/${id}`);
-  };
-
-  const handleEmojiClick = (emoji) => {
-    setMessageText((prev) => prev + emoji);
-  };
 
   return (
     <div className="chat-page">
@@ -186,7 +112,6 @@ const Chat = () => {
         <Card className="chat-wrapper border-0">
           <Card.Body className="p-0">
             <Row className="g-0 h-100">
-              {/* Conversations Column */}
               <Col md={4} className="border-end conversations-column">
                 <div className="chat-header">
                   <h5 className="mb-3 fw-bold text-primary">Messages</h5>
@@ -202,69 +127,34 @@ const Chat = () => {
                     />
                   </InputGroup>
                 </div>
-
                 <div className="conversations-list">
-                  {loading && conversations.length === 0 ? (
+                  {loading ? (
                     <div className="text-center py-5">
-                      <div
-                        className="spinner-border text-primary"
-                        role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
+                      <div className="spinner-border text-primary" role="status" />
                     </div>
                   ) : filteredConversations.length > 0 ? (
                     <ListGroup variant="flush">
                       {filteredConversations.map((conversation) => {
                         const participant = getParticipantInfo(conversation);
-                        const isActive =
-                          currentConversation?.id === conversation.id;
-
+                        const isActive = currentConversation?.id === conversation.id;
+                        const lastMsg = conversation.messages?.[conversation.messages.length - 1];
                         return (
                           <ListGroup.Item
                             key={conversation.id}
                             action
                             active={isActive}
-                            onClick={() =>
-                              handleSelectConversation(conversation.id)
-                            }
-                            className={`conversation-item px-3 py-3 border-bottom ${
-                              isActive ? "bg-primary bg-opacity-10" : ""
-                            }`}>
+                            onClick={() => navigate(`/chat/${conversation.id}`)}
+                            className={`conversation-item px-3 py-3 border-bottom ${isActive ? "bg-primary bg-opacity-10" : ""}`}>
                             <div className="d-flex align-items-center">
-                              <div className="position-relative me-3">
-                                <img
-                                  src={participant.avatar}
-                                  alt={participant.name}
-                                  className="rounded-circle"
-                                  width="48"
-                                  height="48"
-                                  style={{ objectFit: "cover" }}
-                                />
-                                {participant.isOnline && (
-                                  <span className="position-absolute bottom-0 end-0 bg-success rounded-circle p-1 border border-white"></span>
-                                )}
-                              </div>
+                              <img src={participant.avatar} alt={participant.name}
+                                className="rounded-circle me-3" width="48" height="48"
+                                style={{ objectFit: "cover" }} />
                               <div className="flex-grow-1 min-width-0">
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <h6 className="mb-0 text-truncate fw-bold">
-                                    {participant.name}
-                                  </h6>
-                                  <small
-                                    className={`text-${
-                                      isActive ? "primary" : "muted"
-                                    }`}>
-                                    {formatTime(conversation.lastMessageTime)}
-                                  </small>
-                                </div>
+                                <h6 className="mb-0 text-truncate fw-bold">{participant.name}</h6>
                                 <p className="mb-0 text-truncate small last-message">
-                                  {conversation.lastMessage}
+                                  {lastMsg?.text || "No messages yet"}
                                 </p>
                               </div>
-                              {conversation.unreadCount > 0 && (
-                                <Badge bg="primary" pill className="ms-2">
-                                  {conversation.unreadCount}
-                                </Badge>
-                              )}
                             </div>
                           </ListGroup.Item>
                         );
@@ -279,58 +169,26 @@ const Chat = () => {
                 </div>
               </Col>
 
-              {/* Messages Column */}
               <Col md={8} className="messages-column">
                 {currentConversation ? (
                   <>
-                    <ChatHeader
-                      participant={getParticipantInfo(currentConversation)}
-                    />
+                    <ChatHeader participant={getParticipantInfo(currentConversation)} />
                     <div className="chat-messages">
-                      <div
-                        className="messages-container p-3"
-                        style={{
-                          height: "calc(100vh - 240px)",
-                          overflowY: "auto",
-                          overflowX: "hidden",
-                        }}>
-                        {loading ? (
-                          <div className="text-center py-5">
-                            <div
-                              className="spinner-border text-primary"
-                              role="status">
-                              <span className="visually-hidden">
-                                Loading...
-                              </span>
-                            </div>
-                          </div>
-                        ) : messages.length > 0 ? (
+                      <div className="messages-container p-3"
+                        style={{ height: "calc(100vh - 240px)", overflowY: "auto" }}>
+                        {messages.length > 0 ? (
                           <div>
                             {messages.map((message, index) => {
-                              const isSender =
-                                message.senderId === currentUser.id;
-                              const showDate =
-                                index === 0 ||
+                              const isSender = message.senderId === currentUser?.id;
+                              const showDate = index === 0 ||
                                 new Date(message.timestamp).toDateString() !==
-                                  new Date(
-                                    messages[index - 1].timestamp
-                                  ).toDateString();
-
+                                  new Date(messages[index - 1].timestamp).toDateString();
                               return (
-                                <div key={message.id || message.tempId}>
-                                  {showDate && (
-                                    <DateDivider
-                                      timestamp={message.timestamp}
-                                    />
-                                  )}
-                                  <Message
-                                    message={message}
-                                    isSender={isSender}
-                                    participant={getParticipantInfo(
-                                      currentConversation
-                                    )}
-                                    formatTime={formatTime}
-                                  />
+                                <div key={message.id}>
+                                  {showDate && <DateDivider timestamp={message.timestamp} />}
+                                  <Message message={message} isSender={isSender}
+                                    participant={getParticipantInfo(currentConversation)}
+                                    formatTime={formatTime} />
                                 </div>
                               );
                             })}
@@ -339,9 +197,7 @@ const Chat = () => {
                         ) : (
                           <div className="text-center py-5">
                             <ChatDots size={48} className="text-muted mb-3" />
-                            <p className="mb-0">
-                              No messages yet. Start the conversation!
-                            </p>
+                            <p className="mb-0">No messages yet. Start the conversation!</p>
                           </div>
                         )}
                       </div>
@@ -350,23 +206,13 @@ const Chat = () => {
                       <div className="p-3 border-top">
                         <Form onSubmit={handleSendMessage}>
                           <InputGroup>
-                            <Button variant="light" className="action-button">
-                              <Paperclip />
-                            </Button>
-                            <Form.Control
-                              type="text"
-                              placeholder="Type a message..."
-                              value={messageText}
-                              onChange={handleMessageChange}
-                            />
-                            <EmojiPickerButton
-                              onEmojiClick={handleEmojiClick}
-                            />
-                            <Button
-                              variant="success"
-                              type="submit"
-                              className="action-button ms-1"
-                              disabled={!messageText.trim()}>
+                            <Button variant="light" className="action-button"><Paperclip /></Button>
+                            <Form.Control type="text" placeholder="Type a message..."
+                              value={messageText} onChange={(e) => setMessageText(e.target.value)}
+                              disabled={status !== "open"} />
+                            <EmojiPickerButton onEmojiClick={(e) => setMessageText((p) => p + e)} />
+                            <Button variant="success" type="submit" className="action-button ms-1"
+                              disabled={!messageText.trim() || status !== "open"}>
                               <Send size={20} className="text-white" />
                             </Button>
                           </InputGroup>
@@ -378,9 +224,6 @@ const Chat = () => {
                   <div className="empty-state">
                     <ChatDots size={64} className="text-muted mb-3" />
                     <h5>Select a conversation</h5>
-                    <p className="text-muted">
-                      Choose a conversation from the list to start chatting
-                    </p>
                   </div>
                 )}
               </Col>
