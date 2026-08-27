@@ -155,5 +155,6 @@ class ProjectsByUserIdView(generics.ListAPIView):
                 {"detail": "Client has no projects yet."}, status=status.HTTP_200_OK
             )
 
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

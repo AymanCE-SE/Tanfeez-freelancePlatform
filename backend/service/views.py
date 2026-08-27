@@ -117,11 +117,12 @@ class ServiceDeleteView(APIView):
 
 
 #  List Services by Tags
-class ServiceByTagView(APIView):
+class ServiceByTagView(generics.ListAPIView):
+    serializer_class = ServiceRetriveDeleteSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        tag = request.query_params.get("tag")
+    def get_queryset(self):
+        tag = self.request.query_params.get("tag")
 
         if not tag:
             raise ValidationError("Query parameter 'tag' is required.")
@@ -130,9 +131,7 @@ class ServiceByTagView(APIView):
         tag = tag.lower()
 
         # Filter services where tag is in the tags array
-        services = Service.objects.filter(tags__icontains=f"{tag}")
-        serializer = ServiceRetriveDeleteSerializer(services, many=True)
-        return Response(serializer.data)
+        return Service.objects.filter(tags__icontains=tag, is_deleted=False)
 
 
 #  List Services by Logged-in User
