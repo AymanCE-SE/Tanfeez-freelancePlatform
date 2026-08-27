@@ -41,7 +41,11 @@ class ProjectListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.exclude(progress=Progress.CANCELLED)
+        return (
+            Project.objects.select_related("clientId")
+            .prefetch_related("skills")
+            .exclude(progress=Progress.CANCELLED)
+        )
 
 # latest projects 
 # In your Django view
@@ -50,11 +54,16 @@ class LatestProjectsView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Project.objects.filter(is_deleted=False).order_by('-created_at')[:5]
+        return (
+            Project.objects.select_related("clientId")
+            .prefetch_related("skills")
+            .filter(is_deleted=False)
+            .order_by("-created_at")[:5]
+        )
 
 # Retrieve (get one)
 class ProjectRetrieveView(generics.RetrieveAPIView):
-    queryset = Project.objects.select_related("clientId")
+    queryset = Project.objects.select_related("clientId").prefetch_related("skills")
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
@@ -108,8 +117,11 @@ class ProjectsByCurrentClientView(generics.ListAPIView):
         if not hasattr(user, "client_profile"):
             raise NotFound("Client profile not found for this user.")
 
-        return Project.objects.filter(clientId=user).exclude(
-            progress=Progress.CANCELLED
+        return (
+            Project.objects.select_related("clientId")
+            .prefetch_related("skills")
+            .filter(clientId=user)
+            .exclude(progress=Progress.CANCELLED)
         )
 
 
@@ -128,8 +140,11 @@ class ProjectsByUserIdView(generics.ListAPIView):
         if user.user_type != "client":
             raise NotFound("This user is not a client.")
 
-        return Project.objects.filter(clientId=user).exclude(
-            progress=Progress.CANCELLED
+        return (
+            Project.objects.select_related("clientId")
+            .prefetch_related("skills")
+            .filter(clientId=user)
+            .exclude(progress=Progress.CANCELLED)
         )
 
     def list(self, request, *args, **kwargs):
