@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col, Badge, Alert } from "react-bootstrap";
 import { FiTag, FiYoutube } from "react-icons/fi";
 import { formatDistanceToNow } from "date-fns";
-// import { servicesData } from "../mock/servicesData";
 import ImageGallery from "../components/serviceDetails/ImageGallery";
 import ServiceDetails from "../components/serviceDetails/ServiceDetails";
 import SellerInfo from "../components/serviceDetails/SellerInfo";

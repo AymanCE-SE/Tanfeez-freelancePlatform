@@ -4,7 +4,7 @@ import React, { useState, useEffect, use } from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ServiceCard from "../components/cards/ServiceCard";
-import { servicesData, categories } from "../mock/servicesData";
+import { categories } from "../mock/servicesData";
 import "../styles/ServicesPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { myStore } from "../store";

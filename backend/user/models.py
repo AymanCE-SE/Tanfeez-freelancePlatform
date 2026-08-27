@@ -51,7 +51,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Profile information
     user_name = models.CharField(max_length=255, unique=True)
     photo = models.ImageField(upload_to="profile_photos/", blank=True, null=True)  # Allow null for profile photos
-    birth_date = models.DateField(null=False, blank=True, default="2000-01-01")
+    birth_date = models.DateField(null=True, blank=True)
     phone = models.CharField(max_length=14, null=False, blank=True)
     bio = models.TextField(null=False, blank=True)
     address = models.TextField(null=False, blank=True)

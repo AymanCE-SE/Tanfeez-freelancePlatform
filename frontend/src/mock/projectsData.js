@@ -85,32 +85,3 @@ export const mockProjects = [
   },
 ];
 
-export const projectCategories = [
-  "Web Development",
-  "Mobile Development",
-  "Design",
-  "Backend Development",
-  "Frontend Development",
-  "CMS Development",
-  "DevOps",
-  "Database Design",
-  "Quality Assurance",
-];
-
-export const projectLevels = [
-  { value: "Beginner", label: "Entry Level" },
-  { value: "Intermediate", label: "Intermediate" },
-  { value: "Expert", label: "Expert" },
-];
-
-export const projectTypes = [
-  { value: "Fixed Price", label: "Fixed Price" },
-  { value: "Hourly", label: "Hourly Rate" },
-];
-
-export const projectStatus = [
-  { value: "open", label: "Open" },
-  { value: "in-progress", label: "In Progress" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
-];

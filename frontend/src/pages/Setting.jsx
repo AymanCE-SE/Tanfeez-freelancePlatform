@@ -14,7 +14,6 @@ import {
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { updatePassword } from "../api/auth";
-// import { mockUserSettings } from "../mock/settingsData";
 import "../styles/components/Settings.css";
 
 const Settings = () => {

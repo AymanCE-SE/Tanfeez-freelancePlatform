@@ -98,20 +98,12 @@ const UsersTable = () => {
       );
       MySwal.fire("Updated!", "User has been updated.", "success");
 
-      // Uncomment for real API
-      /*
-      await axios.put(`http://localhost:3000/users/${formData.id}`, formData);
-      */
     } else {
       // Add new
       const newUser = { ...formData, id: Date.now() };
       setData((prev) => [...prev, newUser]);
       MySwal.fire("Added!", "New user has been added.", "success");
 
-      // Uncomment for real API
-      /*
-      await axios.post("http://localhost:3000/users", newUser);
-      */
     }
 
     setShowModal(false);

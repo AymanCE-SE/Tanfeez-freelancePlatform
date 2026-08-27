@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from .models import ChatRoom, Message
 from .serializers import ChatRoomSerializer, MessageSerializer
+from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 
 
@@ -21,7 +22,7 @@ class MessageListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         chatroom_id = self.kwargs["chatroom_id"]
-        chatroom = ChatRoom.objects.get(id=chatroom_id)
+        chatroom = get_object_or_404(ChatRoom, id=chatroom_id)
 
         # Check if the user belongs to the chat
         if self.request.user not in [chatroom.client, chatroom.freelancer]:
@@ -30,7 +31,7 @@ class MessageListCreateView(generics.ListCreateAPIView):
         return Message.objects.filter(chatroom=chatroom)
 
     def perform_create(self, serializer):
-        chatroom = ChatRoom.objects.get(id=self.kwargs["chatroom_id"])
+        chatroom = get_object_or_404(ChatRoom, id=self.kwargs["chatroom_id"])
 
         if self.request.user not in [chatroom.client, chatroom.freelancer]:
             raise PermissionDenied("You're not part of this chat.")

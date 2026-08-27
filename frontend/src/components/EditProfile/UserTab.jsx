@@ -22,6 +22,7 @@ const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
             delete filteredData.client_profile;
             delete filteredData.photo;
             delete filteredData.id; // Exclude id
+            filteredData.birth_date = filteredData.birth_date || null;
 
             await dispatch(updateUserProfileAction(filteredData))
                 .unwrap()
