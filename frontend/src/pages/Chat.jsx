@@ -21,12 +21,14 @@ const normalizeRestMessage = (m) => ({
   content: m.text,
   senderId: m.sender,
   timestamp: m.timestamp,
+  isRead: m.is_read,
 });
 const normalizeLiveMessage = (m) => ({
-  id: `${m.sender_id}-${m.timestamp}`, // مفيش id حقيقي من الـ socket، بنعمل واحد فريد
+  id: m.id, // now the real DB id, sent from the consumer
   content: m.message,
   senderId: m.sender_id,
   timestamp: m.timestamp,
+  isRead: false, // just arrived, can't be read yet
 });
 
 const Chat = () => {
@@ -46,19 +48,17 @@ const Chat = () => {
   );
 
   // الـ hook بيفتح اتصال جديد أوتوماتيك كل ما conversationId يتغير
-  const { liveMessages, sendMessage, status } = useChatSocket(conversationId);
-
+  // const { liveMessages, sendMessage, status } = useChatSocket(conversationId);
+  const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } = useChatSocket(conversationId, currentUser?.id);
   // 1. هات ليست الأوض مرة واحدة لما الصفحة تفتح
-  useEffect(() => {
-    getChatRooms()
-      .then((rooms) => {
-        setConversations(rooms);
-        if (!conversationId && rooms.length > 0) {
-          navigate(`/chat/${rooms[0].id}`, { replace: true });
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+ useEffect(() => {
+  getChatRooms()
+    .then((rooms) => {
+      setConversations(rooms);
+      // removed: no longer auto-navigating to the first room
+    })
+    .finally(() => setLoading(false));
+}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 2. هات الـ history بتاع الأوضة دي بس لما تتفتح
   useEffect(() => {
@@ -69,11 +69,19 @@ const Chat = () => {
   }, [conversationId]);
 
   // 3. ادمج الـ history + الرسايل اللايف الجديدة في ليست واحدة للعرض
-  const messages = useMemo(
-    () => [...historyMessages, ...liveMessages.map(normalizeLiveMessage)],
-    [historyMessages, liveMessages]
-  );
-
+const messages = useMemo(() => {
+  const combined = [...historyMessages, ...liveMessages.map(normalizeLiveMessage)];
+  return combined.map((m) => ({
+    ...m,
+    isRead: m.isRead || readMessageIds.has(m.id),
+  }));
+}, [historyMessages, liveMessages, readMessageIds]);
+  // 4. mark as read every time we open a conversation or receive new messages in it
+  useEffect(() => {
+    if (conversationId && status === "open") {
+      markAsRead();
+    }
+  }, [conversationId, status, liveMessages.length]);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length]);
@@ -172,7 +180,7 @@ const Chat = () => {
               <Col md={8} className="messages-column">
                 {currentConversation ? (
                   <>
-                    <ChatHeader participant={getParticipantInfo(currentConversation)} />
+                    <ChatHeader participant={getParticipantInfo(currentConversation)} presence={presence}/>
                     <div className="chat-messages">
                       <div className="messages-container p-3"
                         style={{ height: "calc(100vh - 240px)", overflowY: "auto" }}>

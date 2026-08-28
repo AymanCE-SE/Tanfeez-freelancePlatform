@@ -8,7 +8,7 @@ class ChatParticipantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "name", "photo"]
+        fields = ["id", "name", "photo", "last_seen"]
 
     def get_name(self, obj):
         return " ".join(filter(None, [obj.first_name, obj.second_name]))

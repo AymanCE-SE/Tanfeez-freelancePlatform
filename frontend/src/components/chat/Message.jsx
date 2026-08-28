@@ -28,11 +28,11 @@ const Message = ({ message, isSender, participant, formatTime }) => (
         <small className="text-muted me-2">
           {formatTime(message.timestamp)}
         </small>
-        {isSender && (
-          <small className="text-primary">
-            <CheckCircleFill size={12} />
-          </small>
-        )}
+          {isSender && (
+            <small className={message.isRead ? "text-primary" : "text-muted"}>
+              <CheckCircleFill size={12} />
+            </small>
+          )}
       </div>
     </div>
   </div>

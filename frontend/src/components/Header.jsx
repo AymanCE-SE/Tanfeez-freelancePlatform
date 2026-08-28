@@ -157,12 +157,12 @@ export const Header = () => {
     },
     {
       icon: <FaInfoCircle />,
-      text: "About Us",
+      text: "About",
       path: "/about"
     },
     {
       icon: <FaRobot />,
-      text: "Chat With 🤖",
+      text: "Chat bot",
       path: "/chatBot"
     },
     ...(isLoggedIn ? [
@@ -288,15 +288,15 @@ export const Header = () => {
               className={({ isActive }) =>
                 `nav-link nav-link-custom ${isActive ? "active" : ""}`
               }>
-              About Us
+              About
             </NavLink>
             <NavLink
               to="/chatBot/"
               className={({ isActive }) =>
                 `nav-link nav-link-custom me-4  ai  ${isActive ? "active" : ""}`
               }>
-              Chat With
-              <span className="robot-icon"> 🤖</span>
+              ChatBot
+              {/* <span className="robot-icon"> 🤖</span> */}
             </NavLink>
           </Nav>
 

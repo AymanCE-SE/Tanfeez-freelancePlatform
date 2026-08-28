@@ -61,7 +61,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_deleted = models.BooleanField(default=False)
     is_registered = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-
+    last_seen = models.DateTimeField(null=True, blank=True)
     # Role tracking
     user_type = models.CharField(
         max_length=10,
