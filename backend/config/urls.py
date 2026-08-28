@@ -34,5 +34,6 @@ urlpatterns = [
     path("api/chatroom/", include("chatroom.urls")),
     path("api/client-ratings/", include("client_rating.urls")),  
     path("api/", include("chatbot.urls")),
+    path("api/notifications/", include("notification.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

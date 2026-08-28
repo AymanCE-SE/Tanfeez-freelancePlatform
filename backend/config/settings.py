@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "admin_dashboard",
     "chatroom",
     "chatbot",
+    "notification"
 
 ]
 
