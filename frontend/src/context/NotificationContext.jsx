@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNotificationSocket } from "../hooks/useNotificationSocket";
-import { getNotifications, markAllNotificationsRead } from "../api/notifications";
-
+import { getNotifications, markAllNotificationsRead, markNotificationRead } from "../api/notifications";
 const NotificationContext = createContext(null);
 
 export const NotificationProvider = ({ children }) => {
@@ -21,6 +20,10 @@ export const NotificationProvider = ({ children }) => {
   }, [currentUser?.id, loaded]);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
+const markOneRead = useCallback(async (id) => {
+  setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+  await markNotificationRead(id);
+}, [setNotifications]);
 
   const markAllRead = useCallback(async () => {
     await markAllNotificationsRead();
@@ -28,10 +31,11 @@ export const NotificationProvider = ({ children }) => {
   }, [setNotifications]);
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markAllRead, status }}>
-      {children}
+    <NotificationContext.Provider value={{ notifications, unreadCount, markAllRead, markOneRead, status }}>
+          {children}
     </NotificationContext.Provider>
   );
 };
+
 
 export const useNotifications = () => useContext(NotificationContext);

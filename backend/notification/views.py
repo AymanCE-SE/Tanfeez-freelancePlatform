@@ -22,3 +22,10 @@ class MarkNotificationsReadView(APIView):
     def post(self, request):
         Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
         return Response({"detail": "All notifications marked as read."})
+
+class MarkNotificationReadView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, notification_id):
+        Notification.objects.filter(id=notification_id, recipient=request.user).update(is_read=True)
+        return Response({"detail": "Notification marked as read."})

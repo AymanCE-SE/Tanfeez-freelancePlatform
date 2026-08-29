@@ -60,13 +60,14 @@ export const Header = () => {
   const { isLoggedIn } = useSelector((myStore) => myStore.authSlice);
   const { user } = useSelector((state) => state.userSlice);
   const { theme } = useSelector((state) => state.themeSlice);
-  const { notifications, unreadCount, markAllRead } = useNotifications();
+  const { notifications, unreadCount, markAllRead, markOneRead  } = useNotifications();
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
+  
   useEffect(() => {
     dispatch(getMyProfileAction());
   }, []);
@@ -121,6 +122,7 @@ export const Header = () => {
   const handleNotificationClick = (notification) => {
     const buildLink = NOTIFICATION_LINKS[notification.notification_type];
     toggleDropdown("notifications");
+    if (!notification.is_read) markOneRead(notification.id);
     if (buildLink && notification.target_id) {
       navigate(buildLink(notification.target_id));
     }
