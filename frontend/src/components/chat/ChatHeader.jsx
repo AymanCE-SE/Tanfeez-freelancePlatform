@@ -10,7 +10,7 @@ const formatLastSeen = (isoString) => {
   return `Last seen ${new Date(isoString).toLocaleString()}`;
 };
 
-const ChatHeader = ({ participant, presence }) => (
+const ChatHeader = ({ participant, presence, projectName }) => (
   <div className="chat-header">
     <div className="p-3 border-bottom d-flex justify-content-between align-items-center">
       <div className="d-flex align-items-center">
@@ -24,6 +24,9 @@ const ChatHeader = ({ participant, presence }) => (
         </div>
         <div>
           <h6 className="mb-0 chat-header-title">{participant.name}</h6>
+          {projectName && (
+            <small className="text-muted d-block">Re: {projectName}</small>
+          )}
           <small className={presence?.online ? "text-success" : "text-muted"}>
             {presence?.online ? "Online" : formatLastSeen(presence?.lastSeen)}
           </small>

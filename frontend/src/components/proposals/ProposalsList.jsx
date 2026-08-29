@@ -16,8 +16,7 @@ const ProposalsList = ({ proposals, onApprove, isClientView , projectStatus}) =>
                             <div key={proposal.id} className="proposal-item mb-4 pb-4 border-bottom">
                                 <div className="d-flex justify-content-between align-items-start mb-3">
                                     <div>
-                                        <h6 className="mb-1">{proposal.freelancer?.user?.first_name} {proposal.freelancer?.user?.last_name}</h6>
-                                        <small className="text-muted">
+                                <h6 className="mb-1">{proposal.freelancer_name}</h6>                                        <small className="text-muted">
                                             Submitted {formatDistanceToNow(new Date(proposal.created_at), { addSuffix: true })}
                                         </small>
                                     </div>
@@ -33,7 +32,7 @@ const ProposalsList = ({ proposals, onApprove, isClientView , projectStatus}) =>
                                     <Button
                                         variant="success"
                                         size="sm"
-                                        href={`/profile/${proposal.freelancer}`}
+                                    href={`/profile/${proposal.freelancer_user_id}`}
                                         target="_blank"
                                     >
                                         View Profile

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import ChatRoom, Message
 from user.models import CustomUser
-
+from project.models import Project
 
 class ChatParticipantSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
@@ -13,6 +13,10 @@ class ChatParticipantSerializer(serializers.ModelSerializer):
     def get_name(self, obj):
         return " ".join(filter(None, [obj.first_name, obj.second_name]))
 
+class ChatProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["id", "name"]
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +29,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
     client_detail = ChatParticipantSerializer(source="client", read_only=True)
     freelancer_detail = ChatParticipantSerializer(source="freelancer", read_only=True)
-
+    project_detail = ChatProjectSerializer(source="project", read_only=True) 
     class Meta:
         model = ChatRoom
         fields = "__all__"

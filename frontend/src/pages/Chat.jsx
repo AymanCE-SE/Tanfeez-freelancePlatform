@@ -160,7 +160,7 @@ const messages = useMemo(() => {
                               <div className="flex-grow-1 min-width-0">
                                 <h6 className="mb-0 text-truncate fw-bold">{participant.name}</h6>
                                 <p className="mb-0 text-truncate small last-message">
-                                  {lastMsg?.text || "No messages yet"}
+                                  {lastMsg?.text || conversation.project_detail?.name || "No messages yet"}
                                 </p>
                               </div>
                             </div>
@@ -180,8 +180,11 @@ const messages = useMemo(() => {
               <Col md={8} className="messages-column">
                 {currentConversation ? (
                   <>
-                    <ChatHeader participant={getParticipantInfo(currentConversation)} presence={presence}/>
-                    <div className="chat-messages">
+                  <ChatHeader
+                    participant={getParticipantInfo(currentConversation)}
+                    presence={presence}
+                    projectName={currentConversation?.project_detail?.name}
+                  />                    <div className="chat-messages">
                       <div className="messages-container p-3"
                         style={{ height: "calc(100vh - 240px)", overflowY: "auto" }}>
                         {messages.length > 0 ? (
