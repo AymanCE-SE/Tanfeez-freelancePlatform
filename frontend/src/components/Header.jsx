@@ -38,8 +38,6 @@ import { getMyProfileAction } from "../store/slices/userSlice";
 import { useNotifications } from "../context/NotificationContext";
 
 // Maps a notification's type to the page it should take you to when clicked.
-// Centralized here so adding a new notification type later means one new
-// line here, not hunting through JSX.
 const NOTIFICATION_LINKS = {
   new_proposal: (targetId) => `/project/${targetId}`,
   proposal_approved: (targetId) => `/project/${targetId}`,
@@ -85,11 +83,14 @@ export const Header = () => {
     profileMenu: useRef(null),
   };
 
+  // Refs on a plain div WE control inside each Popover — not on the
+  // Popover component itself, since Overlay needs that ref internally
+  // for positioning and doesn't reliably forward a ref we pass to it.
   const popoverRefs = {
-  expandMenu: useRef(null),
-  notifications: useRef(null),
-  profileMenu: useRef(null),
-};
+    expandMenu: useRef(null),
+    notifications: useRef(null),
+    profileMenu: useRef(null),
+  };
 
   const toggleDropdown = (dropdown) => {
     setDropdowns((prev) => {
@@ -102,20 +103,20 @@ export const Header = () => {
   };
 
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    Object.keys(dropdowns).forEach((key) => {
-      const trigger = refs[key]?.current;
-      const popover = popoverRefs[key]?.current;
-      const clickedInsideTrigger = trigger && trigger.contains(event.target);
-      const clickedInsidePopover = popover && popover.contains(event.target);
-      if (!clickedInsideTrigger && !clickedInsidePopover) {
-        setDropdowns((prev) => ({ ...prev, [key]: false }));
-      }
-    });
-  };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-});
+    const handleClickOutside = (event) => {
+      Object.keys(dropdowns).forEach((key) => {
+        const trigger = refs[key]?.current;
+        const popover = popoverRefs[key]?.current;
+        const clickedInsideTrigger = trigger && trigger.contains(event.target);
+        const clickedInsidePopover = popover && popover.contains(event.target);
+        if (!clickedInsideTrigger && !clickedInsidePopover) {
+          setDropdowns((prev) => ({ ...prev, [key]: false }));
+        }
+      });
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
 
   const handleNotificationClick = (notification) => {
     const buildLink = NOTIFICATION_LINKS[notification.notification_type];
@@ -146,9 +147,6 @@ export const Header = () => {
           { icon: <FaUser />, text: "My Profile", path: `/profile/${user?.id}` },
           { icon: <FaEnvelope />, text: "Messages", path: "/chat" },
           { icon: <FaCog />, text: "Settings", path: "/settings" },
-          // On mobile, the "Post Project / Add Service" button is hidden from
-          // the main bar (see renderActionButton), so it's mirrored here —
-          // otherwise mobile users would have no way to reach it at all.
           ...(user?.user_type === "freelancer"
             ? [{ icon: <FaTools />, text: "Add Service", path: "/0/service" }]
             : []),
@@ -262,35 +260,38 @@ export const Header = () => {
                       target={refs.notifications.current}
                       placement="bottom-end"
                       containerPadding={20}>
-                        <Popover id="notifications-popover" ref={popoverRefs.notifications} className="border-0 shadow-custom">                        <Popover.Header className="bg-light d-flex justify-content-between align-items-center popup-header">
-                          <span>Notifications</span>
-                          {unreadCount > 0 && (
-                            <Button variant="link" size="sm" className="p-0 text-muted mark-read-btn" onClick={markAllRead}>
-                              Mark all as read
-                            </Button>
-                          )}
-                        </Popover.Header>
-                        <Popover.Body className="p-0">
-                          {notifications.length > 0 ? (
-                            <div className="notification-list">
-                              {notifications.slice(0, 8).map((notification) => (
-                                <div
-                                  key={notification.id}
-                                  role="button"
-                                  onClick={() => handleNotificationClick(notification)}
-                                  className={`notification-item p-2 border-bottom ${!notification.is_read ? "bg-light" : ""}`}>
-                                  <div className="d-flex justify-content-between">
-                                    <span className="notification-content">{notification.message}</span>
-                                    {!notification.is_read && <span className="text-primary unread-indicator">•</span>}
+                      <Popover id="notifications-popover" className="border-0 shadow-custom">
+                        <div ref={popoverRefs.notifications}>
+                          <Popover.Header className="bg-light d-flex justify-content-between align-items-center popup-header">
+                            <span>Notifications</span>
+                            {unreadCount > 0 && (
+                              <Button variant="link" size="sm" className="p-0 text-muted mark-read-btn" onClick={markAllRead}>
+                                Mark all as read
+                              </Button>
+                            )}
+                          </Popover.Header>
+                          <Popover.Body className="p-0">
+                            {notifications.length > 0 ? (
+                              <div className="notification-list">
+                                {notifications.slice(0, 8).map((notification) => (
+                                  <div
+                                    key={notification.id}
+                                    role="button"
+                                    onClick={() => handleNotificationClick(notification)}
+                                    className={`notification-item p-2 border-bottom ${!notification.is_read ? "bg-light" : ""}`}>
+                                    <div className="d-flex justify-content-between">
+                                      <span className="notification-content">{notification.message}</span>
+                                      {!notification.is_read && <span className="text-primary unread-indicator">•</span>}
+                                    </div>
+                                    <small className="text-muted notification-time">{timeAgo(notification.created_at)}</small>
                                   </div>
-                                  <small className="text-muted notification-time">{timeAgo(notification.created_at)}</small>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="p-3 text-center">No notifications</div>
-                          )}
-                        </Popover.Body>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="p-3 text-center">No notifications</div>
+                            )}
+                          </Popover.Body>
+                        </div>
                       </Popover>
                     </Overlay>
                   </div>
@@ -317,29 +318,32 @@ export const Header = () => {
                       target={refs.profileMenu.current}
                       placement="bottom-end"
                       containerPadding={20}>
-                      <Popover id="profile-menu-popover" ref={popoverRefs.profileMenu} className="border-0 shadow-custom profile-menu-popover">                        <Popover.Body className="p-0">
-                          <Nav className="flex-column">
-                            {profileMenuOptions.map((option, idx) => (
-                              <Nav.Link
-                                key={idx}
-                                as={option.text === "Logout" ? "button" : Link}
-                                to={option.to}
-                                onClick={
-                                  option.text === "Logout"
-                                    ? (e) => {
-                                        e.preventDefault();
-                                        handleLogout();
-                                        toggleDropdown("profileMenu");
-                                      }
-                                    : () => toggleDropdown("profileMenu")
-                                }
-                                className="px-3 py-2 text-dark menu-item d-flex align-items-center">
-                                <span className="menu-icon me-2">{option.icon}</span>
-                                {option.text}
-                              </Nav.Link>
-                            ))}
-                          </Nav>
-                        </Popover.Body>
+                      <Popover id="profile-menu-popover" className="border-0 shadow-custom profile-menu-popover">
+                        <div ref={popoverRefs.profileMenu}>
+                          <Popover.Body className="p-0">
+                            <Nav className="flex-column">
+                              {profileMenuOptions.map((option, idx) => (
+                                <Nav.Link
+                                  key={idx}
+                                  as={option.text === "Logout" ? "button" : Link}
+                                  to={option.to}
+                                  onClick={
+                                    option.text === "Logout"
+                                      ? (e) => {
+                                          e.preventDefault();
+                                          handleLogout();
+                                          toggleDropdown("profileMenu");
+                                        }
+                                      : () => toggleDropdown("profileMenu")
+                                  }
+                                  className="px-3 py-2 text-dark menu-item d-flex align-items-center">
+                                  <span className="menu-icon me-2">{option.icon}</span>
+                                  {option.text}
+                                </Nav.Link>
+                              ))}
+                            </Nav>
+                          </Popover.Body>
+                        </div>
                       </Popover>
                     </Overlay>
                   </div>
@@ -360,41 +364,44 @@ export const Header = () => {
                   target={refs.expandMenu.current}
                   placement="bottom-end"
                   containerPadding={20}>
-                <Popover id="expand-menu-popover" ref={popoverRefs.expandMenu} className="border-0 shadow-custom expandable-menu">                    <Popover.Body className="p-0">
-                      <Nav className="flex-column">
-                        {expandMenuOptions.map((option, idx) => (
-                          <Nav.Link
-                            key={idx}
-                            as={option.onClick ? "button" : Link}
-                            to={!option.onClick ? option.path : undefined}
-                            onClick={
-                              option.onClick
-                                ? (e) => {
-                                    e.preventDefault();
-                                    option.onClick();
-                                    toggleDropdown("expandMenu");
-                                  }
-                                : () => toggleDropdown("expandMenu")
-                            }
-                            className="px-3 py-2 text-dark menu-item d-flex align-items-center">
-                            <span className="menu-icon me-2">{option.icon}</span>
-                            {option.text}
-                          </Nav.Link>
-                        ))}
-                        {!isLoggedIn && (
-                          <>
-                            <Nav.Link as={Link} to="/login" className="px-3 py-2 text-dark menu-item d-flex align-items-center" onClick={() => toggleDropdown("expandMenu")}>
-                              <span className="menu-icon me-2"><FaSignInAlt /></span>
-                              Login
+                  <Popover id="expand-menu-popover" className="border-0 shadow-custom expandable-menu">
+                    <div ref={popoverRefs.expandMenu}>
+                      <Popover.Body className="p-0">
+                        <Nav className="flex-column">
+                          {expandMenuOptions.map((option, idx) => (
+                            <Nav.Link
+                              key={idx}
+                              as={option.onClick ? "button" : Link}
+                              to={!option.onClick ? option.path : undefined}
+                              onClick={
+                                option.onClick
+                                  ? (e) => {
+                                      e.preventDefault();
+                                      option.onClick();
+                                      toggleDropdown("expandMenu");
+                                    }
+                                  : () => toggleDropdown("expandMenu")
+                              }
+                              className="px-3 py-2 text-dark menu-item d-flex align-items-center">
+                              <span className="menu-icon me-2">{option.icon}</span>
+                              {option.text}
                             </Nav.Link>
-                            <Nav.Link as={Link} to="/register" className="px-3 py-2 text-dark menu-item d-flex align-items-center" onClick={() => toggleDropdown("expandMenu")}>
-                              <span className="menu-icon me-2"><FaUserPlus /></span>
-                              Register
-                            </Nav.Link>
-                          </>
-                        )}
-                      </Nav>
-                    </Popover.Body>
+                          ))}
+                          {!isLoggedIn && (
+                            <>
+                              <Nav.Link as={Link} to="/login" className="px-3 py-2 text-dark menu-item d-flex align-items-center" onClick={() => toggleDropdown("expandMenu")}>
+                                <span className="menu-icon me-2"><FaSignInAlt /></span>
+                                Login
+                              </Nav.Link>
+                              <Nav.Link as={Link} to="/register" className="px-3 py-2 text-dark menu-item d-flex align-items-center" onClick={() => toggleDropdown("expandMenu")}>
+                                <span className="menu-icon me-2"><FaUserPlus /></span>
+                                Register
+                              </Nav.Link>
+                            </>
+                          )}
+                        </Nav>
+                      </Popover.Body>
+                    </div>
                   </Popover>
                 </Overlay>
               </div>
