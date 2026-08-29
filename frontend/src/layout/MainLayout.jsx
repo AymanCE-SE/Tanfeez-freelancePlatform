@@ -33,9 +33,11 @@ import EditProfile from "../pages/EditProfile";
 import Projects from "../pages/Projects";
 import Dashboard from "../pages/Dashboard";
 import { ChatbotInterface } from "../pages/ChatBot";
+import { NotificationProvider } from "../context/NotificationContext";
 
 export function MainLayout() {
   return (
+    <NotificationProvider>
     <BrowserRouter>
       <Routes>
       <Route path="/" element={<SharedLayout />}>
@@ -72,5 +74,6 @@ export function MainLayout() {
 
       </Routes>
     </BrowserRouter>
+    </NotificationProvider>
   );
 }
