@@ -1,7 +1,7 @@
 /** @format */
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
-  Container, Row, Col, Card, Form, Button, ListGroup, Badge, InputGroup,
+  Container, Row, Col, Card, Form, Button, ListGroup, InputGroup,
 } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -14,21 +14,11 @@ import EmojiPickerButton from "../components/chat/EmojiPickerButton";
 import { getChatRooms, getMessages } from "../api/chatroom";
 import { useChatSocket } from "../hooks/useChatSocket";
 
-// بتحول شكل الرسالة القادمة من الـ REST (history) لنفس شكل الرسالة القادمة من الـ WebSocket (live)
-// عشان الـ <Message /> component ياخدهم بنفس الطريقة من غير ما يعرف الفرق
 const normalizeRestMessage = (m) => ({
-  id: m.id,
-  content: m.text,
-  senderId: m.sender,
-  timestamp: m.timestamp,
-  isRead: m.is_read,
+  id: m.id, content: m.text, senderId: m.sender, timestamp: m.timestamp, isRead: m.is_read,
 });
 const normalizeLiveMessage = (m) => ({
-  id: m.id, // now the real DB id, sent from the consumer
-  content: m.message,
-  senderId: m.sender_id,
-  timestamp: m.timestamp,
-  isRead: false, // just arrived, can't be read yet
+  id: m.id, content: m.message, senderId: m.sender_id, timestamp: m.timestamp, isRead: false,
 });
 
 const Chat = () => {
@@ -47,41 +37,31 @@ const Chat = () => {
     [conversations, conversationId]
   );
 
-  // الـ hook بيفتح اتصال جديد أوتوماتيك كل ما conversationId يتغير
-  // const { liveMessages, sendMessage, status } = useChatSocket(conversationId);
-  const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } = useChatSocket(conversationId, currentUser?.id);
-  // 1. هات ليست الأوض مرة واحدة لما الصفحة تفتح
- useEffect(() => {
-  getChatRooms()
-    .then((rooms) => {
-      setConversations(rooms);
-      // removed: no longer auto-navigating to the first room
-    })
-    .finally(() => setLoading(false));
-}, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // On mobile, having a conversationId means "show the chat view instead of
+  // the list" — this single boolean drives which panel is visible below.
+  const isChatOpenOnMobile = Boolean(conversationId);
 
-  // 2. هات الـ history بتاع الأوضة دي بس لما تتفتح
+  const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } =
+    useChatSocket(conversationId, currentUser?.id);
+
+  useEffect(() => {
+    getChatRooms().then(setConversations).finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     if (!conversationId) return;
-    getMessages(conversationId).then((msgs) =>
-      setHistoryMessages(msgs.map(normalizeRestMessage))
-    );
+    getMessages(conversationId).then((msgs) => setHistoryMessages(msgs.map(normalizeRestMessage)));
   }, [conversationId]);
 
-  // 3. ادمج الـ history + الرسايل اللايف الجديدة في ليست واحدة للعرض
-const messages = useMemo(() => {
-  const combined = [...historyMessages, ...liveMessages.map(normalizeLiveMessage)];
-  return combined.map((m) => ({
-    ...m,
-    isRead: m.isRead || readMessageIds.has(m.id),
-  }));
-}, [historyMessages, liveMessages, readMessageIds]);
-  // 4. mark as read every time we open a conversation or receive new messages in it
+  const messages = useMemo(() => {
+    const combined = [...historyMessages, ...liveMessages.map(normalizeLiveMessage)];
+    return combined.map((m) => ({ ...m, isRead: m.isRead || readMessageIds.has(m.id) }));
+  }, [historyMessages, liveMessages, readMessageIds]);
+
   useEffect(() => {
-    if (conversationId && status === "open") {
-      markAsRead();
-    }
+    if (conversationId && status === "open") markAsRead();
   }, [conversationId, status, liveMessages.length]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length]);
@@ -89,8 +69,8 @@ const messages = useMemo(() => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!messageText.trim()) return;
-    sendMessage(messageText); // بس كده — مفيش setState يدوي للرسالة الجديدة،
-    setMessageText("");        // هتيجي أوتوماتيك من onmessage بتاع الـ hook زي أي حد تاني
+    sendMessage(messageText);
+    setMessageText("");
   };
 
   const formatTime = (timestamp) =>
@@ -109,10 +89,9 @@ const messages = useMemo(() => {
     };
   };
 
-  const filteredConversations = conversations.filter((c) => {
-    const p = getParticipantInfo(c);
-    return p.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const filteredConversations = conversations.filter((c) =>
+    getParticipantInfo(c).name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="chat-page">
@@ -120,7 +99,10 @@ const messages = useMemo(() => {
         <Card className="chat-wrapper border-0">
           <Card.Body className="p-0">
             <Row className="g-0 h-100">
-              <Col md={4} className="border-end conversations-column">
+              {/* CONVERSATIONS LIST — hidden on mobile once a chat is open */}
+              <Col
+                md={4}
+                className={`border-end conversations-column ${isChatOpenOnMobile ? "d-none d-md-block" : ""}`}>
                 <div className="chat-header">
                   <h5 className="mb-3 fw-bold text-primary">Messages</h5>
                   <InputGroup>
@@ -177,14 +159,19 @@ const messages = useMemo(() => {
                 </div>
               </Col>
 
-              <Col md={8} className="messages-column">
+              {/* CHAT VIEW — hidden on mobile until a conversation is picked */}
+              <Col
+                md={8}
+                className={`messages-column ${!isChatOpenOnMobile ? "d-none d-md-flex" : "d-flex"} flex-column`}>
                 {currentConversation ? (
                   <>
-                  <ChatHeader
-                    participant={getParticipantInfo(currentConversation)}
-                    presence={presence}
-                    projectName={currentConversation?.project_detail?.name}
-                  />                    <div className="chat-messages">
+                    <ChatHeader
+                      participant={getParticipantInfo(currentConversation)}
+                      presence={presence}
+                      projectName={currentConversation?.project_detail?.name}
+                      onBack={() => navigate("/chat")}
+                    />
+                    <div className="chat-messages flex-grow-1">
                       <div className="messages-container p-3"
                         style={{ height: "calc(100vh - 240px)", overflowY: "auto" }}>
                         {messages.length > 0 ? (
@@ -214,10 +201,10 @@ const messages = useMemo(() => {
                       </div>
                     </div>
                     <div className="chat-input">
-                      <div className="p-3 border-top">
+                      <div className="p-2 p-md-3 border-top">
                         <Form onSubmit={handleSendMessage}>
                           <InputGroup>
-                            <Button variant="light" className="action-button"><Paperclip /></Button>
+                            <Button variant="light" className="action-button d-none d-sm-flex"><Paperclip /></Button>
                             <Form.Control type="text" placeholder="Type a message..."
                               value={messageText} onChange={(e) => setMessageText(e.target.value)}
                               disabled={status !== "open"} />
