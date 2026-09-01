@@ -25,3 +25,20 @@ class ProposalSerializer(serializers.ModelSerializer):
         if ProjectProposal.objects.filter(freelancer=freelancer, project=project, is_deleted=False).exists():
             raise ValidationError("You have already submitted a proposal for this project.")
         return attrs
+
+class PublicProposalSerializer(serializers.ModelSerializer):
+    freelancer_name = serializers.SerializerMethodField()
+    preview = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProjectProposal
+        fields = ["id", "freelancer_name", "preview", "created_at"]
+
+    def get_freelancer_name(self, obj):
+        user = obj.freelancer.uid
+        return f"{user.first_name} {user.second_name}".strip()
+
+    def get_preview(self, obj):
+        words = obj.body.split()
+        preview = " ".join(words[:15])
+        return preview + ("..." if len(words) > 15 else "")

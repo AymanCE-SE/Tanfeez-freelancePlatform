@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addProposal, approveProposal, getMyProposals, getProposalsByProject, updateProposalStatus } from "../../api/proposal";
+import { addProposal, approveProposal, finishProject, getMyProposals, getProposalsByProject, updateProposalStatus } from "../../api/proposal";
 
 const initialState = {
   proposals: [],
@@ -63,6 +63,18 @@ export const updateProposalStatusAction = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const finishProjectAction = createAsyncThunk(
+  'proposal/finishProject',
+  async (proposalId, { rejectWithValue }) => {
+    try {
+      const response = await finishProject(proposalId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -134,8 +146,19 @@ const proposalSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       });
-  
+      builder
+    .addCase(finishProjectAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(finishProjectAction.fulfilled, (state) => {
+      state.isLoading = false;
+    })
+    .addCase(finishProjectAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
   },
-});
+})
 
 export const proposalReducer = proposalSlice.reducer;

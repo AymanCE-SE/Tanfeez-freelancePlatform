@@ -9,7 +9,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     client_id = serializers.SerializerMethodField()
     user_id = serializers.SerializerMethodField()
     skills = SkillSerializer(many=True, read_only=True)
-
+    proposals_count = serializers.SerializerMethodField()
     class Meta:
         model = Project
         fields = "__all__"
@@ -20,7 +20,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     def get_user_id(self, obj):
         return obj.clientId.id if obj.clientId else None
 
-
+    def get_proposals_count(self, obj):
+        return obj.projectproposal_set.filter(is_deleted=False).count()
+    
 class ProjectCreateSerializer(serializers.ModelSerializer):
     skills = serializers.ListField(
         child=serializers.CharField(), required=False, write_only=True

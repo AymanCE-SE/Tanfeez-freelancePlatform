@@ -11,7 +11,7 @@ from chatroom.models import ChatRoom
 from project.enums import Progress
 from project.models import Project
 from .models import ProjectProposal
-from .serializers import ProposalSerializer
+from .serializers import ProposalSerializer , PublicProposalSerializer
 from freelancer.models import Freelancer
 from service_proposal.models import ServiceProposal
 
@@ -175,6 +175,15 @@ class AllProposalsView(generics.ListAPIView):
     queryset = ProjectProposal.objects.filter(is_deleted=False)
     serializer_class = ProposalSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class PublicProposalsByProjectView(generics.ListAPIView):
+    serializer_class = PublicProposalSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project_id = self.kwargs["project_id"]
+        return ProjectProposal.objects.filter(project_id=project_id, is_deleted=False)
 
 
 class FinishProjectView(APIView):

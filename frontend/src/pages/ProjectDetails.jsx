@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProjectByIdAction } from "../store/slices/projectSlice";
 import { fetchUserProfile } from "../store/slices/userSlice";
 import { addProposalAction, approveProposalAction, getProposalsByProjectAction } from "../store/slices/proposalSlice";
+import { getMyProposals, getPublicProposalsByProject } from "../api/proposal";
 import Swal from "sweetalert2";
 import ProposalsList from "../components/proposals/ProposalsList";
 
@@ -37,16 +38,49 @@ function ProjectDetails() {
     days_to_finish: "",
   });
 
+  // Holds the freelancer's OWN proposal for this specific project, fetched
+  // directly (not through the shared `proposals` redux slice, since that
+  // field is also used by getProposalsByProjectAction for the client's full
+  // list — reusing it here would risk one overwriting the other).
+  const [myProposal, setMyProposal] = useState(null);
+
+  // The public, no-pricing-details teaser list — who applied + a short
+  // preview of their pitch. Visible to anyone, unlike `proposals` (full
+  // bids, client-only) or `myProposal` (a freelancer's own submission).
+  const [publicProposals, setPublicProposals] = useState([]);
+
   const { projectDetails, isLoading } = useSelector((myStore) => myStore.projectSlice);
   const { profile } = useSelector((myStore) => myStore.userSlice);
   const { user } = useSelector((myStore) => myStore.userSlice);
   const { proposals } = useSelector((myStore) => myStore.proposalSlice);
 
+  const isProjectOwner = user?.id === projectDetails?.user_id;
+
   useEffect(() => {
-    if (id) {
+    // Only the project's client can view the full proposals list — the
+    // backend rejects anyone else with a 403, so don't even try for them.
+    if (id && isProjectOwner) {
       dispatch(getProposalsByProjectAction(id));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, isProjectOwner]);
+
+  useEffect(() => {
+    if (user?.user_type === "freelancer") {
+      getMyProposals().then((res) => {
+        const mine = res.data.find((p) => String(p.project) === String(id));
+        setMyProposal(mine || null);
+      });
+    }
+  }, [user, id]);
+
+  useEffect(() => {
+    // Not gated by role — anyone logged in can see who applied and a
+    // preview of their pitch. The backend endpoint itself has no ownership
+    // check either, by design (it never exposes price/days).
+    if (id) {
+      getPublicProposalsByProject(id).then(setPublicProposals);
+    }
+  }, [id]);
 
   useEffect(() => {
     dispatch(getProjectByIdAction(id)).unwrap()
@@ -101,8 +135,9 @@ function ProjectDetails() {
         ...proposal,
         project: id,
       };
-      await dispatch(addProposalAction(proposalData)).unwrap();
+      const result = await dispatch(addProposalAction(proposalData)).unwrap();
       setShowProposalModal(false);
+      setMyProposal(result); // reflect the new proposal immediately, no refresh needed
       Swal.fire({
         icon: 'success',
         title: 'Proposal Submitted',
@@ -222,11 +257,13 @@ function ProjectDetails() {
                 <span className="client-stat-label">Project Type:</span>
                 <span className="client-stat-value">{projectDetails?.type}</span>
               </div>
+              {/* Public count — comes bundled on the project itself, safe
+                  for anyone to see (Upwork/Mostaql show this too). Full bid
+                  details stay private; see the proposals lists below. */}
               <div className="client-stat">
                 <span className="client-stat-label">Number of Proposals:</span>
-                <span className="client-stat-value">{proposals?.length} proposals</span>
+                <span className="client-stat-value">{projectDetails?.proposals_count ?? 0} proposals</span>
               </div>
-              {/* Only show start/end date if available */}
               {projectDetails?.start_date && (
                 <div className="client-stat">
                   <span className="client-stat-label">Start Date:</span>
@@ -303,31 +340,24 @@ function ProjectDetails() {
                       </div>
                     )}
 
-                    <div className="info-item">
-                      <span className="info-label">Member Since:</span>
-                      <span className="info-value">
-                        {new Date(profile?.client_profile?.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
+                    {/* Guarded — without this, a missing created_at renders
+                        the literal text "Invalid Date" if client_profile
+                        hasn't finished loading yet. */}
+                    {profile?.client_profile?.created_at && (
+                      <div className="info-item">
+                        <span className="info-label">Member Since:</span>
+                        <span className="info-value">
+                          {new Date(profile.client_profile.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </Card.Body>
               </Card>
             </Col>
-            {/* Comment out skills section since it's not in API */}
-            {/* <Col md={6}>
-              <h5 className="section-title">Required Skills</h5>
-              <div className="d-flex flex-wrap gap-2">
-                {projectDetails?.skills &&
-                  projectDetails?.skills.map((skill, index) => (
-                    <Badge key={index} className="skill-badge py-2 px-3">
-                      {skill}
-                    </Badge>
-                  ))}
-              </div>
-            </Col> */}
           </Row>
 
-          {  projectDetails?.progress === "not_started" &&   user.user_type === "freelancer" && (
+          {projectDetails?.progress === "not_started" && user.user_type === "freelancer" && !myProposal && (
             <div className="mt-4 d-flex justify-content-end">
               <Button
                 variant="primary"
@@ -341,13 +371,72 @@ function ProjectDetails() {
         </Card.Body>
       </Card>
 
-      {user.id === projectDetails?.user_id &&<ProposalsList 
-        proposals={proposals}
-        onApprove={handleApproveProposal}
-        projectStatus = {projectDetails?.progress}
-        isClientView={profile?.user_type === 'client' && projectDetails?.clientId === profile?.id}
-      />}
+      {isProjectOwner && (
+        <ProposalsList
+          proposals={proposals}
+          onApprove={handleApproveProposal}
+          projectStatus={projectDetails?.progress}
+          isClientView={profile?.user_type === 'client' && projectDetails?.clientId === profile?.id}
+        />
+      )}
 
+      {user.user_type === "freelancer" && (
+        <div className="proposals-section mt-4">
+          <Card>
+            <Card.Header className="bg-light">
+              <h5 className="mb-0">Your Proposal</h5>
+            </Card.Header>
+            <Card.Body>
+              {myProposal ? (
+                <div>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <h6 className="mb-0">{myProposal.freelancer_name}</h6>
+                    <div>
+                      <Badge bg="primary" className="me-2">${myProposal.bid_price}</Badge>
+                      <Badge bg="info">{myProposal.days_to_finish} days</Badge>
+                      {myProposal.is_approved && <Badge bg="success" className="ms-2">Approved</Badge>}
+                    </div>
+                  </div>
+                  <p className="mb-0 text-muted">
+                    {myProposal.body?.slice(0, 120)}
+                    {myProposal.body?.length > 120 ? "..." : ""}
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center text-muted py-3">
+                  You haven't submitted a proposal for this project yet.
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+
+      {/* Public teaser list — visible to everyone (including the client,
+          alongside their full private list above). Names + a short pitch
+          preview only, never price or timeline. */}
+      {publicProposals.length > 0 && (
+        <div className="proposals-section mt-4">
+          <Card>
+            <Card.Header className="bg-light">
+              <h5 className="mb-0">Who Applied</h5>
+            </Card.Header>
+            <Card.Body>
+              {publicProposals.map((p) => (
+                <div key={p.id} className="d-flex justify-content-between align-items-start py-2 border-bottom">
+                  <div>
+                    <h6 className="mb-1">{p.freelancer_name}</h6>
+                    <p className="mb-0 text-muted small">{p.preview}</p>
+                  </div>
+                  <small className="text-muted flex-shrink-0 ms-3">
+                    {formatDistanceToNow(new Date(p.created_at), { addSuffix: true })}
+                  </small>
+                </div>
+              ))}
+            </Card.Body>
+          </Card>
+        </div>
+      )}
 
       <Modal
         show={showProposalModal}
@@ -428,5 +517,3 @@ function ProjectDetails() {
 }
 
 export default ProjectDetails;
-
-
