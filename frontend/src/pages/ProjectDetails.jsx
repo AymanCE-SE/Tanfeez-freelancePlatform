@@ -22,10 +22,14 @@ import "../styles/pages/ProjectDetails.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getProjectByIdAction } from "../store/slices/projectSlice";
 import { fetchUserProfile } from "../store/slices/userSlice";
-import { addProposalAction, approveProposalAction, getProposalsByProjectAction } from "../store/slices/proposalSlice";
+import {
+  addProposalAction,
+  approveProposalAction,
+  finishProjectAction,
+  getProposalsByProjectAction,
+} from "../store/slices/proposalSlice";
 import { getMyProposals, getPublicProposalsByProject } from "../api/proposal";
 import Swal from "sweetalert2";
-import ProposalsList from "../components/proposals/ProposalsList";
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -38,27 +42,20 @@ function ProjectDetails() {
     days_to_finish: "",
   });
 
-  // Holds the freelancer's OWN proposal for this specific project, fetched
-  // directly (not through the shared `proposals` redux slice, since that
-  // field is also used by getProposalsByProjectAction for the client's full
-  // list — reusing it here would risk one overwriting the other).
   const [myProposal, setMyProposal] = useState(null);
-
-  // The public, no-pricing-details teaser list — who applied + a short
-  // preview of their pitch. Visible to anyone, unlike `proposals` (full
-  // bids, client-only) or `myProposal` (a freelancer's own submission).
   const [publicProposals, setPublicProposals] = useState([]);
+  const [selectedProposalId, setSelectedProposalId] = useState(null);
 
   const { projectDetails, isLoading } = useSelector((myStore) => myStore.projectSlice);
-  const { profile } = useSelector((myStore) => myStore.userSlice);
-  const { user } = useSelector((myStore) => myStore.userSlice);
+  const { profile, user } = useSelector((myStore) => myStore.userSlice);
   const { proposals } = useSelector((myStore) => myStore.proposalSlice);
 
-  const isProjectOwner = user?.id === projectDetails?.user_id;
+  const isProjectOwner =
+    user?.id === projectDetails?.user_id && projectDetails?.id === Number(id);
+
+  const selectedProposal = proposals?.find((p) => p.id === selectedProposalId) || null;
 
   useEffect(() => {
-    // Only the project's client can view the full proposals list — the
-    // backend rejects anyone else with a 403, so don't even try for them.
     if (id && isProjectOwner) {
       dispatch(getProposalsByProjectAction(id));
     }
@@ -74,9 +71,6 @@ function ProjectDetails() {
   }, [user, id]);
 
   useEffect(() => {
-    // Not gated by role — anyone logged in can see who applied and a
-    // preview of their pitch. The backend endpoint itself has no ownership
-    // check either, by design (it never exposes price/days).
     if (id) {
       getPublicProposalsByProject(id).then(setPublicProposals);
     }
@@ -90,6 +84,14 @@ function ProjectDetails() {
         }
       });
   }, [dispatch, id]);
+
+  const refreshProposalsData = () => {
+    dispatch(getProjectByIdAction(id));
+    getPublicProposalsByProject(id).then(setPublicProposals);
+    if (isProjectOwner) {
+      dispatch(getProposalsByProjectAction(id));
+    }
+  };
 
   if (isLoading) {
     return (
@@ -112,6 +114,8 @@ function ProjectDetails() {
   const handleApproveProposal = async (proposalId) => {
     try {
       await dispatch(approveProposalAction(proposalId)).unwrap();
+      setSelectedProposalId(null);
+      refreshProposalsData();
       Swal.fire({
         icon: 'success',
         title: 'Proposal Approved',
@@ -128,6 +132,27 @@ function ProjectDetails() {
     }
   };
 
+  const handleFinishProject = async (proposalId) => {
+    try {
+      await dispatch(finishProjectAction(proposalId)).unwrap();
+      setSelectedProposalId(null);
+      refreshProposalsData();
+      Swal.fire({
+        icon: 'success',
+        title: 'Project Completed',
+        text: 'The project has been marked as completed.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Action Failed',
+        text: error?.message || 'Failed to finish the project. Please try again.',
+      });
+    }
+  };
+
   const handleSubmitProposal = async (e) => {
     e.preventDefault();
     try {
@@ -137,7 +162,8 @@ function ProjectDetails() {
       };
       const result = await dispatch(addProposalAction(proposalData)).unwrap();
       setShowProposalModal(false);
-      setMyProposal(result); // reflect the new proposal immediately, no refresh needed
+      setMyProposal(result);
+      refreshProposalsData();
       Swal.fire({
         icon: 'success',
         title: 'Proposal Submitted',
@@ -185,7 +211,6 @@ function ProjectDetails() {
     <Container className="mt-5 mb-5">
       <Card className="project-card">
         <Card.Body className="p-4">
-          {/* Project Header */}
           <div className="project-header" style={{ borderBottom: "1px solid var(--color-border)", paddingBottom: "1.5rem", marginBottom: "1.5rem" }}>
             <div className="d-flex justify-content-between align-items-start mb-2">
               <h2 className="mb-0 project-title" style={{ fontSize: "2rem", fontWeight: 700, color: "var(--color-text)" }}>
@@ -225,13 +250,11 @@ function ProjectDetails() {
             </div>
           </div>
 
-          {/* Project Description */}
           <section className="mb-5">
             <h5 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Description</h5>
             <p className="text-muted" style={{ fontSize: "1.1rem" }}>{projectDetails?.description}</p>
           </section>
 
-          {/* Skills Section */}
           {projectDetails?.skills && projectDetails.skills.length > 0 && (
             <section className="mb-4">
               <h6 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Required Skills</h6>
@@ -245,7 +268,6 @@ function ProjectDetails() {
             </section>
           )}
 
-          {/* Project Details */}
           <Row className="mb-5">
             <Col md={6}>
               <h5 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Details</h5>
@@ -257,9 +279,6 @@ function ProjectDetails() {
                 <span className="client-stat-label">Project Type:</span>
                 <span className="client-stat-value">{projectDetails?.type}</span>
               </div>
-              {/* Public count — comes bundled on the project itself, safe
-                  for anyone to see (Upwork/Mostaql show this too). Full bid
-                  details stay private; see the proposals lists below. */}
               <div className="client-stat">
                 <span className="client-stat-label">Number of Proposals:</span>
                 <span className="client-stat-value">{projectDetails?.proposals_count ?? 0} proposals</span>
@@ -340,9 +359,6 @@ function ProjectDetails() {
                       </div>
                     )}
 
-                    {/* Guarded — without this, a missing created_at renders
-                        the literal text "Invalid Date" if client_profile
-                        hasn't finished loading yet. */}
                     {profile?.client_profile?.created_at && (
                       <div className="info-item">
                         <span className="info-label">Member Since:</span>
@@ -370,15 +386,6 @@ function ProjectDetails() {
           )}
         </Card.Body>
       </Card>
-
-      {isProjectOwner && (
-        <ProposalsList
-          proposals={proposals}
-          onApprove={handleApproveProposal}
-          projectStatus={projectDetails?.progress}
-          isClientView={profile?.user_type === 'client' && projectDetails?.clientId === profile?.id}
-        />
-      )}
 
       {user.user_type === "freelancer" && (
         <div className="proposals-section mt-4">
@@ -412,14 +419,11 @@ function ProjectDetails() {
         </div>
       )}
 
-      {/* Public teaser list — visible to everyone (including the client,
-          alongside their full private list above). Names + a short pitch
-          preview only, never price or timeline. */}
       {publicProposals.length > 0 && (
         <div className="proposals-section mt-4">
           <Card>
             <Card.Header className="bg-light">
-              <h5 className="mb-0">Who Applied</h5>
+              <h5 className="mb-0">Proposals ({publicProposals.length})</h5>
             </Card.Header>
             <Card.Body>
               {publicProposals.map((p) => (
@@ -427,16 +431,54 @@ function ProjectDetails() {
                   <div>
                     <h6 className="mb-1">{p.freelancer_name}</h6>
                     <p className="mb-0 text-muted small">{p.preview}</p>
+                    <small className="text-muted">
+                      {formatDistanceToNow(new Date(p.created_at), { addSuffix: true })}
+                    </small>
                   </div>
-                  <small className="text-muted flex-shrink-0 ms-3">
-                    {formatDistanceToNow(new Date(p.created_at), { addSuffix: true })}
-                  </small>
+                  {isProjectOwner && (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="flex-shrink-0 ms-3"
+                      onClick={() => setSelectedProposalId(p.id)}
+                    >
+                      View Details
+                    </Button>
+                  )}
                 </div>
               ))}
             </Card.Body>
           </Card>
         </div>
       )}
+
+      <Modal show={Boolean(selectedProposal)} onHide={() => setSelectedProposalId(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Proposal Details</Modal.Title>
+        </Modal.Header>
+        {selectedProposal && (
+          <Modal.Body>
+            <h6>{selectedProposal.freelancer_name}</h6>
+            <div className="d-flex gap-2 mb-3">
+              <Badge bg="primary">${selectedProposal.bid_price}</Badge>
+              <Badge bg="info">{selectedProposal.days_to_finish} days</Badge>
+              {selectedProposal.is_approved && <Badge bg="success">Approved</Badge>}
+            </div>
+            <p style={{ whiteSpace: "pre-wrap" }}>{selectedProposal.body}</p>
+
+            {projectDetails?.progress === "not_started" && !selectedProposal.is_approved && (
+              <Button variant="success" onClick={() => handleApproveProposal(selectedProposal.id)}>
+                Accept Proposal
+              </Button>
+            )}
+            {projectDetails?.progress === "in_progress" && selectedProposal.is_approved && (
+              <Button variant="success" onClick={() => handleFinishProject(selectedProposal.id)}>
+                Finish and Accept Project
+              </Button>
+            )}
+          </Modal.Body>
+        )}
+      </Modal>
 
       <Modal
         show={showProposalModal}
