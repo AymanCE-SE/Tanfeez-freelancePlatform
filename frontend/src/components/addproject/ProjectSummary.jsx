@@ -1,10 +1,8 @@
 /** @format */
 
 import { Card, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 
 const ProjectSummary = ({ formData, handleSubmit, isLoading }) => {
-  const navigate = useNavigate();
   return (
     <div className="sticky-sidebar">
       <Card className="custom-card">
@@ -52,17 +50,14 @@ const ProjectSummary = ({ formData, handleSubmit, isLoading }) => {
 </div>
           <hr />
           <div className="d-grid gap-2">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => {
-                handleSubmit();
-                if (!isLoading) navigate('/projects');
-              }}
-              className="submit-button"
-              disabled={isLoading}>
-              {isLoading ? "Posting..." : "Post Project"}
-            </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={handleSubmit}
+            className="submit-button"
+            disabled={isLoading}>
+            {isLoading ? "Posting..." : "Post Project"}
+          </Button>
             <Button
               variant="outline-secondary"
               size="lg"

@@ -1,9 +1,12 @@
 from rest_framework import generics, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import ChatRoom, Message
 from .serializers import ChatRoomSerializer, MessageSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
-
+from django.db.models import Q
 
 class ChatRoomListCreateView(generics.ListAPIView):
     serializer_class = ChatRoomSerializer
@@ -40,3 +43,11 @@ class MessageListCreateView(generics.ListCreateAPIView):
         sender = self.request.user
 
         serializer.save(chatroom=chatroom, sender=sender)
+
+class UnreadMessagesCountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        rooms = ChatRoom.objects.filter(Q(client=request.user) | Q(freelancer=request.user))
+        count = Message.objects.filter(chatroom__in=rooms, is_read=False).exclude(sender=request.user).count()
+        return Response({"count": count})

@@ -16,6 +16,7 @@ def send_notification(recipient, notification_type, message, target_id=None):
         f"user_{recipient.id}_notifications",
         {
             "type": "notify",
+            "kind": "notification",   
             "id": notif.id,
             "notification_type": notif.notification_type,
             "message": notif.message,

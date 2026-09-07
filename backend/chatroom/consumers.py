@@ -35,6 +35,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if room is None or self.user.id not in (room.client_id, room.freelancer_id):
             await self.close(code=4003)
             return
+        self.room = room   # new receive() to restore it
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
@@ -109,9 +110,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             "sender_id": message.sender_id,
             "sender_name": f"{self.user.first_name} {self.user.second_name or ''}".strip(),
             "timestamp": message.timestamp.isoformat(),
+            })    
+        
+        recipient_id = self.room.freelancer_id if self.user.id == self.room.client_id else self.room.client_id
+        await self.channel_layer.group_send(f"user_{recipient_id}_notifications", {
+            "type": "notify",
+            "kind": "new_message",
+            "chatroom_id": self.room_id,
+            "sender_name": f"{self.user.first_name} {self.user.second_name or ''}".strip(),
+            "created_at": message.timestamp.isoformat(),
         })
-
-    # --- group event handlers: one per "type" string used in group_send above ---
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps(event))

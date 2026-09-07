@@ -30,6 +30,13 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     client_detail = ChatParticipantSerializer(source="client", read_only=True)
     freelancer_detail = ChatParticipantSerializer(source="freelancer", read_only=True)
     project_detail = ChatProjectSerializer(source="project", read_only=True) 
+    unread_count = serializers.SerializerMethodField()
     class Meta:
         model = ChatRoom
         fields = "__all__"
+
+    def get_unread_count(self, obj):
+        request = self.context.get("request")
+        if not request or not request.user.is_authenticated:
+            return 0
+        return obj.messages.filter(is_read=False).exclude(sender=request.user).count()

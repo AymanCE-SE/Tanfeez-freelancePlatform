@@ -8,6 +8,7 @@ import ProjectSummary from "../components/addproject/ProjectSummary";
 import ProjectRequirements from "../components/addproject/ProjectRequirements";
 import { useDispatch, useSelector } from "react-redux";
 import { createProjectAction } from "../store/slices/projectSlice";
+import { useNavigate } from "react-router-dom";
 
 function AddProject() {
   const [formData, setFormData] = useState({
@@ -27,10 +28,11 @@ function AddProject() {
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
-  const [levelOpen, setLevelOpen] = useState(false);
+  // const [levelOpen, setLevelOpen] = useState(false);
   const [skillSuggestions, setSkillSuggestions] = useState([]);
   const suggestionsRef = useRef(null);
 
+  const navigate = useNavigate();
   const typeOptions = ["Fixed Price", "Hourly"];
   const levelOptions = ["Entry", "Intermediate", "Expert"];
   const skillOptions = [
@@ -174,21 +176,12 @@ function AddProject() {
     if (!isLoading && !error && createdProject) {
       setSuccessMessage("Project posted successfully!");
       setFormData({
-        name: "",
-        description: "",
-        // start_date: "",
-        // end_date: "",
-        duration: "",
-        progress: "not_started",
-        experience_level: "",
-        type: "Fixed Price",
-        budget: "",
-        hourlyRate: "",
-        estimatedHours: estimatedHours,
-        location: "",
-        status: "open",
-      }); // reset form
+        name: "", description: "", duration: "", progress: "not_started",
+        experience_level: "", type: "Fixed Price", budget: "", hourlyRate: "",
+        location: "", status: "open",
+      });
       setErrors({});
+      navigate("/projects");   
     }
   }, [isLoading, error, createdProject]);
 
