@@ -162,7 +162,10 @@ function ProjectDetails() {
       };
       const result = await dispatch(addProposalAction(proposalData)).unwrap();
       setShowProposalModal(false);
-      setMyProposal(result);
+      const res = await getMyProposals();
+      const mine = res.data.find((p) => String(p.project) === String(id));
+      setMyProposal(mine || null);      
+      
       refreshProposalsData();
       Swal.fire({
         icon: 'success',
