@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Container, Row, Col, Card, Form, Button, ListGroup, InputGroup,
+  Badge,
 } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -13,6 +14,7 @@ import ChatHeader from "../components/chat/ChatHeader";
 import EmojiPickerButton from "../components/chat/EmojiPickerButton";
 import { getChatRooms, getMessages } from "../api/chatroom";
 import { useChatSocket } from "../hooks/useChatSocket";
+import { useNotifications } from "../context/NotificationContext";
 
 const normalizeRestMessage = (m) => ({
   id: m.id, content: m.text, senderId: m.sender, timestamp: m.timestamp, isRead: m.is_read,
@@ -40,7 +42,7 @@ const Chat = () => {
   // On mobile, having a conversationId means "show the chat view instead of
   // the list" — this single boolean drives which panel is visible below.
   const isChatOpenOnMobile = Boolean(conversationId);
-
+  const { refreshMessagesUnreadCount } = useNotifications();
   const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } =
     useChatSocket(conversationId, currentUser?.id);
 
@@ -59,7 +61,10 @@ const Chat = () => {
   }, [historyMessages, liveMessages, readMessageIds]);
 
   useEffect(() => {
-    if (conversationId && status === "open") markAsRead();
+    if (conversationId && status === "open") {
+      markAsRead();
+      refreshMessagesUnreadCount(); 
+    }
   }, [conversationId, status, liveMessages.length]);
 
   useEffect(() => {
@@ -140,7 +145,12 @@ const Chat = () => {
                                 className="rounded-circle me-3" width="48" height="48"
                                 style={{ objectFit: "cover" }} />
                               <div className="flex-grow-1 min-width-0">
-                                <h6 className="mb-0 text-truncate fw-bold">{participant.name}</h6>
+                              <h6 className="mb-0 text-truncate fw-bold">
+                                {participant.name}
+                                {conversation.unread_count > 0 && (
+                                  <Badge bg="danger" pill className="ms-2">{conversation.unread_count}</Badge>
+                                )}
+                              </h6>
                                 <p className="mb-0 text-truncate small last-message">
                                   {lastMsg?.text || conversation.project_detail?.name || "No messages yet"}
                                 </p>

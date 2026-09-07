@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useState, useRef, useEffect } from "react";
 import {
   Navbar,
@@ -60,8 +58,7 @@ export const Header = () => {
   const { isLoggedIn } = useSelector((myStore) => myStore.authSlice);
   const { user } = useSelector((state) => state.userSlice);
   const { theme } = useSelector((state) => state.themeSlice);
-  const { notifications, unreadCount, markAllRead, markOneRead  } = useNotifications();
-
+  const { notifications, unreadCount, markAllRead, markOneRead, messagesUnreadCount } = useNotifications();
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -302,6 +299,11 @@ export const Header = () => {
                   <div className="position-relative icon-wrapper">
                     <NavLink className="nav-icon" aria-label="Messages" to="/chat">
                       <FaEnvelope />
+                      {messagesUnreadCount > 0 && (
+                        <Badge bg="danger" pill className="position-absolute top-0 end-0 notification-badge">
+                          {messagesUnreadCount}
+                        </Badge>
+                      )}
                     </NavLink>
                   </div>
 

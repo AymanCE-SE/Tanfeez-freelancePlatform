@@ -9,3 +9,8 @@ export const getMessages = async (chatroomId) => {
   const response = await apiClient.get(`chatroom/messages/${chatroomId}/`);
   return response.data;
 };
+
+export const getUnreadMessagesCount = async () => {
+  const response = await apiClient.get("chatroom/unread-count/");
+  return response.data.count;
+};
