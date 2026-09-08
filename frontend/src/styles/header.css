@@ -142,7 +142,7 @@
 
 /* Notification Badge */
 .notification-badge {
-  font-size: 0.8rem;
+  font-size: 0.65rem !important;
   min-width: 22px;
   min-height: 22px;
   display: flex;

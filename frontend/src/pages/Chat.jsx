@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   Container, Row, Col, Card, Form, Button, ListGroup, InputGroup,
   Badge,
@@ -42,13 +42,15 @@ const Chat = () => {
   // On mobile, having a conversationId means "show the chat view instead of
   // the list" — this single boolean drives which panel is visible below.
   const isChatOpenOnMobile = Boolean(conversationId);
-  const { refreshMessagesUnreadCount } = useNotifications();
+  const { refreshMessagesUnreadCount, messageEventTick } = useNotifications();
   const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } =
     useChatSocket(conversationId, currentUser?.id);
 
+  const loadConversations = useCallback(() => getChatRooms().then(setConversations), []);
+
   useEffect(() => {
-    getChatRooms().then(setConversations).finally(() => setLoading(false));
-  }, []);
+    loadConversations().finally(() => setLoading(false));
+  }, [loadConversations]);
 
   useEffect(() => {
     if (!conversationId) return;
@@ -63,15 +65,26 @@ const Chat = () => {
   useEffect(() => {
     if (conversationId && status === "open") {
       markAsRead();
-      refreshMessagesUnreadCount(); 
     }
-  }, [conversationId, status, liveMessages.length]);
+  }, [conversationId, status, liveMessages.length, markAsRead]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length]);
 
-  const handleSendMessage = (e) => {
+  useEffect(() => {
+    if (messageEventTick > 0) loadConversations();
+  }, [loadConversations, messageEventTick]);
+
+  useEffect(() => {
+    if (readMessageIds.size > 0) {
+      loadConversations();
+      refreshMessagesUnreadCount();
+    }
+  }, [loadConversations, readMessageIds.size, refreshMessagesUnreadCount]);
+
+
+    const handleSendMessage = (e) => {
     e.preventDefault();
     if (!messageText.trim()) return;
     sendMessage(messageText);
@@ -93,8 +106,15 @@ const Chat = () => {
       isOnline: false,
     };
   };
+  const sortedConversations = useMemo(() => {
+    return [...conversations].sort((a, b) => {
+      const aTime = a.messages?.[a.messages.length - 1]?.timestamp || a.created_at;
+      const bTime = b.messages?.[b.messages.length - 1]?.timestamp || b.created_at;
+      return new Date(bTime) - new Date(aTime);
+    });
+  }, [conversations]);
 
-  const filteredConversations = conversations.filter((c) =>
+  const filteredConversations = sortedConversations.filter((c) =>
     getParticipantInfo(c).name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

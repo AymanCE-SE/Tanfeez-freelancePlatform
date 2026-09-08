@@ -11,6 +11,7 @@ export const NotificationProvider = ({ children }) => {
   const { notifications: rawEvents, setNotifications, status } = useNotificationSocket(currentUser?.id);
   const [loaded, setLoaded] = useState(false);
   const [messagesUnreadCount, setMessagesUnreadCount] = useState(0);
+  const [messageEventTick, setMessageEventTick] = useState(0);
 
   // Only "kind: notification" events belong in the bell dropdown —
   // "kind: new_message" events pass through the same socket but are
@@ -38,6 +39,7 @@ export const NotificationProvider = ({ children }) => {
     const latest = rawEvents[0];
     if (latest?.kind === "new_message") {
       getUnreadMessagesCount().then(setMessagesUnreadCount);
+      setMessageEventTick((t) => t + 1);   
     }
   }, [rawEvents.length]);
 
@@ -58,8 +60,8 @@ export const NotificationProvider = ({ children }) => {
   }, [setNotifications]);
 
   return (
-    <NotificationContext.Provider
-      value={{ notifications, unreadCount, markAllRead, markOneRead, status, messagesUnreadCount, refreshMessagesUnreadCount }}>
+    <NotificationContext.Provider 
+    value={{ notifications, unreadCount, markAllRead, markOneRead, status, messagesUnreadCount, refreshMessagesUnreadCount, messageEventTick }}>
       {children}
     </NotificationContext.Provider>
   );
