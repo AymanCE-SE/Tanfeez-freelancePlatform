@@ -2,6 +2,14 @@ from rest_framework import serializers
 from .models import ChatRoom, Message
 from user.models import CustomUser
 from project.models import Project
+from service_proposal.models import ServiceProposal
+
+
+class ChatServiceProposalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProposal
+        fields = ["id", "message", "price_offer", "is_approved", "is_completed"]
+
 
 class ChatParticipantSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
@@ -29,8 +37,10 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
     client_detail = ChatParticipantSerializer(source="client", read_only=True)
     freelancer_detail = ChatParticipantSerializer(source="freelancer", read_only=True)
-    project_detail = ChatProjectSerializer(source="project", read_only=True) 
+    project_detail = ChatProjectSerializer(source="project", read_only=True)
+    service_proposal_detail = ChatServiceProposalSerializer(source="service_proposal", read_only=True)  # ← جديد
     unread_count = serializers.SerializerMethodField()
+
     class Meta:
         model = ChatRoom
         fields = "__all__"

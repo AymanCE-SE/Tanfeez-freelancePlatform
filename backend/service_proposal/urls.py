@@ -7,6 +7,7 @@ from .views import (
     DeleteServiceProposalView,
     ServiceProposalsByServiceView,
     UpdateOwnServiceProposalView,
+    CompleteServiceProposalView
 )
 
 urlpatterns = [
@@ -38,4 +39,5 @@ urlpatterns = [
         DeleteServiceProposalView.as_view(),
         name="delete-service-proposal",
     ),
+        path("complete/<int:pk>/", CompleteServiceProposalView.as_view(), name="complete-service-proposal"),
 ]

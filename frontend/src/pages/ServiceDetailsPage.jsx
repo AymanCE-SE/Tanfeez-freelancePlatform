@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Badge, Alert } from "react-bootstrap";
 import { FiTag, FiYoutube } from "react-icons/fi";
@@ -7,30 +7,37 @@ import ImageGallery from "../components/serviceDetails/ImageGallery";
 import ServiceDetails from "../components/serviceDetails/ServiceDetails";
 import SellerInfo from "../components/serviceDetails/SellerInfo";
 import PricingBox from "../components/serviceDetails/PricingBox";
-// import FAQSection from "../components/serviceDetails/FAQSection";
 import ReviewsSection from "../components/serviceDetails/ReviewsSection";
 import "../styles/ServiceDetailsPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getServiceByIdAction } from "../store/slices/serviceSlice";
 import { fetchUserProfile } from "../store/slices/userSlice";
+import { getMyServiceProposals } from "../api/serviceProposal";
 
 export function ServiceDetailsPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { service, isLoading } = useSelector((myStore) => myStore.serviceSlice);
   const { profile } = useSelector((myStore) => myStore.userSlice);
+  const { user } = useSelector((myStore) => myStore.authSlice);
+  const [alreadyOrdered, setAlreadyOrdered] = useState(false);
 
   useEffect(() => {
     dispatch(getServiceByIdAction(id))
       .unwrap()
       .then((response) => {
-        const freelancerId = response.freelancerId;
-        dispatch(fetchUserProfile(freelancerId));
+        dispatch(fetchUserProfile(response.freelancerId));
       })
-      .catch((error) => {
-        console.error("Failed to fetch service:", error);
-      });
+      .catch((error) => console.error("Failed to fetch service:", error));
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (user?.user_type === "client") {
+      getMyServiceProposals().then((res) => {
+        setAlreadyOrdered(res.data.some((p) => String(p.service) === String(id)));
+      });
+    }
+  }, [user, id]);
 
   if (!service && !isLoading) {
     return (
@@ -125,7 +132,7 @@ const youtubeVideoId = extractYoutubeId(service?.video);
                   <h5 className="mb-0 text-light">About the Seller</h5>
                 </div>
                 <div className="card-body-custom">
-                  <SellerInfo freelancer={service.freelancerId} />
+                <SellerInfo id={service.freelancerId} />
                 </div>
               </div>
 
@@ -153,10 +160,13 @@ const youtubeVideoId = extractYoutubeId(service?.video);
             {/* Right Column */}
             <Col lg={4}>
               <div className="sticky-sidebar">
-                <PricingBox
-                  price={service.price}
-                  // deliveryTime={serviceData.deliveryTime}
-                />
+              <PricingBox
+                price={service.price}
+                serviceId={service.id}
+                isOwnService={user?.id === service.freelancerId}
+                alreadyOrdered={alreadyOrdered}
+                onOrderSuccess={() => setAlreadyOrdered(true)}   
+              />
               </div>
             </Col>
           </Row>

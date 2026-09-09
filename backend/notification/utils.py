@@ -3,11 +3,12 @@ from channels.layers import get_channel_layer
 from .models import Notification
 
 
-def send_notification(recipient, notification_type, message, target_id=None):
+def send_notification(recipient, notification_type, message, target_id=None, target_type=None):
     """Call this from any view when something notification-worthy happens."""
     notif = Notification.objects.create(
         recipient=recipient,
         notification_type=notification_type,
+        target_type=target_type,
         message=message,
         target_id=target_id,
     )
@@ -16,11 +17,13 @@ def send_notification(recipient, notification_type, message, target_id=None):
         f"user_{recipient.id}_notifications",
         {
             "type": "notify",
-            "kind": "notification",   
+            "kind": "notification",
             "id": notif.id,
             "notification_type": notif.notification_type,
+            "target_type": notif.target_type,
             "message": notif.message,
             "target_id": notif.target_id,
+            "is_read": notif.is_read,
             "created_at": notif.created_at.isoformat(),
         },
     )

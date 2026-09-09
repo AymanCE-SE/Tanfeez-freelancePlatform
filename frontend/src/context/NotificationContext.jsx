@@ -21,7 +21,18 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     if (!currentUser?.id || loaded) return;
     getNotifications().then((history) => {
-      setNotifications(history.map((n) => ({ ...n, kind: "notification" })));
+      const normalizedHistory = history.map((n) => ({ ...n, kind: "notification" }));
+      setNotifications((liveEvents) => {
+        const eventsById = new Map(normalizedHistory.map((notification) => [notification.id, notification]));
+
+        liveEvents.forEach((notification) => {
+          eventsById.set(notification.id, notification);
+        });
+
+        return [...eventsById.values()].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+      });
       setLoaded(true);
     });
   }, [currentUser?.id, loaded]);

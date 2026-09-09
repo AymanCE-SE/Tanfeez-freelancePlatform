@@ -59,10 +59,11 @@ class ApplyToProjectView(generics.CreateAPIView):
         self.chatroom_id = chatroom.id  # Store for use in response
 
         send_notification(
-            recipient=proposal.project.clientId,
-            notification_type=Notification.NotificationType.NEW_PROPOSAL,
-            message=f"You have a new proposal on '{proposal.project.name}'",
-            target_id=proposal.project.id,
+            recipient=...,
+            notification_type=Notification.NotificationType.NEW_PROPOSAL,  
+            message=...,
+            target_id=...,
+            target_type=Notification.TargetType.PROJECT,   
         )
 
     def create(self, request, *args, **kwargs):

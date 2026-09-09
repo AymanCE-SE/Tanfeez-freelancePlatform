@@ -38,6 +38,7 @@ const Chat = () => {
     () => conversations.find((c) => c.id.toString() === conversationId),
     [conversations, conversationId]
   );
+  const isMeClient = currentUser?.id === currentConversation?.client;
 
   // On mobile, having a conversationId means "show the chat view instead of
   // the list" — this single boolean drives which panel is visible below.
@@ -200,6 +201,9 @@ const Chat = () => {
                       presence={presence}
                       projectName={currentConversation?.project_detail?.name}
                       onBack={() => navigate("/chat")}
+                      serviceProposal={currentConversation?.service_proposal_detail}
+                      canEditOffer={isMeClient && Boolean(currentConversation?.service_proposal_detail)}
+                      onOfferUpdated={loadConversations}
                     />
                     <div className="chat-messages flex-grow-1">
                       <div className="messages-container p-3"

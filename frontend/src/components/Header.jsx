@@ -41,6 +41,8 @@ const NOTIFICATION_LINKS = {
   proposal_approved: (targetId) => `/project/${targetId}`,
   project_completed: (targetId) => `/project/${targetId}`,
   new_rating: (targetId) => `/project/${targetId}`,
+  project: (targetId) => `/project/${targetId}`,
+  service: (targetId) => `/services/${targetId}`,
 };
 
 const timeAgo = (isoString) => {
@@ -117,7 +119,7 @@ export const Header = () => {
   });
 
   const handleNotificationClick = (notification) => {
-    const buildLink = NOTIFICATION_LINKS[notification.notification_type];
+    const buildLink = NOTIFICATION_LINKS[notification.target_type];
     toggleDropdown("notifications");
     if (!notification.is_read) markOneRead(notification.id);
     if (buildLink && notification.target_id) {

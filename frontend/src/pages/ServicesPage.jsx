@@ -31,6 +31,7 @@ const ServicesPage = () => {
     }
   };
   const { services, isLoading, error } = useSelector((myStore) => myStore.serviceSlice);
+  const { user } = useSelector((myStore) => myStore.authSlice);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllServicesAction());
@@ -243,8 +244,7 @@ const ServicesPage = () => {
               <Row xs={1} md={showFilters ? 2 : 3} className="g-4">
                 {services.map((service) => (
                   <Col key={service.id}>
-                    <ServiceCard service={service} />
-                  </Col>
+                <ServiceCard service={service} isOwner={user?.id === service.freelancerId} />                  </Col>
                 ))}
               </Row>
             )}

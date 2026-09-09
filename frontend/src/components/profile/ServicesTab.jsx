@@ -7,7 +7,7 @@ import { Plus } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyServicesAction, getUserServicesAction, clearServices } from "../../store/slices/serviceSlice";
 import { useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";  
 const ServicesTab = ({ isMyProfile, userId }) => {
   const { myServices, services, isLoading, error } = useSelector((state) => state.serviceSlice);
   const dispatch = useDispatch();
@@ -44,10 +44,10 @@ const ServicesTab = ({ isMyProfile, userId }) => {
     <div className="services-tab">
       {isMyProfile && (
         <div className="d-flex justify-content-end mb-4">
-          <Button variant="primary">
-            <Plus className="me-2" />
-            Add New Service
-          </Button>
+        <Button variant="primary" as={Link} to="/0/service">
+          <Plus className="me-2" />
+          Add New Service
+        </Button>
         </div>
       )}
 

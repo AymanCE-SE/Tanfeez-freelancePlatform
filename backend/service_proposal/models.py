@@ -12,6 +12,7 @@ class ServiceProposal(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True
     )
     is_approved = models.BooleanField(default=False)
+    is_completed = models.BooleanField(default=False)  
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

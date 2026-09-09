@@ -34,6 +34,7 @@ import Projects from "../pages/Projects";
 import Dashboard from "../pages/Dashboard";
 import { ChatbotInterface } from "../pages/ChatBot";
 import { NotificationProvider } from "../context/NotificationContext";
+import ServiceRequests from "../pages/ServiceRequests";
 
 export function MainLayout() {
   return (
@@ -53,6 +54,7 @@ export function MainLayout() {
           <Route path="profile/:id" element={<UserProfile />} />
           <Route path="profile/edit/:id" element={<EditProfile />} />
           <Route path="/services/:id" element={<ServiceDetailsPage />} />
+          <Route path="services/:serviceId/requests" element={<ServiceRequests />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chat/:conversationId" element={<Chat />} />

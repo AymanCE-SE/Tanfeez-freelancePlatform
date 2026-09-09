@@ -51,6 +51,7 @@ const CreateService = () => {
   const [validated, setValidated] = useState(false);
   const [youtubeVideoId, setYoutubeVideoId] = useState('');
   const [youtubeError, setYoutubeError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const categories = [
     'Web Development', 'Graphic Design', 'Interior Design', 'Content Writing',
@@ -132,6 +133,7 @@ const CreateService = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     const form = e.currentTarget;
 
     if (form.checkValidity() === false || (!formData.photo && id === "0")) {
@@ -144,6 +146,7 @@ const CreateService = () => {
           text: 'Please upload a thumbnail image.'
         });
       }
+      setIsSubmitting(true);
       return;
     }
 
@@ -171,9 +174,7 @@ const CreateService = () => {
 
 
 
-    const action = id !== "0"
-      ? updateServiceAction({ id, data: serviceData })
-      : addServiceAction(serviceData);
+  const action = id !== "0" ? updateServiceAction({ id, data: serviceData }) : addServiceAction(serviceData);
 
     dispatch(action).unwrap()
       .then(() => {
@@ -203,8 +204,9 @@ const CreateService = () => {
           title: 'Submission Failed',
           html: errorMessages.join('<br>'),
         });
-      });
-  };
+      })
+      .finally(() => setIsSubmitting(false));
+     };
 
   return (
     <div className="page-container">
@@ -468,9 +470,9 @@ const CreateService = () => {
           </Row>
 
           <div className="d-flex justify-content-between mt-4">
-            <Button variant="primary" type="submit" className="button-primary">
-              Publish Service
-            </Button>
+        <Button variant="primary" type="submit" className="button-primary" disabled={isSubmitting}>
+          {isSubmitting ? "Saving..." : "Create Service"}
+        </Button>
           </div>
         </Form>
       </Container>

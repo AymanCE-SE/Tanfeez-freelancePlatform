@@ -37,7 +37,11 @@ const ServiceCard = ({ service, isOwner }) => {
         )}
       </div>
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="service-title mb-2">{service_name}</Card.Title>
+        <Card.Title className="service-title mb-2">
+          <Link to={`/services/${id}`} className="service-title-link">
+            {service_name}
+          </Link>
+        </Card.Title>
         <Card.Text className="service-description mb-3">
           {description.length > 100
             ? `${description.substring(0, 100)}...`
@@ -72,14 +76,14 @@ const ServiceCard = ({ service, isOwner }) => {
             <span className="price-value">${price}</span>
           </div>
           {isOwner ? (
-            <Button 
-              variant="outline-primary" 
-              as={Link}
-              to={`/${id}/service`}
-              className="service-action-btn"
-            >
+          <div className="d-flex gap-2">
+            <Button variant="outline-primary" as={Link} to={`/${id}/service`} className="service-action-btn">
               Edit Service
             </Button>
+            <Button variant="primary" as={Link} to={`/services/${id}/requests`} className="service-action-btn">
+              View Orders
+            </Button>
+          </div>            
           ) : (
             <Button 
               variant="primary" 

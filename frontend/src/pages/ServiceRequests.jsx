@@ -1,67 +1,88 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Card, Badge, Row, Col } from "react-bootstrap";
-import { BsPersonCircle, BsClock } from "react-icons/bs";
-import {mockServiceRequests} from "../mock/mockServiceRequests";
-import {mockServices} from "../mock/mockServices";
+import { BsPersonCircle, BsClock, BsChatDots } from "react-icons/bs";
+import { formatDistanceToNow } from "date-fns";
+import Swal from "sweetalert2";
+import { getServiceProposalsByService, approveServiceProposal, completeServiceProposal } from "../api/serviceProposal";
+import { getServiceByIdAction } from "../store/slices/serviceSlice";
+import { useDispatch, useSelector } from "react-redux";
 import "../styles/ServiceRequests.css";
-
-const statusColors = {
-  pending: "secondary",
-  accepted: "success",
-  rejected: "danger",
-};
 
 const ServiceRequests = () => {
   const { serviceId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { service } = useSelector((myStore) => myStore.serviceSlice);
+
   const [requests, setRequests] = useState([]);
-  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [actingOnId, setActingOnId] = useState(null); // disables the button of whichever card is mid-action
 
-  useEffect(() => {
-    setRequests(mockServiceRequests);
-    const found = mockServices.find(
-      (s) => String(s.id) === String(serviceId)
-    );
-    setService(found);
-  }, [serviceId]);
-
-  const handleStatus = (requestId, status) => {
-    setRequests((prev) =>
-      prev.map((r) =>
-        r.id === requestId ? { ...r, status } : r
-      )
-    );
+  const loadRequests = () => {
+    getServiceProposalsByService(serviceId)
+      .then((res) => setRequests(res.data))
+      .finally(() => setLoading(false));
   };
 
-  if (!service) {
-    return <div className="text-center text-muted py-5">Service not found.</div>;
+  useEffect(() => {
+    dispatch(getServiceByIdAction(serviceId));
+    loadRequests();
+  }, [serviceId]);
+
+  const handleAccept = async (requestId) => {
+    setActingOnId(requestId);
+    try {
+      await approveServiceProposal(requestId);
+      loadRequests();
+      Swal.fire({ icon: "success", title: "Order Accepted", timer: 1500, showConfirmButton: false });
+    } catch (error) {
+      Swal.fire({ icon: "error", title: "Failed", text: error?.response?.data?.detail || "Please try again." });
+    } finally {
+      setActingOnId(null);
+    }
+  };
+
+  const handleComplete = async (requestId) => {
+    setActingOnId(requestId);
+    try {
+      await completeServiceProposal(requestId);
+      loadRequests();
+      Swal.fire({ icon: "success", title: "Marked as Completed", timer: 1500, showConfirmButton: false });
+    } catch (error) {
+      Swal.fire({ icon: "error", title: "Failed", text: error?.response?.data?.detail || "Please try again." });
+    } finally {
+      setActingOnId(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status" />
+      </div>
+    );
   }
 
   return (
     <div className="service-requests-page-container py-4" style={{ minHeight: "80vh" }}>
-      {/* --- Service Main Info --- */}
-      <Card className="mb-4 shadow-sm service-card">
-        <Card.Body>
-          <h3 className="mb-2">{service.title}</h3>
-          <div className="mb-2 text-muted">{service.description}</div>
-          <div className="d-flex flex-wrap gap-3 mb-2">
-            <Badge bg="info" className="me-2">{service.category}</Badge>
-            <Badge bg="success" className="me-2">{service.status}</Badge>
-            <Badge bg="dark" className="me-2">{service.price}</Badge>
-            <Badge bg="light" text="dark" className="me-2">{service.deliveryTime}</Badge>
-          </div>
-          <div className="d-flex flex-wrap gap-2">
-            {service.skills && service.skills.map((skill, idx) => (
-              <Badge key={idx} bg="primary" className="me-1">{skill}</Badge>
-            ))}
-          </div>
-        </Card.Body>
-      </Card>
+      {service && (
+        <Card className="mb-4 shadow-sm service-card">
+          <Card.Body>
+            <h3 className="mb-2">{service.service_name}</h3>
+            <div className="mb-2 text-muted">{service.description}</div>
+            <div className="d-flex flex-wrap gap-2">
+              <Badge bg="info">{service.category}</Badge>
+              <Badge bg="dark">${service.price}</Badge>
+            </div>
+          </Card.Body>
+        </Card>
+      )}
 
-      {/* --- Requests List --- */}
-      <h2 className="mb-4 section-title text-center">Service Requests</h2>
+      <h2 className="mb-4 section-title text-center">Orders</h2>
+
       {requests.length === 0 ? (
-        <div className="text-center text-muted py-5">No requests yet.</div>
+        <div className="text-center text-muted py-5">No orders yet.</div>
       ) : (
         <Row xs={1} md={2} lg={2} className="g-4">
           {requests.map((request) => (
@@ -71,46 +92,67 @@ const ServiceRequests = () => {
                   <div className="d-flex align-items-center mb-3">
                     <BsPersonCircle size={38} className="me-3 text-primary" />
                     <div>
-                      <div className="fw-bold">{request.clientName}</div>
-                      <Badge
-                        bg={statusColors[request.status]}
-                        className="request-status-badge ms-1"
-                      >
-                        {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                      <div className="fw-bold">{request.client_name}</div>
+                      <Badge bg={request.is_completed ? "secondary" : request.is_approved ? "success" : "warning"}>
+                        {request.is_completed ? "Completed" : request.is_approved ? "Accepted" : "Pending"}
                       </Badge>
                     </div>
                   </div>
-                  <Card.Text className="request-message mb-3">
+
+                  <Card.Text className="request-message mb-2">
                     <span className="text-muted">Message:</span>
                     <br />
-                    {request.message}
+                    {request.message || <span className="text-muted">No message</span>}
                   </Card.Text>
+
+                  <div className="fw-semibold mb-3">Offer: ${request.price_offer}</div>
+
                   <div className="d-flex flex-wrap gap-3 mb-3 request-meta">
                     <span className="d-flex align-items-center">
                       <BsClock className="me-1 text-warning" />
-                      <span>{request.createdAt}</span>
+                      {formatDistanceToNow(new Date(request.created_at), { addSuffix: true })}
                     </span>
                   </div>
-                  {request.status === "pending" && (
-                    <div className="d-flex gap-2 mt-2">
+
+                  <div className="d-flex gap-2 mt-2 flex-wrap">
+                    {/* "Bargain" — negotiation happens through the chat that
+                        was auto-created when the order was placed, not a
+                        separate counter-offer field. */}
+                    {request.chatroom_id && (
                       <Button
-                        onClick={() => handleStatus(request.id, "accepted")}
+                        variant="outline-primary"
+                        size="sm"
+                        className="flex-fill"
+                        onClick={() => navigate(`/chat/${request.chatroom_id}`)}
+                      >
+                        <BsChatDots className="me-1" /> Message & Bargain
+                      </Button>
+                    )}
+
+                    {!request.is_approved && (
+                      <Button
+                        onClick={() => handleAccept(request.id)}
                         variant="success"
                         size="sm"
                         className="flex-fill"
+                        disabled={actingOnId === request.id}
                       >
                         Accept
                       </Button>
+                    )}
+
+                    {request.is_approved && !request.is_completed && (
                       <Button
-                        onClick={() => handleStatus(request.id, "rejected")}
-                        variant="danger"
+                        onClick={() => handleComplete(request.id)}
+                        variant="primary"
                         size="sm"
                         className="flex-fill"
+                        disabled={actingOnId === request.id}
                       >
-                        Reject
+                        Mark Completed
                       </Button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
