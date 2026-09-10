@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -10,7 +10,6 @@ import {
   Modal,
   Form,
   Button,
-  Spinner,
   Alert,
 } from "react-bootstrap";
 import {
@@ -30,10 +29,11 @@ import {
 } from "../store/slices/proposalSlice";
 import { getMyProposals, getPublicProposalsByProject } from "../api/proposal";
 import Swal from "sweetalert2";
+import RatingModal from "../components/rating/RatingModal";
+import { getMyEngagementRating } from "../api/rating";
 
 function ProjectDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showProposalModal, setShowProposalModal] = useState(false);
   const [proposal, setProposal] = useState({
@@ -49,9 +49,11 @@ function ProjectDetails() {
   const { projectDetails, isLoading } = useSelector((myStore) => myStore.projectSlice);
   const { profile, user } = useSelector((myStore) => myStore.userSlice);
   const { proposals } = useSelector((myStore) => myStore.proposalSlice);
-
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [myRating, setMyRating] = useState(null);
+  const [ratingLoaded, setRatingLoaded] = useState(false);
   const isProjectOwner =
-    user?.id === projectDetails?.user_id && projectDetails?.id === Number(id);
+    String(user?.id) === String(projectDetails?.user_id) && projectDetails?.id === Number(id);
 
   const selectedProposal = proposals?.find((p) => p.id === selectedProposalId) || null;
 
@@ -66,13 +68,13 @@ function ProjectDetails() {
       getMyProposals().then((res) => {
         const mine = res.data.find((p) => String(p.project) === String(id));
         setMyProposal(mine || null);
-      });
+      }).catch(() => setMyProposal(null));
     }
   }, [user, id]);
 
   useEffect(() => {
     if (id) {
-      getPublicProposalsByProject(id).then(setPublicProposals);
+      getPublicProposalsByProject(id).then(setPublicProposals).catch(() => setPublicProposals([]));
     }
   }, [id]);
 
@@ -84,6 +86,19 @@ function ProjectDetails() {
         }
       });
   }, [dispatch, id]);
+
+  useEffect(() => {
+  if (projectDetails?.progress === "completed" && projectDetails?.id === Number(id)) {
+    setRatingLoaded(false);
+    getMyEngagementRating({ project: id })
+      .then(setMyRating)
+      .catch(() => setMyRating(null))
+      .finally(() => setRatingLoaded(true));
+  }
+}, [projectDetails?.progress, projectDetails?.id, id]);
+  const isFreelancerOnProject = String(user?.id) === String(projectDetails?.freelancerId);
+  const counterpartId = isProjectOwner ? projectDetails?.freelancerId : projectDetails?.user_id;
+  const ratingDirection = isProjectOwner ? "client_to_freelancer" : "freelancer_to_client";
 
   const refreshProposalsData = () => {
     dispatch(getProjectByIdAction(id));
@@ -160,7 +175,7 @@ function ProjectDetails() {
         ...proposal,
         project: id,
       };
-      const result = await dispatch(addProposalAction(proposalData)).unwrap();
+      await dispatch(addProposalAction(proposalData)).unwrap();
       setShowProposalModal(false);
       const res = await getMyProposals();
       const mine = res.data.find((p) => String(p.project) === String(id));
@@ -375,7 +390,7 @@ function ProjectDetails() {
               </Card>
             </Col>
           </Row>
-
+          
           {projectDetails?.progress === "not_started" && user.user_type === "freelancer" && !myProposal && (
             <div className="mt-4 d-flex justify-content-end">
               <Button
@@ -385,8 +400,35 @@ function ProjectDetails() {
               >
                 Submit Proposal
               </Button>
+            </div>    
+          )}
+          {projectDetails?.progress === "completed" && (isProjectOwner || isFreelancerOnProject) && (
+            <div className="mt-4 d-flex justify-content-end align-items-center gap-3">
+              {ratingLoaded && myRating === null && (
+                <Button variant="warning" onClick={() => setShowRatingModal(true)}>
+                  Rate {isProjectOwner ? "Freelancer" : "Client"}
+                </Button>
+              )}
+              {myRating && (
+                <Button variant="outline-secondary" disabled>
+                  Rated {myRating.rating}★
+                </Button>
+              )}
             </div>
           )}
+
+            <RatingModal
+            show={showRatingModal}
+            onHide={() => setShowRatingModal(false)}
+            direction={ratingDirection}
+            ratee={counterpartId}
+            project={id}
+            onSuccess={() =>
+              getMyEngagementRating({ project: id })
+                .then(setMyRating)
+                .catch(() => setMyRating(null))
+            }
+          />
         </Card.Body>
       </Card>
 

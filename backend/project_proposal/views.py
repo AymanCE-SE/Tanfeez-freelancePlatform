@@ -187,6 +187,7 @@ class PublicProposalsByProjectView(generics.ListAPIView):
         return ProjectProposal.objects.filter(project_id=project_id, is_deleted=False)
 
 
+# backend/project_proposal/views.py
 class FinishProjectView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -206,11 +207,27 @@ class FinishProjectView(APIView):
         project.save()
 
         send_notification(
-            recipient=project.clientId,     #user that get no notification
+            recipient=proposal.freelancer.uid,
+            notification_type=Notification.NotificationType.PROJECT_COMPLETED,
+            message=f"'{project.name}' has been marked as completed.",
+            target_id=project.id,
+            target_type=Notification.TargetType.PROJECT,
+        )
+
+        # notification to rate the two sides
+        send_notification(
+            recipient=project.clientId,
             notification_type=Notification.NotificationType.NEW_RATING,
             message=f"'{project.name}' is complete — rate your freelancer.",
             target_id=project.id,
-            target_type=Notification.TargetType.PROJECT
-                    )
+            target_type=Notification.TargetType.PROJECT,
+        )
+        send_notification(
+            recipient=proposal.freelancer.uid,
+            notification_type=Notification.NotificationType.NEW_RATING,
+            message=f"'{project.name}' is complete — rate your client.",
+            target_id=project.id,
+            target_type=Notification.TargetType.PROJECT,
+        )
 
         return Response({"detail": "Project marked as completed."})

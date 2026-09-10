@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     ClientRatingCreateView, ClientRatingDetailView, ClientRatingUpdateView,
     ClientRatingDeleteView, ClientRatingListView, FreelancerRatingSummaryView,
-    EngagementRatingCreateView, EngagementRatingListView, EngagementRatingSummaryView
+    EngagementRatingCreateView, EngagementRatingListView, EngagementRatingSummaryView,
+    MyEngagementRatingView,
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path("engagement/create/", EngagementRatingCreateView.as_view()),
     path("engagement/list/<int:user_id>/", EngagementRatingListView.as_view()),
     path("engagement/summary/<int:user_id>/", EngagementRatingSummaryView.as_view()),
+    path("engagement/mine/", MyEngagementRatingView.as_view()),
 ]

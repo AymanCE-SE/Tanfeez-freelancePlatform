@@ -169,3 +169,17 @@ class EngagementRatingSummaryView(APIView):
             "average_rating": round(stats["average"], 2) if stats["average"] else None,
             "ratings_count": stats["count"],
         })
+
+class MyEngagementRatingView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        project_id = request.query_params.get("project")
+        service_id = request.query_params.get("service")
+        qs = EngagementRating.objects.filter(rater=request.user, is_deleted=False)
+        if project_id:
+            qs = qs.filter(project_id=project_id)
+        if service_id:
+            qs = qs.filter(service_id=service_id)
+        rating = qs.first()
+        return Response(EngagementRatingSerializer(rating).data if rating else None)
