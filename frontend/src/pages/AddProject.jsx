@@ -64,14 +64,10 @@ function AddProject() {
   };
 
   const handleSkillClick = (skill) => {
-    const skillsArray = formData.skills
-      ? formData.skills.split(",").map((s) => s.trim())
-      : [];
-
-    if (!skillsArray.includes(skill)) {
+    if (!formData.skills.includes(skill)) {
       setFormData((prev) => ({
         ...prev,
-        skills: [...skillsArray, skill].join(", "),
+        skills: [...prev.skills, skill],
       }));
     }
     setSkillSuggestions([]);
@@ -176,12 +172,20 @@ function AddProject() {
     if (!isLoading && !error && createdProject) {
       setSuccessMessage("Project posted successfully!");
       setFormData({
-        name: "", description: "", duration: "", progress: "not_started",
-        experience_level: "", type: "Fixed Price", budget: "", hourlyRate: "",
-        location: "", status: "open",
+        name: "",
+        description: "",
+        type: "Fixed Price",
+        budget: "",
+        hourlyRate: "",
+        duration: "",
+        experience_level: "",
+        location: "",
+        status: "open",
+        skills: [],         
+        progress: "not_started",
       });
       setErrors({});
-      navigate("/projects");   
+      navigate("/projects");
     }
   }, [isLoading, error, createdProject]);
 
