@@ -37,10 +37,10 @@ import { useNotifications } from "../context/NotificationContext";
 
 // Maps a notification's type to the page it should take you to when clicked.
 const NOTIFICATION_LINKS = {
-  new_proposal: (targetId) => `/project/${targetId}`,
-  proposal_approved: (targetId) => `/project/${targetId}`,
-  project_completed: (targetId) => `/project/${targetId}`,
-  new_rating: (targetId) => `/project/${targetId}`,
+  // new_proposal: (targetId) => `/project/${targetId}`,
+  // proposal_approved: (targetId) => `/project/${targetId}`,
+  // project_completed: (targetId) => `/project/${targetId}`,
+  // new_rating: (targetId) => `/project/${targetId}`,
   project: (targetId) => `/project/${targetId}`,
   service: (targetId) => `/services/${targetId}`,
 };

@@ -112,6 +112,7 @@ class ApproveServiceProposalView(APIView):
             notification_type=Notification.NotificationType.PROPOSAL_APPROVED,
             message=f"Your order for '{service.service_name}' was approved!",
             target_id=service.id,
+            target_type=Notification.TargetType.SERVICE,  
         )
 
         return Response({"detail": "Proposal approved successfully.", "chatroom_id": chatroom.id})
@@ -203,6 +204,7 @@ class CompleteServiceProposalView(APIView):
             notification_type=Notification.NotificationType.PROJECT_COMPLETED,
             message=f"'{proposal.service.service_name}' has been marked as completed.",
             target_id=proposal.service.id,
+            target_type=Notification.TargetType.SERVICE, 
         )
 
         return Response({"detail": "Service order marked as completed."})

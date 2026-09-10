@@ -210,6 +210,7 @@ class FinishProjectView(APIView):
             notification_type=Notification.NotificationType.PROJECT_COMPLETED,
             message=f"'{project.name}' has been marked as completed.",
             target_id=project.id,
+            target_type=Notification.TargetType.PROJECT,   
         )
 
         return Response({"detail": "Project marked as completed."})
