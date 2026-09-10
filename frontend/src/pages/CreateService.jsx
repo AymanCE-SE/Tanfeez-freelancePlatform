@@ -146,7 +146,6 @@ const CreateService = () => {
           text: 'Please upload a thumbnail image.'
         });
       }
-      setIsSubmitting(true);
       return;
     }
 

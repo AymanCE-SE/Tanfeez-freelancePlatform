@@ -15,8 +15,11 @@ from project.models import Project
 from .models import ClientRating
 from .serializers import ClientRatingSerializer
 from .permissions import IsClientUser 
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Q
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from .models import EngagementRating
+from .serializers import EngagementRatingSerializer
 
 class ClientRatingCreateView(CreateAPIView):
     serializer_class = ClientRatingSerializer
@@ -108,6 +111,61 @@ class FreelancerRatingSummaryView(APIView):
 
         return Response({
             "freelancer_id": freelancer_id,
+            "average_rating": round(stats["average"], 2) if stats["average"] else None,
+            "ratings_count": stats["count"],
+        })
+
+class EngagementRatingCreateView(CreateAPIView):
+    serializer_class = EngagementRatingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        direction = serializer.validated_data.get("direction")
+        project = serializer.validated_data.get("project")
+        service = serializer.validated_data.get("service")
+        ratee = serializer.validated_data.get("ratee")
+
+        # Only the actual counterpart in the engagement can rate — the
+        # client of THIS project/service, or the freelancer of it,
+        # matching whichever direction is being submitted.
+        if project:
+            valid_pair = (project.clientId, project.freelancerId)
+        elif service:
+            # service.freelancerId is the owner; the rater must be a client
+            # who actually had an approved/completed order on this service
+            valid_pair = None
+        else:
+            raise ValidationError("A rating must reference a project or a service.")
+
+        if project and self.request.user not in valid_pair:
+            raise PermissionDenied("You weren't part of this project.")
+
+        if EngagementRating.objects.filter(
+            rater=self.request.user, ratee=ratee, project=project, service=service, is_deleted=False
+        ).exists():
+            raise ValidationError("You already rated this person for this engagement.")
+
+        serializer.save(rater=self.request.user)
+
+
+class EngagementRatingListView(ListAPIView):
+    serializer_class = EngagementRatingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        ratee_id = self.kwargs["user_id"]
+        return EngagementRating.objects.filter(ratee_id=ratee_id, is_deleted=False)
+
+
+class EngagementRatingSummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        stats = EngagementRating.objects.filter(ratee_id=user_id, is_deleted=False).aggregate(
+            average=Avg("rating"), count=Count("id")
+        )
+        return Response({
+            "user_id": user_id,
             "average_rating": round(stats["average"], 2) if stats["average"] else None,
             "ratings_count": stats["count"],
         })

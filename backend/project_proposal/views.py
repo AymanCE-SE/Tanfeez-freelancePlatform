@@ -59,11 +59,11 @@ class ApplyToProjectView(generics.CreateAPIView):
         self.chatroom_id = chatroom.id  # Store for use in response
 
         send_notification(
-            recipient=...,
-            notification_type=Notification.NotificationType.NEW_PROPOSAL,  
-            message=...,
-            target_id=...,
-            target_type=Notification.TargetType.PROJECT,   
+            recipient=proposal.project.clientId,
+            notification_type=Notification.NotificationType.NEW_PROPOSAL,
+            message=f"You have a new proposal on '{proposal.project.name}'",
+            target_id=proposal.project.id,
+            target_type=Notification.TargetType.PROJECT, 
         )
 
     def create(self, request, *args, **kwargs):
@@ -206,11 +206,11 @@ class FinishProjectView(APIView):
         project.save()
 
         send_notification(
-            recipient=proposal.freelancer.uid,
-            notification_type=Notification.NotificationType.PROJECT_COMPLETED,
-            message=f"'{project.name}' has been marked as completed.",
+            recipient=project.clientId,     #user that get no notification
+            notification_type=Notification.NotificationType.NEW_RATING,
+            message=f"'{project.name}' is complete — rate your freelancer.",
             target_id=project.id,
-            target_type=Notification.TargetType.PROJECT,   
-        )
+            target_type=Notification.TargetType.PROJECT
+                    )
 
         return Response({"detail": "Project marked as completed."})

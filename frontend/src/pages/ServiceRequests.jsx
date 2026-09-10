@@ -119,13 +119,9 @@ const ServiceRequests = () => {
                         was auto-created when the order was placed, not a
                         separate counter-offer field. */}
                     {request.chatroom_id && (
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="flex-fill"
-                        onClick={() => navigate(`/chat/${request.chatroom_id}`)}
-                      >
-                        <BsChatDots className="me-1" /> Message & Bargain
+                      <Button variant="outline-primary" size="sm" className="flex-fill" onClick={() => navigate(`/chat/${request.chatroom_id}`)}>
+                        <BsChatDots className="me-1" />
+                        {request.is_completed || request.is_approved ? "Message" : "Message & Bargain"}
                       </Button>
                     )}
 

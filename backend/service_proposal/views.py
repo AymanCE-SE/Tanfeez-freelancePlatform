@@ -199,12 +199,29 @@ class CompleteServiceProposalView(APIView):
         proposal.is_completed = True
         proposal.save()
 
+
         send_notification(
             recipient=proposal.client.uid,
             notification_type=Notification.NotificationType.PROJECT_COMPLETED,
             message=f"'{proposal.service.service_name}' has been marked as completed.",
             target_id=proposal.service.id,
-            target_type=Notification.TargetType.SERVICE, 
+            target_type=Notification.TargetType.SERVICE,   
+        )
+
+        # rating for both not one side
+        send_notification(
+            recipient=proposal.client.uid,
+            notification_type=Notification.NotificationType.NEW_RATING,
+            message=f"'{proposal.service.service_name}' is complete — rate your freelancer.",
+            target_id=proposal.service.id,
+            target_type=Notification.TargetType.SERVICE,
+        )
+        send_notification(
+            recipient=proposal.service.freelancerId,
+            notification_type=Notification.NotificationType.NEW_RATING,
+            message=f"'{proposal.service.service_name}' is complete — rate your client.",
+            target_id=proposal.service.id,
+            target_type=Notification.TargetType.SERVICE,
         )
 
         return Response({"detail": "Service order marked as completed."})
