@@ -11,9 +11,9 @@ export const addService = async (service) => {
 };
 
 
-export const getAllServices = async () => {
+export const getAllServices = async (page = 1) => {
     try {
-        const response = await apiClient.get("service/");
+        const response = await apiClient.get("service/", { params: { page } });
         return response
     } catch (error) {
         throw error;
@@ -51,9 +51,9 @@ export const updateService = async (id, service) => {
     }
 };
 
-export const getServicesByTag = async (tag) => {
+export const getServicesByTag = async (tag, page = 1) => {
     try {
-        const response = await apiClient.get(`service/by-tag/?tag=${tag}`);
+        const response = await apiClient.get("service/by-tag/", { params: { tag, page } });
         return response;
     } catch (error) {
         throw error;

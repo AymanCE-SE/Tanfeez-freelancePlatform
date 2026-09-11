@@ -1,13 +1,13 @@
 /** @format */
 
-import React, { useState, useEffect, use } from "react";
-import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import { Container, Row, Col, Form, InputGroup, Button, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ServiceCard from "../components/cards/ServiceCard";
 import { categories } from "../mock/servicesData";
 import "../styles/ServicesPage.css";
 import { useDispatch, useSelector } from "react-redux";
-import { myStore } from "../store";
+import { useSearchParams } from "react-router-dom";
 import { getAllServicesAction, getServicesByTagAction } from "../store/slices/serviceSlice";
 
 const ServicesPage = () => {
@@ -18,6 +18,13 @@ const ServicesPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
   const [selectedTag, setSelectedTag] = useState(""); // Add to your filter state and UI as needed
+  const [searchParams, setSearchParams] = useSearchParams();
+  const hasMounted = useRef(false);
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const goToPage = (page) => {
+    setSearchParams({ page: String(page) });
+  };
 
   const handleCategoryClick = (categoryName) => {
     if (categoryName === "All Services") {
@@ -30,12 +37,26 @@ const ServicesPage = () => {
       setSelectedCategory(categoryName);
     }
   };
-  const { services, isLoading, error } = useSelector((myStore) => myStore.serviceSlice);
+  const { services, isLoading, error, totalServices, totalServicePages } = useSelector((myStore) => myStore.serviceSlice);
   const { user } = useSelector((myStore) => myStore.authSlice);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllServicesAction());
-  }, [])
+    if (searchTerm.trim()) {
+      dispatch(getServicesByTagAction({ tag: searchTerm.trim(), page: currentPage }));
+    } else {
+      dispatch(getAllServicesAction(currentPage));
+    }
+  }, [dispatch, currentPage])
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    if (currentPage !== 1) {
+      goToPage(1);
+    }
+  }, [searchTerm, selectedCategory, selectedSubcategory, priceRange, selectedTag]);
 
   useEffect(() => {
     setFilteredServices(services);
@@ -97,8 +118,10 @@ const ServicesPage = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (searchTerm.trim()) {
-        dispatch(getServicesByTagAction(searchTerm.trim()));
+        goToPage(1);
+        dispatch(getServicesByTagAction({ tag: searchTerm.trim(), page: 1 }));
       } else {
+        goToPage(1);
         dispatch(getAllServicesAction());
       }
     }
@@ -231,10 +254,10 @@ const ServicesPage = () => {
 
           <Col md={showFilters ? 9 : 12}>
             <div className="mb-3 text-muted">
-              Found {services.length} services
+              Found {totalServices} services
             </div>
 
-            {services.length === 0 ? (
+            {filteredServices.length === 0 ? (
               <div className="text-center py-5">
                 <p className="text-muted">
                   No services found matching your criteria.
@@ -242,11 +265,32 @@ const ServicesPage = () => {
               </div>
             ) : (
               <Row xs={1} md={showFilters ? 2 : 3} className="g-4">
-                {services.map((service) => (
+                {filteredServices.map((service) => (
                   <Col key={service.id}>
                 <ServiceCard service={service} isOwner={user?.id === service.freelancerId} />                  </Col>
                 ))}
               </Row>
+            )}
+            {!isLoading && !error && totalServices > 0 && (
+              <Pagination className="justify-content-center mt-4">
+                <Pagination.Prev
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                />
+                {Array.from({ length: totalServicePages }, (_, index) => index + 1).map((page) => (
+                  <Pagination.Item
+                    key={page}
+                    active={page === currentPage}
+                    onClick={() => goToPage(page)}
+                  >
+                    {page}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  disabled={currentPage === totalServicePages}
+                  onClick={() => goToPage(currentPage + 1)}
+                />
+              </Pagination>
             )}
           </Col>
         </Row>

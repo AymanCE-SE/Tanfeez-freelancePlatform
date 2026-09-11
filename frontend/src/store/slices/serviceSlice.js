@@ -9,6 +9,9 @@ const initialState = {
     latestServices: [],
     isLoading: false,
     error: null,
+    totalServices: 0,
+    totalServicePages: 1,
+    currentServicePage: 1,
 
 };
 
@@ -52,10 +55,10 @@ export const getMyServicesAction = createAsyncThunk(
 export const getAllServicesAction = createAsyncThunk(
 
     "service/getAllServicesAction",
-    async (args, thunkAPI) => {
+    async (page = 1, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
         try {
-            const response = await getAllServices();
+            const response = await getAllServices(page);
             return response.data;
 
         } catch (error) {
@@ -105,10 +108,13 @@ export const updateServiceAction = createAsyncThunk(
 
 export const getServicesByTagAction = createAsyncThunk(
     "service/getServicesByTagAction",
-    async (tag, thunkAPI) => {
+    async (tagOrParams, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
+        const { tag, page = 1 } = typeof tagOrParams === "string"
+            ? { tag: tagOrParams }
+            : tagOrParams;
         try {
-            const response = await getServicesByTag(tag);
+            const response = await getServicesByTag(tag, page);
             return response.data;
         } catch (error) {
             const serializedError = {
@@ -164,7 +170,13 @@ const serviceSlice = createSlice(
                 })
                 .addCase(getAllServicesAction.fulfilled, (state, action) => {
                     state.isLoading = false;
-                    state.services = action.payload;
+                    const payload = Array.isArray(action.payload)
+                        ? { results: action.payload, count: action.payload.count || action.payload.length }
+                        : action.payload;
+                    state.services = payload.results || [];
+                    state.totalServices = payload.count || 0;
+                    state.totalServicePages = Math.max(1, Math.ceil((payload.count || 0) / 20));
+                    state.currentServicePage = action.meta.arg || 1;
                 })
                 .addCase(getAllServicesAction.rejected, (state, action) => {
                     state.isLoading = false;
@@ -232,8 +244,11 @@ const serviceSlice = createSlice(
                 })
                 .addCase(getServicesByTagAction.fulfilled, (state, action) => {
                     state.isLoading = false;
+                    const payload = Array.isArray(action.payload)
+                        ? { results: action.payload, count: action.payload.count || action.payload.length }
+                        : action.payload;
                     // Map the services to ensure photo URLs are complete
-                    state.services = action.payload.map(service => ({
+                    state.services = (payload.results || []).map(service => ({
                         ...service,
                         photo: service.photo ?
                             (service.photo.startsWith('http') ?
@@ -241,6 +256,9 @@ const serviceSlice = createSlice(
                                 `${apiOrigin}${service.photo}`
                             ) : null
                     }));
+                            state.totalServices = payload.count || 0;
+                            state.totalServicePages = Math.max(1, Math.ceil((payload.count || 0) / 20));
+                            state.currentServicePage = action.meta.arg?.page || 1;
                 })
                 .addCase(getServicesByTagAction.rejected, (state, action) => {
                     state.isLoading = false;

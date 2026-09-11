@@ -10,9 +10,9 @@ export const addProject = async (service) => {
 };
 
 
-export const getAllProject = async () => {
+export const getAllProject = async (page = 1) => {
     try {
-        const response = await apiClient.get("project/");
+        const response = await apiClient.get("project/", { params: { page } });
         return response
     } catch (error) {
         throw error;

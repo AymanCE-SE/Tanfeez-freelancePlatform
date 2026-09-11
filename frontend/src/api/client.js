@@ -29,7 +29,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => {
     if (Array.isArray(response.data?.results)) {
-      response.data = response.data.results;
+      const paginatedResponse = response.data;
+      response.data = paginatedResponse.results;
+      response.data.count = paginatedResponse.count;
+      response.data.next = paginatedResponse.next;
+      response.data.previous = paginatedResponse.previous;
     }
     return response;
   },

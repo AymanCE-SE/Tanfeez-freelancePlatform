@@ -12,6 +12,9 @@ const initialState = {
   error: null,
   projectDetails: null,
   latestProjects: [],
+  totalProjects: 0,
+  totalProjectPages: 1,
+  currentProjectPage: 1,
 };
 
 const getProjectByIdAction = createAsyncThunk(
@@ -50,9 +53,9 @@ export const getMyProjectsAction = createAsyncThunk(
 
 const getAllProjectAction = createAsyncThunk(
   "project/getAllProjectAction",
-  async (_, { rejectWithValue }) => {
+  async (page = 1, { rejectWithValue }) => {
     try {
-      const response = await getAllProject(); // This should call your backend
+      const response = await getAllProject(page);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -103,11 +106,16 @@ const projectSlice = createSlice({
       })
       .addCase(getAllProjectAction.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Filter out projects where the user/client exists
-        state.projectList = action.payload.filter(project => {
+        const payload = Array.isArray(action.payload)
+          ? { results: action.payload, count: action.payload.count || action.payload.length }
+          : action.payload;
+        state.projectList = (payload.results || []).filter(project => {
           // Check if clientId exists and is not null/undefined
           return project.clientId && project.user_id;
         });
+        state.totalProjects = payload.count || 0;
+        state.totalProjectPages = Math.max(1, Math.ceil((payload.count || 0) / 20));
+        state.currentProjectPage = action.meta.arg || 1;
       })
       .addCase(getAllProjectAction.rejected, (state, action) => {
         state.isLoading = false;

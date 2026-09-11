@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, InputGroup, Button, Spinner } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import { Container, Row, Col, Form, InputGroup, Button, Spinner, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ProjectCard from "../components/cards/ProjectCard";
 import ProjectFilters from "../components/projects/ProjectFilters";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { getAllProjectAction } from "../store/slices/projectSlice";
 import "../styles/pages/Projects.css";
 
 const Projects = () => {
   const dispatch = useDispatch();
-  const { projectList, isLoading, error } = useSelector((state) => state.projectSlice);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { projectList, isLoading, error, totalProjects, totalProjectPages } = useSelector((state) => state.projectSlice);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -20,11 +22,27 @@ const Projects = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const hasMounted = useRef(false);
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const goToPage = (page) => {
+    setSearchParams({ page: String(page) });
+  };
 
   // Fetch projects from backend on mount
   useEffect(() => {
-    dispatch(getAllProjectAction());
-  }, [dispatch]);
+    dispatch(getAllProjectAction(currentPage));
+  }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    if (currentPage !== 1) {
+      goToPage(1);
+    }
+  }, [searchTerm, filters]);
 
   // Filter projects when projectList, filters, or searchTerm changes
   useEffect(() => {
@@ -138,7 +156,7 @@ const Projects = () => {
           <div className="mb-3 text-muted">
             {isLoading
               ? "Loading projects..."
-              : `Found ${filteredProjects.length} projects`}
+              : `Found ${totalProjects} projects`}
           </div>
 
           {isLoading ? (
@@ -164,6 +182,27 @@ const Projects = () => {
                 </Col>
               ))}
             </Row>
+          )}
+          {!isLoading && !error && totalProjects > 0 && (
+            <Pagination className="justify-content-center mt-4">
+              <Pagination.Prev
+                disabled={currentPage === 1}
+                onClick={() => goToPage(currentPage - 1)}
+              />
+              {Array.from({ length: totalProjectPages }, (_, index) => index + 1).map((page) => (
+                <Pagination.Item
+                  key={page}
+                  active={page === currentPage}
+                  onClick={() => goToPage(page)}
+                >
+                  {page}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                disabled={currentPage === totalProjectPages}
+                onClick={() => goToPage(currentPage + 1)}
+              />
+            </Pagination>
           )}
         </Col>
       </Row>
