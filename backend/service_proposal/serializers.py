@@ -4,6 +4,7 @@ from .models import ServiceProposal
 
 class ServiceProposalSerializer(serializers.ModelSerializer):
     client_name = serializers.SerializerMethodField()
+    client_user_id = serializers.SerializerMethodField()
     chatroom_id = serializers.SerializerMethodField()
 
     class Meta:
@@ -15,12 +16,15 @@ class ServiceProposalSerializer(serializers.ModelSerializer):
         user = obj.client.uid
         return f"{user.first_name} {user.second_name}".strip()
 
+    def get_client_user_id(self, obj):
+        return obj.client.uid_id
+
     def get_chatroom_id(self, obj):
         from chatroom.models import ChatRoom
         room = ChatRoom.objects.filter(service_proposal=obj).first()
         return room.id if room else None
 
-# serializers.py
+
 class UpdateServiceProposalSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProposal

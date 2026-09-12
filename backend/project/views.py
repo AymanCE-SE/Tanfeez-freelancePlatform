@@ -45,6 +45,7 @@ class ProjectListView(generics.ListAPIView):
             Project.objects.select_related("clientId")
             .prefetch_related("skills")
             .exclude(progress=Progress.CANCELLED)
+            .order_by("-created_at")
         )
 
 # latest projects 

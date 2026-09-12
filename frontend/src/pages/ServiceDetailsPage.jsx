@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getServiceByIdAction } from "../store/slices/serviceSlice";
 import { fetchUserProfile } from "../store/slices/userSlice";
 import { getMyServiceProposals } from "../api/serviceProposal";
+import { getMyEngagementRating } from "../api/rating";
+import RatingModal from "../components/rating/RatingModal";
+
 
 export function ServiceDetailsPage() {
   const { id } = useParams();
@@ -21,6 +24,18 @@ export function ServiceDetailsPage() {
   const { profile } = useSelector((myStore) => myStore.userSlice);
   const { user } = useSelector((myStore) => myStore.authSlice);
   const [alreadyOrdered, setAlreadyOrdered] = useState(false);
+  const [myServiceProposal, setMyServiceProposal] = useState(null);
+  const [myRating, setMyRating] = useState(null);
+  const [ratingLoaded, setRatingLoaded] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+
+  const orderStatus = myServiceProposal
+  ? myServiceProposal.is_completed
+    ? "completed"
+    : myServiceProposal.is_approved
+    ? "approved"
+    : "pending"
+  : null;
 
   useEffect(() => {
     dispatch(getServiceByIdAction(id))
@@ -34,10 +49,27 @@ export function ServiceDetailsPage() {
   useEffect(() => {
     if (user?.user_type === "client") {
       getMyServiceProposals().then((res) => {
-        setAlreadyOrdered(res.data.some((p) => String(p.service) === String(id)));
+        const mine = res.data.find((p) => String(p.service) === String(id));
+        setAlreadyOrdered(Boolean(mine));
+        setMyServiceProposal(mine || null);
       });
     }
   }, [user, id]);
+
+  // Only relevant once THIS client's own order on this service is
+  // actually completed — not just approved, and not anyone else's order.
+  useEffect(() => {
+    if (myServiceProposal?.is_completed && service?.freelancerId) {
+      setRatingLoaded(false);
+      getMyEngagementRating({ service: id, ratee: service.freelancerId })
+        .then(setMyRating)
+        .catch(() => setMyRating(null))
+        .finally(() => setRatingLoaded(true));
+    }
+  }, [myServiceProposal?.is_completed, service?.freelancerId, id]);
+
+  const canRateService =
+    myServiceProposal?.is_completed && ratingLoaded && !myRating;
 
   if (!service && !isLoading) {
     return (
@@ -136,16 +168,6 @@ const youtubeVideoId = extractYoutubeId(service?.video);
                 </div>
               </div>
 
-              {/* FAQ Section */}
-              {/* <div className="custom-card mb-4">
-                <div className="card-header-custom">
-                  <h5 className="mb-0">FAQ</h5>
-                </div>
-                <div className="card-body-custom">
-                  <FAQSection />
-                </div>
-              </div> */}
-
               {/* Reviews Section */}
               <div className="custom-card">
                 <div className="card-header-custom">
@@ -164,14 +186,45 @@ const youtubeVideoId = extractYoutubeId(service?.video);
                 price={service.price}
                 serviceId={service.id}
                 isOwnService={user?.id === service.freelancerId}
-                alreadyOrdered={alreadyOrdered}
-                onOrderSuccess={() => setAlreadyOrdered(true)}   
+                orderStatus={orderStatus}
+                onOrderSuccess={() => {
+                  setAlreadyOrdered(true);
+                  getMyServiceProposals().then((res) => {
+                    setMyServiceProposal(res.data.find((p) => String(p.service) === String(id)) || null);
+                  });
+                }}
               />
+              {canRateService && (
+                <button
+                  className="btn btn-warning w-100 mt-3"
+                  onClick={() => setShowRatingModal(true)}
+                >
+                  Rate Freelancer
+                </button>
+              )}
+              {myRating && (
+                <div className="text-center text-muted mt-3">
+                  You rated this {myRating.rating}★
+                </div>
+              )}
               </div>
             </Col>
           </Row>
         </Container>
       </Container>
+
+      <RatingModal
+        show={showRatingModal}
+        onHide={() => setShowRatingModal(false)}
+        direction="client_to_freelancer"
+        ratee={service?.freelancerId}
+        service={id}
+        onSuccess={() =>
+          getMyEngagementRating({ service: id, ratee: service.freelancerId })
+            .then(setMyRating)
+            .catch(() => setMyRating(null))
+        }
+      />
     </div>
   );
 }

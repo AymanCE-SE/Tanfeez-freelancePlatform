@@ -4,18 +4,20 @@ import {  Clock, CheckCircle, StarFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import "../../styles/components/ServiceCard.css"; // Adjust the path as necessary
+import RatingSummary from "../rating/RatingSummary";
+
 const ServiceCard = ({ service, isOwner }) => {
   const {
     id,
     service_name,
     description,
     price,
-    rating = 5,
-    reviewCount,
+    average_rating,
+    ratings_count,
     deliveryTime,
     photo,
     status = "active",
-    created_at, // <-- add this field
+    created_at,
   } = service;
 
   return (
@@ -49,9 +51,15 @@ const ServiceCard = ({ service, isOwner }) => {
         </Card.Text>
         <div className="service-meta mb-3">
           <div className="rating">
-            <StarFill className="star-icon me-1 text-warning bg" />
-            <span className="rating-value">{rating}</span>
-            <span className="review-count">({reviewCount})</span>
+            {average_rating ? (
+              <>
+                <StarFill className="star-icon me-1 text-warning bg" />
+                <span className="rating-value">{average_rating}</span>
+                <span className="review-count">({ratings_count})</span>
+              </>
+            ) : (
+              <span className="text-muted small">No reviews yet</span>
+            )}
           </div>
           <div className="delivery-time">
             <Clock className="clock-icon" />

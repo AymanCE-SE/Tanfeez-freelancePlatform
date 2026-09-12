@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Service, ServiceImage
-
+from django.db.models import Avg, Count
+from client_rating.models import EngagementRating
 
 class ServiceImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +47,26 @@ class ServiceRetriveDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         exclude = ["is_deleted"]
+
+class ServiceRetriveDeleteSerializer(serializers.ModelSerializer):
+    gallery_images = ServiceImageSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
+    ratings_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Service
+        exclude = ["is_deleted"]
+
+    def _rating_stats(self, obj):
+        return EngagementRating.objects.filter(
+            service=obj,                                              # ← بدل ratee_id
+            direction=EngagementRating.Direction.CLIENT_TO_FREELANCER,
+            is_deleted=False,
+        ).aggregate(average=Avg("rating"), count=Count("id"))
+
+    def get_average_rating(self, obj):
+        stats = self._rating_stats(obj)
+        return round(stats["average"], 2) if stats["average"] else None
+
+    def get_ratings_count(self, obj):
+        return self._rating_stats(obj)["count"]

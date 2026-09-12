@@ -154,32 +154,43 @@ class EngagementRatingListView(ListAPIView):
 
     def get_queryset(self):
         ratee_id = self.kwargs["user_id"]
-        return EngagementRating.objects.filter(ratee_id=ratee_id, is_deleted=False)
+        qs = EngagementRating.objects.filter(ratee_id=ratee_id, is_deleted=False)
+        direction = self.request.query_params.get("direction")
+        service_id = self.request.query_params.get("service")
+        if direction:
+            qs = qs.filter(direction=direction)
+        if service_id:
+            qs = qs.filter(service_id=service_id)
+        return qs.order_by("-created_at")
 
 
 class EngagementRatingSummaryView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
-        stats = EngagementRating.objects.filter(ratee_id=user_id, is_deleted=False).aggregate(
-            average=Avg("rating"), count=Count("id")
-        )
+        qs = EngagementRating.objects.filter(ratee_id=user_id, is_deleted=False)
+        direction = request.query_params.get("direction")
+        if direction:
+            qs = qs.filter(direction=direction)
+        stats = qs.aggregate(average=Avg("rating"), count=Count("id"))
         return Response({
             "user_id": user_id,
             "average_rating": round(stats["average"], 2) if stats["average"] else None,
             "ratings_count": stats["count"],
         })
-
 class MyEngagementRatingView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         project_id = request.query_params.get("project")
         service_id = request.query_params.get("service")
+        ratee_id = request.query_params.get("ratee")
         qs = EngagementRating.objects.filter(rater=request.user, is_deleted=False)
         if project_id:
             qs = qs.filter(project_id=project_id)
         if service_id:
             qs = qs.filter(service_id=service_id)
+        if ratee_id:
+            qs = qs.filter(ratee_id=ratee_id)
         rating = qs.first()
         return Response(EngagementRatingSerializer(rating).data if rating else None)
