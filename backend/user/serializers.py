@@ -7,8 +7,10 @@ from client.models import Client
 from freelancer.models import Freelancer
 from .models import CustomUser
 from django.contrib.auth.hashers import make_password
+from django.db.models import Q
 from project.enums import Progress
 from project.models import Project
+from chatroom.models import Message
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -130,6 +132,7 @@ class UserOutSerializer(serializers.ModelSerializer):
     freelancer_profile = serializers.SerializerMethodField()
     client_profile = serializers.SerializerMethodField()
     completionRate = serializers.SerializerMethodField()
+    averageResponse = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
@@ -148,6 +151,7 @@ class UserOutSerializer(serializers.ModelSerializer):
             "freelancer_profile",
             "client_profile",
             "completionRate",
+            "averageResponse",
         ]
 
     def get_completionRate(self, obj):
@@ -165,6 +169,41 @@ class UserOutSerializer(serializers.ModelSerializer):
 
         completed_projects = projects.filter(progress=Progress.COMPLETED).count()
         return round((completed_projects / total_projects) * 100)
+
+    def get_averageResponse(self, obj):
+        messages = Message.objects.filter(
+            Q(chatroom__client=obj) | Q(chatroom__freelancer=obj)
+        ).order_by("chatroom_id", "timestamp")
+
+        response_seconds = []
+        current_room_id = None
+        waiting_since = None
+
+        for message in messages:
+            if message.chatroom_id != current_room_id:
+                current_room_id = message.chatroom_id
+                waiting_since = None
+
+            if message.sender_id == obj.id:
+                if waiting_since is not None:
+                    response_seconds.append((message.timestamp - waiting_since).total_seconds())
+                    waiting_since = None
+            else:
+                waiting_since = waiting_since or message.timestamp
+
+        if not response_seconds:
+            return "N/A"
+
+        average_seconds = sum(response_seconds) / len(response_seconds)
+        if average_seconds < 60:
+            return "Under 1 min"
+        if average_seconds < 3600:
+            return f"{round(average_seconds / 60)} min"
+        if average_seconds < 86400:
+            hours = average_seconds / 3600
+            return f"{hours:.1f} hr"
+        days = average_seconds / 86400
+        return f"{days:.1f} days"
 
     def get_freelancer_profile(self, obj):
         if hasattr(obj, "freelancer_profile"):
