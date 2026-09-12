@@ -20,7 +20,8 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from .models import EngagementRating
 from .serializers import EngagementRatingSerializer
-
+from notification.utils import send_notification
+from notification.models import Notification
 class ClientRatingCreateView(CreateAPIView):
     serializer_class = ClientRatingSerializer
     permission_classes = [IsAuthenticated, IsClientUser]
@@ -124,10 +125,24 @@ class EngagementRatingCreateView(CreateAPIView):
         project = serializer.validated_data.get("project")
         service = serializer.validated_data.get("service")
         ratee = serializer.validated_data.get("ratee")
-
+        rating = serializer.save(rater=self.request.user)
         # Only the actual counterpart in the engagement can rate — the
         # client of THIS project/service, or the freelancer of it,
         # matching whichever direction is being submitted.
+        target_type = (
+            Notification.TargetType.PROJECT if rating.project
+            else Notification.TargetType.SERVICE
+        )
+        target_id = rating.project_id or rating.service_id
+        rater_name = f"{self.request.user.first_name} {self.request.user.second_name}".strip()
+
+        send_notification(
+            recipient=rating.ratee,
+            notification_type=Notification.NotificationType.RATING_RECEIVED,
+            message=f"{rater_name} gave you a {rating.rating}★ rating.",
+            target_id=target_id,
+            target_type=target_type,
+        )
         if project:
             valid_pair = (project.clientId, project.freelancerId)
         elif service:
@@ -144,7 +159,7 @@ class EngagementRatingCreateView(CreateAPIView):
             rater=self.request.user, ratee=ratee, project=project, service=service, is_deleted=False
         ).exists():
             raise ValidationError("You already rated this person for this engagement.")
-
+        
         serializer.save(rater=self.request.user)
 
 

@@ -8,6 +8,7 @@ class Notification(models.Model):
         PROPOSAL_APPROVED = "proposal_approved", "Proposal Approved"
         PROJECT_COMPLETED = "project_completed", "Project Completed"
         NEW_RATING = "new_rating", "New Rating"
+        RATING_RECEIVED = "rating_received", "Rating Received"   
         # add any new type here without creating a new model
 
     

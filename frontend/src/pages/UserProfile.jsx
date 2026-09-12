@@ -26,6 +26,7 @@ import {
   fetchUserProfile,
   getMyProfileAction,
 } from "../store/slices/userSlice";
+import { getEngagementRatings } from "../api/rating";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -35,7 +36,8 @@ const UserProfile = () => {
   );
 
   const [activeTab, setActiveTab] = useState("about");
-
+  const [reviews, setReviews] = useState([]);
+  const profileData = profile;
   useEffect(() => {
     dispatch(getMyProfileAction());
   }, [dispatch]);
@@ -49,6 +51,22 @@ const UserProfile = () => {
       dispatch(clearProfile());
     };
   }, [id, dispatch]);
+
+  useEffect(() => {
+  if (profileData?.id) {
+    const direction = profileData.user_type === "freelancer" ? "client_to_freelancer" : "freelancer_to_client";
+    getEngagementRatings(profileData.id, { direction }).then((data) => {
+      setReviews(data.map((r) => ({
+        id: r.id,
+        author: r.rater_name,
+        photo: r.rater_photo,   
+        rating: r.rating,
+        comment: r.review || "",
+        date: new Date(r.created_at).toLocaleDateString(),
+      })));
+    });
+  }
+}, [profileData?.id, profileData?.user_type]);
 
   // Show a spinner while loading
   if (isLoading) {
@@ -80,8 +98,6 @@ const UserProfile = () => {
 
   // Only use user to check if this is your own profile
   const isMyProfile = user && profile && String(user.id) === String(profile.id);
-  const profileData = profile;
-
   const renderTabs = () => {
     const userRole = profileData?.user_type || "freelancer";
 
@@ -99,10 +115,7 @@ const UserProfile = () => {
         title: "Reviews",
         icon: <Star className="me-2" />,
         component: (
-          <ReviewsTab
-            reviews={profileData.reviews || []}
-            isMyProfile={isMyProfile}
-          />
+        <ReviewsTab reviews={reviews} isMyProfile={isMyProfile} />
         ),
       },
     ];

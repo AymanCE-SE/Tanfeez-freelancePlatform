@@ -30,6 +30,7 @@ class ClientRatingSerializer(serializers.ModelSerializer):
 
 class EngagementRatingSerializer(serializers.ModelSerializer):
     rater_name = serializers.SerializerMethodField()
+    rater_photo = serializers.SerializerMethodField()  
 
     class Meta:
         model = EngagementRating
@@ -38,3 +39,11 @@ class EngagementRatingSerializer(serializers.ModelSerializer):
 
     def get_rater_name(self, obj):
         return f"{obj.rater.first_name} {obj.rater.second_name}".strip()
+
+
+    def get_rater_photo(self, obj):
+        if not obj.rater.photo:
+            return None
+        request = self.context.get("request")
+        url = obj.rater.photo.url
+        return request.build_absolute_uri(url) if request else url
