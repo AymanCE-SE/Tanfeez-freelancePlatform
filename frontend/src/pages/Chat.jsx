@@ -163,8 +163,7 @@ const Chat = () => {
                             className={`conversation-item px-3 py-3 border-bottom ${isActive ? "bg-primary bg-opacity-10" : ""}`}>
                             <div className="d-flex align-items-center">
                               <img src={participant.avatar} alt={participant.name}
-                                className="rounded-circle me-3" width="48" height="48"
-                                style={{ objectFit: "cover" }} />
+                                className="chat-participant-avatar rounded-circle me-3" width="48" height="48" />
                               <div className="flex-grow-1 min-width-0">
                               <h6 className="mb-0 text-truncate fw-bold">
                                 {participant.name}
@@ -206,8 +205,7 @@ const Chat = () => {
                       onOfferUpdated={loadConversations}
                     />
                     <div className="chat-messages flex-grow-1">
-                      <div className="messages-container p-3"
-                        style={{ height: "calc(100vh - 240px)", overflowY: "auto" }}>
+                      <div className="messages-container chat-messages-container p-3">
                         {messages.length > 0 ? (
                           <div>
                             {messages.map((message, index) => {

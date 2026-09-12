@@ -1,18 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Form, Button, Card, Spinner, Alert, InputGroup, Navbar } from 'react-bootstrap';
 import apiClient from '../api/client';
-
-// Bubble colors
-const BUBBLE_COLORS = {
-  user: {
-    background: '#007bff', // Primary blue
-    text: '#ffffff',       // White text
-  },
-  assistant: {
-    background: '#f8f9fa',  // Light gray
-    text: '#212529',        // Dark text
-  }
-};
+import '../styles/ChatBot.css';
 
 // Helper function to format timestamp
 const formatTimestamp = (isoString) => {
@@ -72,35 +61,9 @@ const MessageBubble = ({ message }) => {
   const { role, content, timestamp } = message;
   const isUser = role === 'user';
 
-  const bubbleStyle = {
-    backgroundColor: isUser ? BUBBLE_COLORS.user.background : BUBBLE_COLORS.assistant.background,
-    color: isUser ? BUBBLE_COLORS.user.text : BUBBLE_COLORS.assistant.text,
-    borderRadius: '18px',
-    padding: '10px 16px',
-    maxWidth: '100%',
-    wordWrap: 'break-word',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-    border: isUser ? 'none' : '1px solid #dee2e6',
-  };
-
-  const containerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: isUser ? 'flex-end' : 'flex-start',
-    marginBottom: '8px',
-  };
-
-  const timestampStyle = {
-    fontSize: '0.75rem',
-    color: '#6c757d',
-    marginTop: '4px',
-    marginLeft: isUser ? '0' : '12px',
-    marginRight: isUser ? '12px' : '0',
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={bubbleStyle}>
+    <div className={`chatbot-message ${isUser ? 'is-user' : 'is-assistant'}`}>
+      <div className="chatbot-bubble">
         {isUser ? (
           <div>{content}</div>
         ) : (
@@ -108,7 +71,7 @@ const MessageBubble = ({ message }) => {
         )}
       </div>
       {timestamp && (
-        <div style={timestampStyle}>
+        <div className="chatbot-timestamp">
           {formatTimestamp(timestamp)}
         </div>
       )}
@@ -231,8 +194,7 @@ export const ChatbotInterface = () => {
               <Button 
                 variant="primary"
                 // make button in center
-                style={{ display: "block", margin: "0 auto" }}
-                className="mt-3 px-4 py-2 fs-5 rounded-3 align-items-center"
+                className="chatbot-login-btn mt-3 px-4 py-2 fs-5 rounded-3 align-items-center"
                 onClick={() => window.location.href = "/login"}>
                 Login
               </Button>
@@ -244,10 +206,7 @@ export const ChatbotInterface = () => {
 
   return (
     // make the hight is 90%
-    <Container fluid="md" className="d-flex flex-column  p-0 shadow-lg rounded overflow-hidden" style={{
-      height
-        : '80vh', maxWidth: '768px', border: '1px solid #dee2e6'
-    }}>
+    <Container fluid="md" className="chatbot-shell d-flex flex-column p-0 shadow-lg rounded overflow-hidden">
       {/* Header */}
       <Navbar bg="dark" variant="dark" expand="false" className="px-3">
         <Navbar.Brand href="#home" className="fw-semibold">Tanfeez Chatbot</Navbar.Brand>
@@ -259,15 +218,7 @@ export const ChatbotInterface = () => {
       {/* Message Display Area */}
       <div
         ref={messageContainerRef}
-        className="flex-grow-1 p-3"
-        style={{
-          overflowY: 'auto',
-          backgroundColor: '#f0f2f5', // Chat background color
-          display: 'flex',
-          flexDirection: 'column-reverse', // Change to column-reverse
-          gap: '8px',
-          padding: '16px'
-        }}
+        className="chatbot-message-list flex-grow-1 p-3"
       >
         {/* Update the messages rendering order */}
         <div ref={messagesEndRef} /> {/* Move anchor to top */}
@@ -289,7 +240,7 @@ export const ChatbotInterface = () => {
 
       {/* Loading and Error Indicators */}
       {isLoading && (
-        <div className="p-2 text-center bg-white border-top" style={{ borderBottom: '1px solid #dee2e6' }}>
+        <div className="chatbot-loading p-2 text-center bg-white border-top">
           <Spinner animation="grow" size="sm" role="status" variant="primary" className="me-2">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
@@ -319,7 +270,7 @@ export const ChatbotInterface = () => {
             placeholder="Type your message..."
             disabled={isLoading}
             aria-label="Type your message"
-            style={{ resize: 'none', maxHeight: '120px', overflowY: 'auto' }}
+            className="chatbot-input"
           />
           {renderSendButton()}
         </InputGroup>

@@ -90,8 +90,8 @@ export default function RegisterForm({ role }) {
     const handleBlur = () => setTouched(true);
 
     return (
-        <div className="login-page login-container">
-            <div className="login-card">
+        <div className="login-page app-page-container login-container">
+            <div className="login-card app-card">
                 <div className="logo-container">
                     {/* <img src="../logo/Tanfeez.png" alt="Tanfeez Logo" className="logo m-0" /> */}
                 </div>

@@ -373,3 +373,12 @@
     border: none;
     border-radius: 1rem;
 }
+
+.chat-participant-avatar {
+    object-fit: cover;
+}
+
+.chat-messages-container {
+    height: calc(100vh - 240px);
+    overflow-y: auto;
+}

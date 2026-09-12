@@ -30,6 +30,18 @@
     color: var(--color-text) !important;
     font-size: 1.9rem !important; 
 }
+
+.project-details-status-badge {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.project-details-meta-item {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
 .project-meta-item {
     display: flex;
     align-items: center;
@@ -115,3 +127,26 @@
 [data-theme="dark"] .project-details-card .client-info {
     background: var(--color-card-bg);
 }
+
+.project-details-description {
+    font-size: 1.1rem;
+}
+
+.project-details-skill-badge {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.project-details-avatar {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.project-details-avatar-placeholder {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+}
+
+.project-details-proposal-body { white-space: pre-wrap; }

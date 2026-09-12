@@ -45,18 +45,18 @@
 }
 
 .service-title {
-    color: var(--color-text);
+    color: var(--color-text-card-title);
     font-size: 1.08rem;
     font-weight: 700;
     line-height: 1.3;
 }
 
 .service-title-link {
-    color: inherit;
+    color: var(--color-text-card-title) !important;
     text-decoration: none;
 }
 
-.service-title-link:hover { color: var(--primary-600); }
+.service-title-link:hover { color: var(--color-primary-hover); }
 
 .service-description {
     color: var(--color-text-muted);

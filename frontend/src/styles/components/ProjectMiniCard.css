@@ -29,7 +29,7 @@
 .mini-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-text-card-title);
   margin-bottom: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -37,13 +37,13 @@
 }
 
 .mini-title-link {
-  color: var(--color-text);
+  color: var(--color-text-card-title) !important;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .mini-title-link:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-hover) !important;
   text-decoration: underline;
 }
 
@@ -90,11 +90,11 @@
 }
 
 [data-theme="dark"] .mini-title-link {
-  color: var(--color-text);
+  color: var(--color-text-card-title) !important;
 }
 
 [data-theme="dark"] .mini-title-link:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-hover) !important;
 }
 
 [data-theme="dark"] .mini-meta .badge.bg-light {

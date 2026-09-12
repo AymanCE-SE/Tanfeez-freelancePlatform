@@ -67,7 +67,7 @@ const EditProfile = () => {
 
   return (
     <Container className="py-5">
-      <Card className="edit-profile-card">
+      <Card className="edit-profile-card app-card">
         <Card.Body className="p-4">
           <h3 className="mb-4 text-muted">Edit Profile</h3>
 

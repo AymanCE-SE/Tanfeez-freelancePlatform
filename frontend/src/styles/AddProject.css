@@ -38,7 +38,7 @@
   border: 1px solid var(--color-border);
   color: var(--color-text);
   padding: 0.75rem 1rem;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .add-project-page .form-control:focus,
@@ -60,7 +60,7 @@
   border-radius: var(--radius-md);
   cursor: pointer;
   background: var(--color-input-bg);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -100,7 +100,7 @@
 .add-project-page .level-option {
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .add-project-page .level-option:hover {

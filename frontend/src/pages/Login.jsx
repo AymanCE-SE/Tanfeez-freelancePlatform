@@ -77,9 +77,9 @@ export default function LoginPage() {
   const handleBlur = () => setTouched(true);
 
   return (
-    <div className="login-page login-container">
+    <div className="login-page app-page-container login-container">
 
-      <div className="login-card">
+      <div className="login-card app-card">
       <div className="logo-container">
         {/* <img src="logo/Tanfeez.png" alt="Tanfeez Logo" className="logo " /> */}
         <h2 className="text-center mb-4">Login to Tanfeez</h2>

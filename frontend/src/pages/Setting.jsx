@@ -154,7 +154,7 @@ const Settings = () => {
   }
 
   return (
-    <div className="settings-page">
+    <div className="settings-page app-page-container">
       <Container className="py-5">
         <h2 className="settings-title">Account Settings</h2>
 

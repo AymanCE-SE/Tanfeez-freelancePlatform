@@ -14,9 +14,26 @@
 }
 
 .profile-project-title {
-    color: var(--color-text);
+    color: var(--color-text-card-title);
     font-size: 1.1rem;
     font-weight: 600;
+}
+
+.profile-project-title-link {
+    color: var(--color-text-card-title) !important;
+}
+
+.profile-project-title-link:hover {
+    color: var(--color-primary-hover) !important;
+}
+
+.profile-project-card .card-title,
+.profile-project-card .card-title a {
+    color: var(--color-text-card-title) !important;
+}
+
+.profile-project-card .card-title a:hover {
+    color: var(--color-primary-hover) !important;
 }
 
 .profile-project-description {

@@ -52,7 +52,7 @@ const ProjectCard = ({ project, variant = "marketplace" }) => {
             >
               <Link
                 to={`/project/${id}`}
-                className="text-decoration-none text-reset"
+                className={`${variant}-project-title-link text-decoration-none text-reset`}
               >
                 {truncate(name, 40)}
               </Link>

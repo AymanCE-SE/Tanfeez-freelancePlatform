@@ -236,21 +236,20 @@ function ProjectDetails() {
     <Container className="mt-5 mb-5">
       <Card className="project-details-card">
         <Card.Body className="p-4">
-          <div className="project-header" style={{ borderBottom: "1px solid var(--color-border)", paddingBottom: "1.5rem", marginBottom: "1.5rem" }}>
+          <div className="project-header">
             <div className="d-flex justify-content-between align-items-start mb-2">
-              <h2 className="mb-0 project-details-title" style={{ fontSize: "2rem", fontWeight: 700, color: "var(--color-text)" }}>
+              <h2 className="mb-0 project-details-title">
                 {projectDetails?.name}
               </h2>
               <Badge
                 bg={getStatusBadgeColor(projectDetails?.progress)}
-                className="px-4 py-3 text-capitalize"
-                style={{ fontSize: "1rem", fontWeight: 500 }}
+                className="project-details-status-badge px-4 py-3 text-capitalize"
               >
                 {projectDetails?.progress?.replace("_", " ")}
               </Badge>
             </div>
             <div className="d-flex flex-wrap gap-3 mt-3">
-              <div className="project-meta-item" style={{ display: "flex", alignItems: "center", color: "var(--color-text-muted)", fontSize: "1rem" }}>
+              <div className="project-details-meta-item">
                 <Calendar3 size={18} className="me-1" />
                 <span>
                   Posted{" "}
@@ -260,32 +259,32 @@ function ProjectDetails() {
                 </span>
               </div>
               {projectDetails?.location && (
-                <div className="project-meta-item" style={{ display: "flex", alignItems: "center", color: "var(--color-text-muted)", fontSize: "1rem" }}>
+                <div className="project-details-meta-item">
                   <GeoAlt size={18} className="me-1" />
                   {projectDetails.location}
                 </div>
               )}
-              <div className="project-meta-item" style={{ display: "flex", alignItems: "center", color: "var(--color-text-muted)", fontSize: "1rem" }}>
+              <div className="project-details-meta-item">
                 <Cash size={18} className="me-1" />
                 {getPrice()}
               </div>
-              <div className="project-meta-item" style={{ display: "flex", alignItems: "center", color: "var(--color-text-muted)", fontSize: "1rem" }}>
+              <div className="project-details-meta-item">
                 <span className="ms-1">Duration: {projectDetails?.duration} days</span>
               </div>
             </div>
           </div>
 
           <section className="mb-5">
-            <h5 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Description</h5>
-            <p className="text-muted" style={{ fontSize: "1.1rem" }}>{projectDetails?.description}</p>
+            <h5 className="project-details-section-title">Project Description</h5>
+            <p className="project-details-description text-muted">{projectDetails?.description}</p>
           </section>
 
           {projectDetails?.skills && projectDetails.skills.length > 0 && (
             <section className="mb-4">
-              <h6 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Required Skills</h6>
+              <h6 className="project-details-section-title">Required Skills</h6>
               <div className="d-flex flex-wrap gap-2">
                 {projectDetails.skills.map((skill, idx) => (
-                  <Badge key={idx} className="skill-badge py-2 px-3" bg="light" text="dark" style={{ fontSize: "1rem", fontWeight: 500 }}>
+                  <Badge key={idx} className="skill-badge project-details-skill-badge py-2 px-3" bg="light" text="dark">
                     {skill.skill_name || skill}
                   </Badge>
                 ))}
@@ -295,7 +294,7 @@ function ProjectDetails() {
 
           <Row className="mb-5">
             <Col md={6}>
-              <h5 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Details</h5>
+              <h5 className="project-details-section-title">Project Details</h5>
               <div className="client-stat">
                 <span className="client-stat-label">Experience Level:</span>
                 <span className="client-stat-value">{projectDetails?.experience_level}</span>
@@ -335,18 +334,11 @@ function ProjectDetails() {
                       <img
                         src={profile.photo}
                         alt="Client"
-                        className="client-avatar rounded-circle me-3"
-                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                        className="client-avatar project-details-avatar rounded-circle me-3"
                       />
                     ) : (
                       <div
-                        className="client-avatar-placeholder rounded-circle me-3 d-flex align-items-center justify-content-center"
-                        style={{
-                          width: '60px',
-                          height: '60px',
-                          backgroundColor: '#e9ecef',
-                          fontSize: '1.5rem'
-                        }}
+                        className="client-avatar-placeholder project-details-avatar project-details-avatar-placeholder rounded-circle me-3 d-flex align-items-center justify-content-center"
                       >
                         {profile?.first_name?.charAt(0)}
                       </div>
@@ -516,7 +508,7 @@ function ProjectDetails() {
               <Badge bg="info">{selectedProposal.days_to_finish} days</Badge>
               {selectedProposal.is_approved && <Badge bg="success">Approved</Badge>}
             </div>
-            <p style={{ whiteSpace: "pre-wrap" }}>{selectedProposal.body}</p>
+            <p className="project-details-proposal-body">{selectedProposal.body}</p>
 
             {projectDetails?.progress === "not_started" && !selectedProposal.is_approved && (
               <Button variant="success" onClick={() => handleApproveProposal(selectedProposal.id)}>

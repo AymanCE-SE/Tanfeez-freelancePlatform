@@ -83,6 +83,7 @@
   --color-text: var(--color-text-primary);
   --color-text-secondary: var(--primitive-neutral-700);
   --color-text-muted: var(--primitive-neutral-500);
+  --color-text-card-title: var(--primitive-neutral-900);
   --color-text-inverse: var(--primitive-white);
   --color-border: var(--primitive-neutral-200);
   --color-input-bg: var(--primitive-white);
@@ -226,6 +227,7 @@
   --color-text: var(--color-text-primary);
   --color-text-secondary: var(--primitive-neutral-200);
   --color-text-muted: var(--primitive-neutral-300);
+  --color-text-card-title: var(--primitive-blue-200);
   --color-text-inverse: var(--primitive-neutral-50);
   --color-border: var(--primitive-neutral-700);
   --color-input-bg: var(--primitive-neutral-800);
@@ -448,6 +450,43 @@ a:hover { color: var(--color-primary-hover); }
 }
 
 .theme-toggle-btn:hover { background-color: rgb(255 255 255 / 0.1); }
+
+/* Shared application primitives */
+.app-page-container {
+  min-height: calc(100vh - 80px);
+  padding: var(--spacing-8) 0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.app-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card-bg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal) ease, transform var(--transition-normal) ease;
+}
+
+.app-form-group { margin-bottom: var(--spacing-4); }
+
+.app-focus-ring:focus,
+.app-form-group .form-control:focus,
+.app-form-group .form-select:focus {
+  border-color: var(--color-input-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
 
 [data-theme="dark"] .text-dark { color: var(--color-text-primary) !important; }
 [data-theme="dark"] .bg-light { background-color: var(--color-card-bg) !important; }
