@@ -26,7 +26,7 @@ import {
   fetchUserProfile,
   getMyProfileAction,
 } from "../store/slices/userSlice";
-import { getEngagementRatings } from "../api/rating";
+import { getEngagementRatings, getEngagementRatingSummary } from "../api/rating";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -38,6 +38,15 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("about");
   const [reviews, setReviews] = useState([]);
   const profileData = profile;
+  const [ratingSummary, setRatingSummary] = useState({ average_rating: 0, ratings_count: 0 });
+
+  useEffect(() => {
+    if (profileData?.id) {
+      const direction = profileData.user_type === "freelancer" ? "client_to_freelancer" : "freelancer_to_client";
+      getEngagementRatingSummary(profileData.id, direction).then(setRatingSummary);
+    }
+  }, [profileData?.id, profileData?.user_type]);
+  
   useEffect(() => {
     dispatch(getMyProfileAction());
   }, [dispatch]);
@@ -151,8 +160,12 @@ const UserProfile = () => {
 
   return (
     <div className="bg-light min-vh-100">
-      <ProfileHeader profileData={profileData} isMyProfile={isMyProfile} />
-
+      <ProfileHeader
+        profileData={profileData}
+        isMyProfile={isMyProfile}
+        averageRating={ratingSummary.average_rating || 0}
+        numberOfReviews={ratingSummary.ratings_count || 0}
+      />
       <Container className="mt-4">
         <Tabs
           activeKey={activeTab}

@@ -174,8 +174,8 @@ const youtubeVideoId = extractYoutubeId(service?.video);
                   <h5 className="mb-0 text-light">Reviews</h5>
                 </div>
                 <div className="card-body-custom">
-                  <ReviewsSection />
-                </div>
+                  <ReviewsSection freelancerId={service.freelancerId} serviceId={service.id} />
+                  </div>
               </div>
             </Col>
 

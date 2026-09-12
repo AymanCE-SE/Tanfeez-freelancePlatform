@@ -22,7 +22,12 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyProfileAction, updateUserImageAction } from "../../store/slices/userSlice";
 
-const ProfileHeader = ({ profileData, isMyProfile }) => {
+const ProfileHeader = ({
+  profileData,
+  isMyProfile,
+  averageRating = 0,
+  numberOfReviews = 0,
+}) => {
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
   const dispatch = useDispatch();
@@ -80,8 +85,6 @@ const ProfileHeader = ({ profileData, isMyProfile }) => {
     second_name = "User",
     user_type = "Freelancer",
     address = "Not specified",
-    averageRating = 0,
-    numberOfReviews = 0,
     completionRate = 0,
     averageResponse = "N/A",
     client_profile = null,
