@@ -1,120 +1,115 @@
-/* Footer.css */
-
-/* Gradient Background */
 .footer {
-  background-color:#0765BC !important;/* Tomato Color */
-    color: white;
-    padding: 40px 0;
-  }
-  
-  .footer a {
-    color: #FFA07A; /* Coral Color */
-    text-decoration: none;
-  }
-  
-  .footer a:hover {
-    color: #FF0000; /* Red Accent */
-  }
-  
-  .social-icons a {
-    color: white;
-    font-size: 20px;
-    margin: 0 10px;
-  }
-  
-  .social-icons a:hover {
-    color: #FFA07A; /* Coral Hover Effect */
-  }
-  
-  .newsletter input {
-    border-radius: 25px;
-    padding: 10px;
-    width: 70%;
-    border: none;
-  }
-  
-  .newsletter button {
-    border-radius: 25px;
-    padding: 10px 20px;
-    background-color: #FF0000; /* Red Accent */
-    color: white;
-    border: none;
-  }
-  
-  .newsletter button:hover {
-    background-color: #FFA07A; /* Coral Hover */
-  }
-  
-
-  /* Container background and general styles */
-.footer {
-  background-color: #121212; /* Dark mode background */
-  color: #ffffff; /* Light text */
-  font-size: 1.1rem; /* Bigger base font size */
+  background: var(--color-footer-bg, #172033);
+  color: var(--color-text-inverse, #fff);
+  padding: 4rem 0 1.5rem;
 }
 
-/* Headings */
+.footer h3,
 .footer h5 {
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem;
+  color: var(--color-text-inverse, #fff);
+  font-weight: 700;
 }
 
-/* Paragraph and list items */
-.footer p,
-.footer .footer-link {
-  font-size: 1.05rem;
-  color: #bbbbbb;
-}
-.footer .footer-link {
-  font-size: 1.2rem;
-  color: #f7f7f7;
-}
-.footer .footer-link:hover {
-  color: #d37b7b;
-  transition: ease;
-  transition-duration: 0.3s;
+.footer h3 {
+  max-width: 15rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.1;
 }
 
-/* Social icons */
-.footer .social-icon {
-  font-size: 1.6rem; /* Bigger icon size */
-  color: #ffffff;
-  transition: color 0.3s;
+.footer h5 {
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.footer .social-icon:hover {
-  color: #d37b7b;
+.footer-kicker {
+  margin: 0 0 0.65rem;
+  color: var(--coral-400, #e86452);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-/* Newsletter input */
-.footer .newsletter-form input {
-  background-color: #1e1e1e;
-  border: 1px solid #444;
+.footer-description,
+.footer .text-muted {
+  max-width: 22rem;
+  color: rgba(255, 255, 255, 0.68) !important;
+  line-height: 1.7;
+}
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+}
+
+.footer li + li { margin-top: 0.65rem; }
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.76);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: var(--coral-400, #e86452);
+}
+
+.social-icon {
+  display: inline-grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.65rem;
+  color: var(--color-text-inverse, #fff);
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.social-icon:hover,
+.social-icon:focus-visible {
+  border-color: var(--coral-400, #e86452);
+  color: var(--coral-400, #e86452);
+  transform: translateY(-2px);
+}
+
+.newsletter-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.newsletter-form input {
+  min-height: 2.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
 
-.footer .newsletter-form input::placeholder {
-  color: #888;
+.newsletter-form input::placeholder { color: rgba(255, 255, 255, 0.55); }
+
+.newsletter-form .btn {
+  min-height: 2.8rem;
+  border: 0;
+  background: var(--color-btn-primary, var(--primary-500, #0ea5e9));
+  color: #fff;
+  font-weight: 700;
 }
 
-.footer .newsletter-form .btn-primary {
-  background-color: #007bff;
-  border: none;
-  font-weight: bold;
+.newsletter-form .btn:hover,
+.newsletter-form .btn:focus-visible {
+  background: var(--color-btn-primary-hover, var(--primary-600, #0284c7));
+  color: #fff;
 }
 
-.footer .newsletter-form .btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Divider */
 .footer hr {
-  border-color: #333;
+  border-color: rgba(255, 255, 255, 0.16);
+  opacity: 1;
 }
 
-/* Copyright */
-.footer .text-muted {
-  color: #cecccc;
+@media (max-width: 767.98px) {
+  .footer { padding-top: 3rem; }
+  .footer-description { max-width: 30rem; }
 }
-

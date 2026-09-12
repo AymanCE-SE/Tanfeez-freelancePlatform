@@ -35,12 +35,7 @@ import { logout } from "../store/slices/authSlice";
 import { getMyProfileAction } from "../store/slices/userSlice";
 import { useNotifications } from "../context/NotificationContext";
 
-// Maps a notification's type to the page it should take you to when clicked.
 const NOTIFICATION_LINKS = {
-  // new_proposal: (targetId) => `/project/${targetId}`,
-  // proposal_approved: (targetId) => `/project/${targetId}`,
-  // project_completed: (targetId) => `/project/${targetId}`,
-  // new_rating: (targetId) => `/project/${targetId}`,
   project: (targetId) => `/project/${targetId}`,
   service: (targetId) => `/services/${targetId}`,
 };
@@ -69,8 +64,8 @@ export const Header = () => {
 
   
   useEffect(() => {
-    dispatch(getMyProfileAction());
-  }, []);
+    if (isLoggedIn) dispatch(getMyProfileAction());
+  }, [dispatch, isLoggedIn]);
 
   const [dropdowns, setDropdowns] = useState({
     expandMenu: false,
@@ -117,7 +112,7 @@ export const Header = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
+  }, []);
 
   const handleNotificationClick = (notification) => {
     if (notification.notification_type === "rating_received" && authUser?.id) {
@@ -142,7 +137,7 @@ export const Header = () => {
     { icon: <FaCog />, text: "Settings", to: "/settings" },
     { icon: <FaUser />, text: "Edit my account", to: `/profile/edit/${user?.id}` },
     { icon: <FaTruck />, text: "Help", to: "/help" },
-    { icon: <FaSignOutAlt />, text: "Logout" },
+    { icon: <FaSignOutAlt />, text: "Logout", onClick: handleLogout },
   ];
 
   const expandMenuOptions = [
@@ -200,11 +195,9 @@ export const Header = () => {
     <header className="header-component">
       <Navbar bg="dark" variant="dark" expand="lg" className="py-2">
         <Container>
-          <Navbar.Brand href="/" className="me-4">
+          <Navbar.Brand as={Link} to="/" className="me-4">
             <svg width="120" height="40" viewBox="0 0 120 40">
-              <text
-                x="10" y="30" className="logo-text"
-                style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, fontSize: "24px" }}>
+              <text x="10" y="30" className="logo-text">
                 <tspan fill="#ffffff">Tan</tspan>
                 <tspan fill="#f09819">feez</tspan>
                 <tspan fill="#f09819">.</tspan>
@@ -225,11 +218,11 @@ export const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             <Nav className="align-items-center justify-content-center nav-icons-container flex-row gap-3">
               {!isLoggedIn && (
-                <div className="d-flex align-items-center auth-buttons">
-                  <Link to="register" className="me-2 text-white border-0 signup-btn">
+                <div className="d-flex align-items-center">
+                  <Link to="/register" className="me-2 text-white border-0">
                     <FaUser className="me-1" /> Register
                   </Link>
-                  <Link to="/login" className="text-white border-0 login-btn">
+                  <Link to="/login" className="text-white border-0">
                     <FaUser className="me-1" /> Login
                   </Link>
                 </div>
@@ -237,6 +230,7 @@ export const Header = () => {
 
               <div className="icon-wrapper">
                 <button
+                  type="button"
                   className="theme-toggle-btn"
                   onClick={handleToggleTheme}
                   aria-label="Toggle theme"
@@ -252,9 +246,12 @@ export const Header = () => {
                   {/* Notifications */}
                   <div ref={refs.notifications} className="position-relative icon-wrapper">
                     <Nav.Link
+                      as="button"
+                      type="button"
                       onClick={() => toggleDropdown("notifications")}
                       className="nav-icon"
                       aria-label="Notifications"
+                      aria-haspopup="menu"
                       aria-expanded={dropdowns.notifications}>
                       <FaBell />
                       {unreadCount > 0 && (
@@ -319,7 +316,7 @@ export const Header = () => {
 
                   {/* Profile */}
                   <div ref={refs.profileMenu} className="position-relative icon-wrapper d-none d-lg-block">
-                    <Nav.Link onClick={() => toggleDropdown("profileMenu")} className="p-0 profile-link" aria-label="Profile">
+                    <Nav.Link as="button" type="button" onClick={() => toggleDropdown("profileMenu")} className="p-0 profile-link" aria-label="Profile" aria-haspopup="menu" aria-expanded={dropdowns.profileMenu}>
                       <Image
                         src={!user?.photo ? "/avatar.png" : user.photo}
                         roundedCircle width="32" height="32"
@@ -336,20 +333,18 @@ export const Header = () => {
                         <div ref={popoverRefs.profileMenu}>
                           <Popover.Body className="p-0">
                             <Nav className="flex-column">
-                              {profileMenuOptions.map((option, idx) => (
+                              {profileMenuOptions.map((option) => (
                                 <Nav.Link
-                                  key={idx}
-                                  as={option.text === "Logout" ? "button" : Link}
-                                  to={option.to}
-                                  onClick={
-                                    option.text === "Logout"
-                                      ? (e) => {
-                                          e.preventDefault();
-                                          handleLogout();
-                                          toggleDropdown("profileMenu");
-                                        }
-                                      : () => toggleDropdown("profileMenu")
-                                  }
+                                  key={option.text}
+                                  as={option.onClick ? "button" : Link}
+                                  to={!option.onClick ? option.to : undefined}
+                                  onClick={(e) => {
+                                    if (option.onClick) {
+                                      e.preventDefault();
+                                      option.onClick();
+                                    }
+                                    toggleDropdown("profileMenu");
+                                  }}
                                   className="px-3 py-2 text-dark menu-item d-flex align-items-center">
                                   <span className="menu-icon me-2">{option.icon}</span>
                                   {option.text}
@@ -367,6 +362,7 @@ export const Header = () => {
               {/* Mobile expand menu */}
               <div ref={refs.expandMenu} className="position-relative icon-wrapper d-lg-none">
                 <Button
+                  type="button"
                   variant="outline-light" size="sm" className="py-1 px-2 expand-menu-btn"
                   onClick={() => toggleDropdown("expandMenu")}
                   aria-expanded={dropdowns.expandMenu}>
@@ -382,9 +378,9 @@ export const Header = () => {
                     <div ref={popoverRefs.expandMenu}>
                       <Popover.Body className="p-0">
                         <Nav className="flex-column">
-                          {expandMenuOptions.map((option, idx) => (
+                          {expandMenuOptions.map((option) => (
                             <Nav.Link
-                              key={idx}
+                              key={option.text}
                               as={option.onClick ? "button" : Link}
                               to={!option.onClick ? option.path : undefined}
                               onClick={

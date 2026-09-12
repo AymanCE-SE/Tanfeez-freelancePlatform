@@ -10,20 +10,21 @@ const Footer = () => {
         <div className="row gy-4">
 
           {/* About */}
-          <div className="col-md-3">
-            <h3 className="text-white">Tanfeez</h3>
-            <p className="small text-white">
-              We are dedicated to providing the best quality service and improving lives through care.
+          <div className="col-md-4">
+            <p className="footer-kicker">Tanfeez marketplace</p>
+            <h3 className="text-white">Work that moves forward.</h3>
+            <p className="footer-description">
+              Connect with trusted clients and independent talent to turn good ideas into finished work.
             </p>
           </div>
 
           {/* Quick Links */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <h5 className="text-white">Quick Links</h5>
             <ul className="list-unstyled">
               <li><Link to="/" className="footer-link">Home</Link></li>
               <li><Link to="/services" className="footer-link">Services</Link></li>
-              <li><Link to="/About" className="footer-link">About</Link></li>
+              <li><Link to="/about" className="footer-link">About</Link></li>
             </ul>
           </div>
 
@@ -48,8 +49,9 @@ const Footer = () => {
           <div className="col-md-3">
             <h5 className="text-white">Newsletter</h5>
             <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" placeholder="Your Email" className="form-control mb-2" />
-              <button className="btn btn-primary w-100" type="submit">Subscribe</button>
+              <label htmlFor="footer-email" className="visually-hidden">Email address</label>
+              <input id="footer-email" type="email" placeholder="Your email address" className="form-control" required />
+              <button className="btn w-100" type="submit">Subscribe</button>
             </form>
           </div>
 
@@ -58,7 +60,7 @@ const Footer = () => {
         <hr className="border-secondary my-4" />
 
         <div className="text-center small text-muted">
-          &copy; 2025 Tanfeez. All rights reserved.
+          &copy; {new Date().getFullYear()} Tanfeez. All rights reserved.
         </div>
       </div>
     </footer>
