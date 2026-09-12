@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Search, ShieldCheck, Stars } from 'react-bootstrap-icons';
 import '../styles/SearchComponent.css';
 
 export function HomeHero() {
@@ -23,45 +24,49 @@ export function HomeHero() {
     };
 
     return (
-        <div className="search-component">
+        <section className="search-component">
             <Container>
-                <Row className="align-items-center justify-content-center" style={{ height: '60vh' }}>
-                    <Col md={6} className="text-center">
-                        <h1>What do you want to achieve today?</h1>
-                        <p>Complete your tasks easily and securely with prices starting from just $5.</p>
-                        <Form className="d-flex" onSubmit={handleSearch}>
+                <div className="hero-grid">
+                    <div className="hero-copy">
+                        <div className="hero-kicker"><span /> Tanfeez freelance marketplace</div>
+                        <h1>Bring your best work to <em>life.</em></h1>
+                        <p className="hero-lede">Find the right freelancer for the job, or turn your expertise into your next opportunity.</p>
+                        <Form className="hero-search" onSubmit={handleSearch}>
+                            <Search className="hero-search-icon" aria-hidden="true" />
                             <Form.Control
                                 type="text"
-                                placeholder="Search for a service"
-                                className="me-2"
+                                placeholder="Search services, skills, or tags"
+                                aria-label="Search services, skills, or tags"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                            <Button variant="success" type="submit">Search</Button>
-                            {searchTerm && (
-                                <Button
-                                    variant="outline-secondary"
-                                    className="ms-2"
-                                    onClick={handleClear}
-                                >
-                                    Clear
-                                </Button>
-                            )}
+                            {searchTerm && <button type="button" className="hero-clear" onClick={handleClear}>Clear</button>}
+                            <Button type="submit">Search <ArrowRight /></Button>
                         </Form>
-                        <div className="tags mt-4">
+                        <div className="hero-tags">
+                            <span>Popular:</span>
                             {['Marketing', 'WordPress', 'Design'].map((tag) => (
-                                <span
-                                    key={tag}
-                                    onClick={() => handleTagClick(tag)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    {tag}
-                                </span>
+                                <button key={tag} type="button" onClick={() => handleTagClick(tag)}><i />{tag}</button>
                             ))}
                         </div>
-                    </Col>
-                </Row>
+                        <div className="hero-proof">
+                            <span><ShieldCheck /> Secure payments</span>
+                            <span><Stars /> Vetted talent</span>
+                        </div>
+                        <div className="hero-metric-row">
+                            <span><strong>10k+</strong> services</span>
+                            <span><strong>4.9/5</strong> client rating</span>
+                            <span><strong>24/7</strong> support</span>
+                        </div>
+                    </div>
+                    <div className="hero-visual" aria-hidden="true">
+                        <div className="hero-connection"><i /><i /></div>
+                        <div className="hero-image-main" />
+                        <div className="hero-floating-note hero-floating-note-top"><strong>4.9/5</strong><span>average rating</span></div>
+                        <div className="hero-people-note"><span className="hero-avatar-stack"><i /><i /><i /></span><span><strong>Real people.</strong><br />Real progress.</span></div>
+                    </div>
+                </div>
             </Container>
-        </div>
+        </section>
     );
 }

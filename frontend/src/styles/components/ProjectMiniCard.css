@@ -1,5 +1,6 @@
 .project-mini-card {
-  width: 220px;
+  width: 100%;
+  max-width: 100%;
   /* Remove or reduce min-height */
   min-height: unset;
   border-radius: 1rem;
@@ -22,7 +23,7 @@
 
 .project-mini-card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-4px);
 }
 
 .mini-title {

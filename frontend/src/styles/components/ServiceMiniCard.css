@@ -1,6 +1,7 @@
 .service-mini-card,
 .project-mini-card {
-  width: 220px;
+  width: 100%;
+  max-width: 100%;
   min-height: 220px;
   border-radius: 1rem;
   overflow: hidden;
@@ -13,7 +14,7 @@
 .service-mini-card:hover,
 .project-mini-card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-4px);
 }
 
 .mini-img-wrapper {
@@ -94,4 +95,18 @@
 [data-theme="dark"] .mini-meta .badge.bg-light {
   background: #334155 !important;
   color: #f8fafc !important;
+}
+
+.service-mini-card,
+.project-mini-card {
+  min-height: 100%;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 575.98px) {
+  .service-mini-card,
+  .project-mini-card {
+    width: 100%;
+  }
 }
