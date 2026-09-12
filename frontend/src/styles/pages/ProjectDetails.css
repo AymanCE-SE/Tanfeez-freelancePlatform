@@ -15,7 +15,7 @@
     color: var(--color-text-muted-dark);
 }
 
-.project-card {
+.project-details-card {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-sm);
@@ -26,7 +26,7 @@
     padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
 }
-.project-title {
+.project-details-title {
     color: var(--color-text) !important;
     font-size: 1.9rem !important; 
 }
@@ -45,7 +45,7 @@
     margin-right: 0.75rem;
 }
 
-.section-title {
+.project-details-section-title {
     color: var(--color-text);
     font-size: 1.25rem;
     margin-bottom: 1.25rem;
@@ -98,22 +98,20 @@
 }
 
 /* Dark mode adjustments */
-[data-theme="dark"] {
-    .project-meta-item {
-        background: var(--color-card-bg);
-    }
+[data-theme="dark"] .project-details-card .project-meta-item {
+    background: var(--color-card-bg);
+}
 
-    .skill-badge {
-        background: var(--color-card-bg) !important;
-    }
+[data-theme="dark"] .project-details-card .skill-badge {
+    background: var(--color-card-bg) !important;
+}
 
-    .skill-badge:hover {
-        background: var(--primary-900) !important;
-        border-color: var(--primary-700);
-        color: var(--primary-300) !important;
-    }
+[data-theme="dark"] .project-details-card .skill-badge:hover {
+    background: var(--primary-900) !important;
+    border-color: var(--primary-700);
+    color: var(--primary-300) !important;
+}
 
-    .client-info {
-        background: var(--color-card-bg);
-    }
+[data-theme="dark"] .project-details-card .client-info {
+    background: var(--color-card-bg);
 }

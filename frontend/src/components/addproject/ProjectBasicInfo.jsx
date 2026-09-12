@@ -3,11 +3,11 @@
 import { Form, Card } from "react-bootstrap";
 
 const ProjectBasicInfo = ({ formData, handleChange, errors }) => (
-  <Card className="custom-card">
-    <div className="card-header-custom">
+  <Card className="add-project-card">
+    <div className="add-project-card-header">
       <h5 className="mb-0 text-light">Basic Information</h5>
     </div>
-    <Card.Body className="card-body-custom">
+    <Card.Body className="add-project-card-body">
     <Form.Group className="mb-3">
   <Form.Label>Project Title</Form.Label>
   <Form.Control

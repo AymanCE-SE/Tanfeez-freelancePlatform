@@ -63,11 +63,11 @@ const ProjectRequirements = ({
   };
 
   return (
-    <Card className="custom-card">
-      <div className="card-header-custom">
+    <Card className="add-project-card">
+      <div className="add-project-card-header">
         <h5 className="mb-0 text-light">Requirements</h5>
       </div>
-      <Card.Body className="card-body-custom">
+      <Card.Body className="add-project-card-body">
         {/* Skills Section */}
         <Form.Group className="mb-3 position-relative">
           <Form.Label>Skills Required</Form.Label>

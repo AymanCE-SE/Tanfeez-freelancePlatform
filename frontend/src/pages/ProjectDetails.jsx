@@ -234,11 +234,11 @@ function ProjectDetails() {
 
   return (
     <Container className="mt-5 mb-5">
-      <Card className="project-card">
+      <Card className="project-details-card">
         <Card.Body className="p-4">
           <div className="project-header" style={{ borderBottom: "1px solid var(--color-border)", paddingBottom: "1.5rem", marginBottom: "1.5rem" }}>
             <div className="d-flex justify-content-between align-items-start mb-2">
-              <h2 className="mb-0 project-title" style={{ fontSize: "2rem", fontWeight: 700, color: "var(--color-text)" }}>
+              <h2 className="mb-0 project-details-title" style={{ fontSize: "2rem", fontWeight: 700, color: "var(--color-text)" }}>
                 {projectDetails?.name}
               </h2>
               <Badge
@@ -276,13 +276,13 @@ function ProjectDetails() {
           </div>
 
           <section className="mb-5">
-            <h5 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Description</h5>
+            <h5 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Description</h5>
             <p className="text-muted" style={{ fontSize: "1.1rem" }}>{projectDetails?.description}</p>
           </section>
 
           {projectDetails?.skills && projectDetails.skills.length > 0 && (
             <section className="mb-4">
-              <h6 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Required Skills</h6>
+              <h6 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Required Skills</h6>
               <div className="d-flex flex-wrap gap-2">
                 {projectDetails.skills.map((skill, idx) => (
                   <Badge key={idx} className="skill-badge py-2 px-3" bg="light" text="dark" style={{ fontSize: "1rem", fontWeight: 500 }}>
@@ -295,7 +295,7 @@ function ProjectDetails() {
 
           <Row className="mb-5">
             <Col md={6}>
-              <h5 className="section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Details</h5>
+              <h5 className="project-details-section-title" style={{ fontWeight: 600, color: "var(--color-text)" }}>Project Details</h5>
               <div className="client-stat">
                 <span className="client-stat-label">Experience Level:</span>
                 <span className="client-stat-value">{projectDetails?.experience_level}</span>
@@ -327,7 +327,7 @@ function ProjectDetails() {
             </Col>
 
             <Col md={6}>
-              <h5 className="section-title">Client Information</h5>
+              <h5 className="project-details-section-title">Client Information</h5>
               <Card className="client-profile-card">
                 <Card.Body>
                   <div className="d-flex align-items-center mb-3">

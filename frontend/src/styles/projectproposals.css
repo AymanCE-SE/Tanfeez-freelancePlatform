@@ -2,7 +2,7 @@
     background: var(--color-background);
   }
   
-  .section-title {
+  .proposal-section-title {
     color: var(--color-text);
     font-weight: 700;
     margin-bottom: 2rem;
@@ -47,7 +47,7 @@
     border-color: var(--color-border);
   }
   
-  [data-theme="dark"] .section-title {
+  [data-theme="dark"] .proposal-section-title {
     color: var(--color-text-inverse);
   }
   

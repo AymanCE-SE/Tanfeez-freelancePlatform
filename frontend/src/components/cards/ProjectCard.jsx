@@ -18,7 +18,7 @@ const progressColor = {
 const truncate = (text, maxLength) =>
   text && text.length > maxLength ? text.slice(0, maxLength - 1) + "…" : text;
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, variant = "marketplace" }) => {
   const navigate = useNavigate();
   const {
     id,
@@ -39,7 +39,7 @@ const ProjectCard = ({ project }) => {
   };
 
   return (
-    <Card className="project-card h-100 border-0">
+    <Card className={`${variant}-project-card h-100 border-0`}>
       <Card.Body>
         <div className="d-flex justify-content-between align-items-center mb-2">
           <OverlayTrigger
@@ -47,7 +47,7 @@ const ProjectCard = ({ project }) => {
             overlay={<Tooltip>{name}</Tooltip>}
           >
             <Card.Title
-              className="project-title project-title-truncated mb-0"
+              className={`${variant}-project-title ${variant}-project-title-truncated mb-0`}
               title={name}
             >
               <Link
@@ -68,7 +68,7 @@ const ProjectCard = ({ project }) => {
           overlay={<Tooltip>{description}</Tooltip>}
         >
           <Card.Text
-            className="project-description project-description-truncated mb-3"
+            className={`${variant}-project-description ${variant}-project-description-truncated mb-3`}
             title={description}
           >
             {truncate(description, 100)}

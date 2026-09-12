@@ -41,7 +41,7 @@ const ProjectsTab = ({ isMyProfile, userId }) => {
         {hasProjects ? (
           projects.map((project) => (
             <Col key={project.id}>
-              <ProjectCard project={project} isOwner={isMyProfile} />
+              <ProjectCard project={project} isOwner={isMyProfile} variant="profile" />
             </Col>
           ))
         ) : (

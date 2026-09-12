@@ -70,7 +70,7 @@
 
 .service-card .service-tags { min-height: 1.75rem; }
 
-.service-card .tag-badge {
+.service-card .service-card-tag {
     border: 1px solid var(--primary-500, #0284c7);
     background: var(--primary-500, #0284c7);
     color: #fff;
@@ -161,7 +161,7 @@
     color: var(--primary-400);
 }
 
-[data-theme="dark"] .service-card .tag-badge {
+[data-theme="dark"] .service-card .service-card-tag {
     border-color: var(--primary-300, #38bdf8);
     background: var(--primary-700, #075985);
     color: var(--primary-100, #bae6fd);

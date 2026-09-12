@@ -11,7 +11,7 @@
     color: var(--color-text);
   }
   /* Card Components */
-  .service-details-root .custom-card {
+  .service-details-root .service-details-card {
     border: none;
     box-shadow: var(--shadow-md);
     border-radius: var(--radius-lg);
@@ -20,14 +20,14 @@
     margin-bottom: 2rem;
   }
   
-  .service-details-root .card-header-custom {
+  .service-details-root .service-details-card-header {
     background: var(--primary-600);
     /* color: var(--color-text-inverse); */
     padding: 1rem 1.25rem;
     font-weight: 500;
   }
   
-  .service-details-root .card-body-custom {
+  .service-details-root .service-details-card-body {
     padding: 1.5rem;
     background: var(--color-card-bg);
     color: var(--color-text);
@@ -35,7 +35,7 @@
   
   /* Badges */
   .service-details-root .category-badge,
-  .service-details-root .tag-badge {
+  .service-details-root .service-details-tag {
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-full);
@@ -43,7 +43,7 @@
     align-items: center;
   }
   
-  .service-details-root .tag-badge {
+  .service-details-root .service-details-tag {
     background: var(--primary-500);
     color: var(--color-text-inverse);
   }
@@ -188,52 +188,53 @@
   }
   
   /* Dark Mode */
-  [data-theme="dark"] .service-details-root {
-    .custom-card {
-      background: var(--color-card-bg);
-      border-color: var(--color-border);
-    }
-  
-    .card-header-custom {
-      background: var(--primary-700);
-    }
-  
-    .card-body-custom h5 {
-      color: var(--color-text-inverse);
-    }
-    .color-inverse{
-        color: var(--color-text-inverse) !important;
-    }
-    .tag-badge {
-      background: var(--primary-700);
-    }
-  
-    .thumbnail-wrapper {
-      background: var(--color-card-bg);
-      border-color: var(--color-border);
-    }
-  
-    .thumbnail-wrapper.active {
-      border-color: var(--primary-400);
-    }
-  
-    .nav-button {
-      background: rgba(255, 255, 255, 0.1);
-    }
-  
-    .nav-button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
+  [data-theme="dark"] .service-details-root .service-details-card {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
   }
-  
+
+  [data-theme="dark"] .service-details-root .service-details-card-header {
+    background: var(--primary-700);
+  }
+
+  [data-theme="dark"] .service-details-root .service-details-card-body h5 {
+    color: var(--color-text-inverse);
+  }
+
+  [data-theme="dark"] .service-details-root .color-inverse {
+    color: var(--color-text-inverse) !important;
+  }
+
+  [data-theme="dark"] .service-details-root .service-details-tag {
+    background: var(--primary-700);
+  }
+
+  [data-theme="dark"] .service-details-root .thumbnail-wrapper {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
+  }
+
+  [data-theme="dark"] .service-details-root .thumbnail-wrapper.active {
+    border-color: var(--primary-400);
+  }
+
+  [data-theme="dark"] .service-details-root .nav-button {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .service-details-root .nav-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
   /* Responsive */
   @media (max-width: 991.98px) {
-    .sticky-sidebar {
+    .service-details-root .sticky-sidebar {
       position: static;
       margin-top: 2rem;
     }
-  
-    .main-image-container {
+
+    .service-details-root .main-image-container {
       height: 300px;
     }
   }
+

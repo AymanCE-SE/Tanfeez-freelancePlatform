@@ -111,8 +111,8 @@ const youtubeVideoId = extractYoutubeId(service?.video);
             {/* Left Column */}
             <Col lg={8}>
               {/* Service Info */}
-              <div className="custom-card mb-4">
-                <div className="card-body-custom">
+              <div className="service-details-card mb-4">
+                <div className="service-details-card-body">
                   <h1 className="service-title mb-4">{service.service_name}</h1>
 
                   {/* Posted date */}
@@ -125,7 +125,7 @@ const youtubeVideoId = extractYoutubeId(service?.video);
                       {service.category}
                     </Badge>
                     {service.tags?.map((tag, index) => (
-                      <Badge key={index} className="tag-badge me-2">
+                      <Badge key={index} className="service-details-tag me-2">
                         <FiTag className="me-1" /> {tag}
                       </Badge>
                     ))}
@@ -137,13 +137,13 @@ const youtubeVideoId = extractYoutubeId(service?.video);
 
               {/* YouTube Preview */}
               {youtubeVideoId && (
-                <div className="custom-card mb-4">
-                  <div className="card-header-custom">
+                <div className="service-details-card mb-4">
+                  <div className="service-details-card-header">
                     <h5 className="mb-0 text-light">
                       <FiYoutube className="me-2 text-danger " /> Service Preview
                     </h5>
                   </div>
-                  <div className="card-body-custom">
+                  <div className="service-details-card-body">
                     <div className="youtube-container">
                       <iframe
                         src={`https://www.youtube.com/embed/${youtubeVideoId}`}
@@ -159,21 +159,21 @@ const youtubeVideoId = extractYoutubeId(service?.video);
               )}
 
               {/* Seller Info */}
-              <div className="custom-card mb-4">
-                <div className="card-header-custom">
+              <div className="service-details-card mb-4">
+                <div className="service-details-card-header">
                   <h5 className="mb-0 text-light">About the Seller</h5>
                 </div>
-                <div className="card-body-custom">
+                <div className="service-details-card-body">
                 <SellerInfo id={service.freelancerId} />
                 </div>
               </div>
 
               {/* Reviews Section */}
-              <div className="custom-card">
-                <div className="card-header-custom">
+              <div className="service-details-card">
+                <div className="service-details-card-header">
                   <h5 className="mb-0 text-light">Reviews</h5>
                 </div>
-                <div className="card-body-custom">
+                <div className="service-details-card-body">
                   <ReviewsSection freelancerId={service.freelancerId} serviceId={service.id} />
                   </div>
               </div>

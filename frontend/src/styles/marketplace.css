@@ -89,7 +89,8 @@
 
 .marketplace-grid > [class*="col"] { display: flex; }
 .marketplace-grid .service-card,
-.marketplace-grid .project-card { width: 100%; }
+.marketplace-grid .marketplace-project-card,
+.marketplace-grid .profile-project-card { width: 100%; }
 
 .marketplace-pagination { margin-top: 2.5rem !important; }
 .marketplace-pagination .page-link {

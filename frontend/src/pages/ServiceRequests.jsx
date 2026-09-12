@@ -79,7 +79,7 @@ const ServiceRequests = () => {
         </Card>
       )}
 
-      <h2 className="mb-4 section-title text-center">Orders</h2>
+      <h2 className="mb-4 service-requests-section-title text-center">Orders</h2>
 
       {requests.length === 0 ? (
         <div className="text-center text-muted py-5">No orders yet.</div>

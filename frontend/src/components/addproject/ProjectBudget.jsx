@@ -4,11 +4,11 @@ import { Form, Card, Row, Col } from "react-bootstrap";
 
 const ProjectBudget = ({ formData, handleChange, errors, typeOptions }) => {
   return (
-    <Card className="custom-card">
-      <div className="card-header-custom">
+    <Card className="add-project-card">
+      <div className="add-project-card-header">
         <h5 className="mb-0 text-light">Budget & Timeline</h5>
       </div>
-      <Card.Body className="card-body-custom">
+      <Card.Body className="add-project-card-body">
         <Form.Group className="mb-3">
           <Form.Label>Project Type</Form.Label>
           <Form.Select

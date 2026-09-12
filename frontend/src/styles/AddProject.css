@@ -11,7 +11,7 @@
 }
 
 /* Card Styles */
-.add-project-page .custom-card {
+.add-project-page .add-project-card {
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
@@ -20,14 +20,14 @@
   overflow: hidden;
 }
 
-.add-project-page .card-header-custom {
+.add-project-page .add-project-card-header {
   padding: 1rem 1.5rem;
   background: var(--primary-600);
   color: var(--color-text-inverse);
   font-weight: 500;
 }
 
-.add-project-page .card-body-custom {
+.add-project-page .add-project-card-body {
   padding: 1.5rem;
 }
 
@@ -139,55 +139,44 @@
 
 /* Dark Mode */
 [data-theme="dark"] .add-project-page {
-  .custom-card {
-    background: var(--color-card-bg-dark);
-    border-color: var(--color-border-dark);
-  }
-
-  .card-header-custom {
-    background: var(--primary-700);
-  }
-
-  .form-control,
-  .form-select,
-  .input-group-text,
-  .level-dropdown {
-    background: var(--color-input-bg-dark);
-    border-color: var(--color-border-dark);
-    color: var(--color-text-inverse);
-  }
-
-  .level-dropdown:hover {
-    border-color: var(--primary-400);
-  }
-
-  .level-dropdown.active {
-    border-color: var(--primary-400);
-    box-shadow: 0 0 0 2px var(--primary-900);
-  }
-
-  .level-options {
-    background: var(--color-card-bg-dark);
-    border-color: var(--color-border-dark);
-  }
-
-  .level-option:hover {
-    background: var(--color-hover-dark);
-  }
-
-  .summary-item {
-    border-color: var(--color-border-dark);
-  }
+[data-theme="dark"] .add-project-page .add-project-card {
+  background: var(--color-card-bg-dark);
+  border-color: var(--color-border-dark);
 }
+
+[data-theme="dark"] .add-project-page .add-project-card-header { background: var(--primary-700); }
+
+[data-theme="dark"] .add-project-page .form-control,
+[data-theme="dark"] .add-project-page .form-select,
+[data-theme="dark"] .add-project-page .input-group-text,
+[data-theme="dark"] .add-project-page .level-dropdown {
+  background: var(--color-input-bg-dark);
+  border-color: var(--color-border-dark);
+  color: var(--color-text-inverse);
+}
+
+[data-theme="dark"] .add-project-page .level-dropdown:hover { border-color: var(--primary-400); }
+[data-theme="dark"] .add-project-page .level-dropdown.active {
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 2px var(--primary-900);
+}
+
+[data-theme="dark"] .add-project-page .level-options {
+  background: var(--color-card-bg-dark);
+  border-color: var(--color-border-dark);
+}
+
+[data-theme="dark"] .add-project-page .level-option:hover { background: var(--color-hover-dark); }
+[data-theme="dark"] .add-project-page .summary-item { border-color: var(--color-border-dark); }
 
 /* Responsive */
 @media (max-width: 991.98px) {
-  .sticky-sidebar {
+  .add-project-page .sticky-sidebar {
     position: static;
     margin-top: 2rem;
   }
 
-  .page-header {
+  .add-project-page .page-header {
     margin-bottom: 1.5rem;
   }
 }

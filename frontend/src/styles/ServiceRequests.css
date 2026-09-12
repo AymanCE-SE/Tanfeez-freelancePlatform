@@ -2,7 +2,7 @@
     background: var(--color-background);
   }
   
-  .section-title {
+  .service-requests-section-title {
     color: var(--color-text);
     font-weight: 700;
     margin-bottom: 2rem;
@@ -48,7 +48,7 @@
     border-color: var(--color-border);
   }
   
-  [data-theme="dark"] .section-title {
+  [data-theme="dark"] .service-requests-section-title {
     color: var(--color-text-inverse);
   }
   

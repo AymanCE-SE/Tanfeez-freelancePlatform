@@ -5,8 +5,8 @@ import { Card, Button } from "react-bootstrap";
 const ProjectSummary = ({ formData, handleSubmit, isLoading }) => {
   return (
     <div className="sticky-sidebar">
-      <Card className="custom-card">
-        <Card.Body className="card-body-custom">
+      <Card className="add-project-card">
+        <Card.Body className="add-project-card-body">
           <h6 className="mb-3">Project Summary</h6>
           <div className="summary-item">
   <small className="text-muted">Type:</small>

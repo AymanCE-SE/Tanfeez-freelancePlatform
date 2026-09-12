@@ -40,7 +40,7 @@ const ProjectProposals = () => {
   return (
     <div className="proposals-page-container py-4" style={{ minHeight: "80vh" }}>
       {/* --- Project Main Info --- */}
-      <Card className="mb-4 shadow-sm project-card">
+      <Card className="mb-4 shadow-sm proposal-project-card">
         <Card.Body>
           <h3 className="mb-2">{project.title}</h3>
           <div className="mb-2 text-muted">{project.description}</div>
@@ -60,7 +60,7 @@ const ProjectProposals = () => {
       </Card>
 
       {/* --- Proposals List --- */}
-      <h2 className="mb-4 section-title text-center">Project Proposals</h2>
+      <h2 className="mb-4 proposal-section-title text-center">Project Proposals</h2>
       {proposals.length === 0 ? (
         <div className="text-center text-muted py-5">No proposals yet.</div>
       ) : (

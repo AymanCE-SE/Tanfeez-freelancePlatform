@@ -1,4 +1,4 @@
-.project-card {
+.marketplace-project-card {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: 0.9rem;
@@ -6,34 +6,34 @@
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.project-card:hover {
+.marketplace-project-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
 }
 
-.project-card .card-body { display: flex; flex-direction: column; padding: 1.35rem; }
+.marketplace-project-card .card-body { display: flex; flex-direction: column; padding: 1.35rem; }
 
-.project-title {
+.marketplace-project-title {
     color: var(--color-text);
     font-size: 1.15rem;
     font-weight: 700;
     line-height: 1.25;
 }
 
-.project-title-truncated {
+.marketplace-project-title-truncated {
     max-width: 70%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.project-description {
+.marketplace-project-description {
     min-height: 3.2em;
     color: var(--color-text-muted);
     line-height: 1.6;
 }
 
-.project-description-truncated {
+.marketplace-project-description-truncated {
     display: -webkit-box;
     line-clamp: 2;
     overflow: hidden;
@@ -58,7 +58,7 @@
 
 .project-budget { color: var(--primary-600); font-weight: 700; }
 .project-budget svg { color: var(--primary-500); }
-.project-card .btn { margin-top: auto; border-radius: 0.6rem; font-weight: 700; }
+.marketplace-project-card .btn { margin-top: auto; border-radius: 0.6rem; font-weight: 700; }
 
 [data-theme="dark"] .project-tag {
     border-color: var(--primary-300, #38bdf8);

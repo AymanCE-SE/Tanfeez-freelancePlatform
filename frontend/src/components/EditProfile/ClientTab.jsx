@@ -63,7 +63,7 @@ const ClientTab = ({ navigate, id }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h4 className="section-title">Company Information</h4>
+      <h4 className="edit-profile-section-title">Company Information</h4>
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">

@@ -220,11 +220,11 @@ const CreateService = () => {
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
             <Col lg={8}>
-              <Card className="mb-4 custom-card">
-                <div className="card-header-custom">
+              <Card className="mb-4 create-service-card">
+                <div className="create-service-card-header">
                   <h5 className="mb-0 text-light">Basic Information</h5>
                 </div>
-                <Card.Body className="card-body-custom">
+                <Card.Body className="create-service-card-body">
                   <Form.Group className="mb-4">
                     <Form.Label>Service Name</Form.Label>
                     <Form.Control
@@ -281,7 +281,7 @@ const CreateService = () => {
                     </Form.Text>
                     <div className="mt-3">
                       {formData.tags.map((tag, index) => (
-                        <span className="tag-badge" key={index}>
+                        <span className="create-service-tag" key={index}>
                           {tag}
                           <FiX
                             className="remove-tag-icon"
@@ -312,11 +312,11 @@ const CreateService = () => {
                 </Card.Body>
               </Card>
 
-              <Card className="mb-4 custom-card">
-                <div className="card-header-custom">
+              <Card className="mb-4 create-service-card">
+                <div className="create-service-card-header">
                   <h5 className="mb-0 text-light">Service Description</h5>
                 </div>
-                <Card.Body className="card-body-custom">
+                <Card.Body className="create-service-card-body">
                   <Form.Group className="mb-3">
                     <Form.Label>Description</Form.Label>
                     <Form.Control
@@ -336,11 +336,11 @@ const CreateService = () => {
             </Col>
 
             <Col lg={4}>
-              <Card className="mb-4 custom-card">
-                <div className="card-header-custom">
+              <Card className="mb-4 create-service-card">
+                <div className="create-service-card-header">
                   <h5 className="mb-0 text-light">Media</h5>
                 </div>
-                <Card.Body className="card-body-custom">
+                <Card.Body className="create-service-card-body">
                   <Form.Group className="mb-4">
                     <Form.Label>Thumbnail Image</Form.Label>
                     <div className="mb-3">

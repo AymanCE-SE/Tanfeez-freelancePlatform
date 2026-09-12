@@ -69,7 +69,7 @@ const ServiceCard = ({ service, isOwner }) => {
         {/* add service.tags  */}
         <div className="service-tags mb-3">
           {service.tags?.slice(0, 3).map((tag) => (
-            <Badge key={tag} className="tag-badge me-2">
+            <Badge key={tag} className="service-card-tag me-2">
               {tag}
             </Badge>
           ))}
