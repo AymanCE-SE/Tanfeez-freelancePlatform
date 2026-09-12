@@ -25,11 +25,11 @@ const Message = ({ message, isSender, participant, formatTime }) => (
         className={`message-meta d-flex align-items-center ${
           isSender ? "justify-content-end" : "justify-content-start"
         } mt-1`}>
-        <small className="text-muted me-2">
+        <small className="message-time me-2">
           {formatTime(message.timestamp)}
         </small>
           {isSender && (
-            <small className={message.isRead ? "text-primary" : "text-muted"}>
+            <small className={message.isRead ? "message-read text-primary" : "message-read"}>
               <CheckCircleFill size={12} />
             </small>
           )}
