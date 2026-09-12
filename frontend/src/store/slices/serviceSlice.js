@@ -55,10 +55,13 @@ export const getMyServicesAction = createAsyncThunk(
 export const getAllServicesAction = createAsyncThunk(
 
     "service/getAllServicesAction",
-    async (page = 1, thunkAPI) => {
+    async (pageOrParams = 1, thunkAPI) => {
         const { rejectWithValue } = thunkAPI;
+        const { page = 1, search = "" } = typeof pageOrParams === "number"
+            ? { page: pageOrParams }
+            : pageOrParams;
         try {
-            const response = await getAllServices(page);
+            const response = await getAllServices(page, search);
             return response.data;
 
         } catch (error) {

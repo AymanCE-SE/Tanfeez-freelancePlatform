@@ -2,6 +2,7 @@ import logging
 
 from django.shortcuts import render
 from rest_framework.exceptions import NotFound, ValidationError
+from django.db.models import Q
 
 # Create your views here.
 from rest_framework.views import APIView
@@ -43,7 +44,13 @@ class ServiceListView(generics.ListAPIView):
         """
         Override get_queryset to filter out soft-deleted services.
         """
-        return Service.objects.filter(is_deleted=False)  # Exclude soft-deleted records
+        queryset = Service.objects.filter(is_deleted=False)
+        search = self.request.query_params.get("search", "").strip()
+        if search:
+            queryset = queryset.filter(
+                Q(service_name__icontains=search) | Q(tags__icontains=search)
+            )
+        return queryset.distinct()
 
 
 # get service by id

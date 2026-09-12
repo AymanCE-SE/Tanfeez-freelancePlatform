@@ -11,9 +11,9 @@ export const addService = async (service) => {
 };
 
 
-export const getAllServices = async (page = 1) => {
+export const getAllServices = async (page = 1, search = "") => {
     try {
-        const response = await apiClient.get("service/", { params: { page } });
+        const response = await apiClient.get("service/", { params: { page, search } });
         return response
     } catch (error) {
         throw error;

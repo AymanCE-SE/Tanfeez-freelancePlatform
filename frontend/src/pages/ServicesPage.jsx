@@ -8,22 +8,25 @@ import { categories } from "../mock/servicesData";
 import "../styles/ServicesPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getAllServicesAction, getServicesByTagAction } from "../store/slices/serviceSlice";
+import { getAllServicesAction } from "../store/slices/serviceSlice";
 
 const ServicesPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState("All Services");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [showFilters, setShowFilters] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
   const [selectedTag, setSelectedTag] = useState(""); // Add to your filter state and UI as needed
-  const [searchParams, setSearchParams] = useSearchParams();
   const hasMounted = useRef(false);
   const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
   const goToPage = (page) => {
-    setSearchParams({ page: String(page) });
+    const nextParams = { page: String(page) };
+    const search = searchParams.get("search");
+    if (search) nextParams.search = search;
+    setSearchParams(nextParams);
   };
 
   const handleCategoryClick = (categoryName) => {
@@ -41,12 +44,12 @@ const ServicesPage = () => {
   const { user } = useSelector((myStore) => myStore.authSlice);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (searchTerm.trim()) {
-      dispatch(getServicesByTagAction({ tag: searchTerm.trim(), page: currentPage }));
-    } else {
-      dispatch(getAllServicesAction(currentPage));
+    const search = searchParams.get("search") || "";
+    if (search !== searchTerm) {
+      setSearchTerm(search);
     }
-  }, [dispatch, currentPage])
+    dispatch(getAllServicesAction({ page: currentPage, search }));
+  }, [dispatch, currentPage, searchParams]);
 
   useEffect(() => {
     if (!hasMounted.current) {
@@ -117,13 +120,8 @@ const ServicesPage = () => {
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (searchTerm.trim()) {
-        goToPage(1);
-        dispatch(getServicesByTagAction({ tag: searchTerm.trim(), page: 1 }));
-      } else {
-        goToPage(1);
-        dispatch(getAllServicesAction());
-      }
+      const search = searchTerm.trim();
+      setSearchParams(search ? { search, page: "1" } : { page: "1" });
     }
   };
 

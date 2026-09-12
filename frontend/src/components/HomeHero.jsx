@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getServicesByTagAction, getAllServicesAction } from '../store/slices/serviceSlice';
 import '../styles/SearchComponent.css';
 
 export function HomeHero() {
     const [searchTerm, setSearchTerm] = useState('');
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (searchTerm.trim()) {
-            dispatch(getServicesByTagAction(searchTerm.trim()));
-        } else {
-            dispatch(getAllServicesAction());
-        }
-        navigate('/services');
+        const term = searchTerm.trim();
+        navigate(term ? `/services?search=${encodeURIComponent(term)}` : '/services');
     };
 
     const handleTagClick = (tag) => {
-        dispatch(getServicesByTagAction(tag));
-        navigate('/services');
+        navigate(`/services?search=${encodeURIComponent(tag)}`);
     };
 
     const handleClear = () => {
         setSearchTerm('');
-        dispatch(getAllServicesAction());
         navigate('/services');
     };
 
