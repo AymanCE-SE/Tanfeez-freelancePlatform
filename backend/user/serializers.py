@@ -7,6 +7,8 @@ from client.models import Client
 from freelancer.models import Freelancer
 from .models import CustomUser
 from django.contrib.auth.hashers import make_password
+from project.enums import Progress
+from project.models import Project
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -127,6 +129,7 @@ class UserPhotoUpdateSerializer(serializers.ModelSerializer):
 class UserOutSerializer(serializers.ModelSerializer):
     freelancer_profile = serializers.SerializerMethodField()
     client_profile = serializers.SerializerMethodField()
+    completionRate = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
@@ -144,7 +147,24 @@ class UserOutSerializer(serializers.ModelSerializer):
             "address",
             "freelancer_profile",
             "client_profile",
+            "completionRate",
         ]
+
+    def get_completionRate(self, obj):
+        projects = Project.objects.filter(is_deleted=False).exclude(progress=Progress.CANCELLED)
+        if obj.user_type == "client":
+            projects = projects.filter(clientId=obj)
+        elif obj.user_type == "freelancer":
+            projects = projects.filter(freelancerId=obj)
+        else:
+            return 0
+
+        total_projects = projects.count()
+        if total_projects == 0:
+            return 0
+
+        completed_projects = projects.filter(progress=Progress.COMPLETED).count()
+        return round((completed_projects / total_projects) * 100)
 
     def get_freelancer_profile(self, obj):
         if hasattr(obj, "freelancer_profile"):
