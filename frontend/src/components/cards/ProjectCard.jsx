@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, Badge, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Cash } from "react-bootstrap-icons";
 import { formatDistanceToNow } from "date-fns";
 
@@ -58,7 +58,12 @@ const ProjectCard = ({ project }) => {
               }}
               title={name}
             >
-              {truncate(name, 40)}
+              <Link
+                to={`/project/${id}`}
+                className="text-decoration-none text-reset"
+              >
+                {truncate(name, 40)}
+              </Link>
             </Card.Title>
           </OverlayTrigger>
           <Badge bg={progressColor[status] || "secondary"} className="text-capitalize">

@@ -24,7 +24,7 @@ const ProjectMiniCard = ({ project }) => {
       <Card.Body className="p-2">
         <div className="d-flex justify-content-between align-items-center mb-1">
           <h6 className="mini-title mb-0">
-            <Link to={`/projects/${id}`} className="mini-title-link">
+            <Link to={`/project/${id}`} className="mini-title-link">
               {truncate(name, 32)}
             </Link>
           </h6>
