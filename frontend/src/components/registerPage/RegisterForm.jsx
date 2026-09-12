@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/Login.css';
 import { validateEmail, isFieldEmpty, isPasswordTooShort } from '../../utils/validation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,7 +90,7 @@ export default function RegisterForm({ role }) {
     const handleBlur = () => setTouched(true);
 
     return (
-        <div className="login-container">
+        <div className="login-page login-container">
             <div className="login-card">
                 <div className="logo-container">
                     {/* <img src="../logo/Tanfeez.png" alt="Tanfeez Logo" className="logo m-0" /> */}

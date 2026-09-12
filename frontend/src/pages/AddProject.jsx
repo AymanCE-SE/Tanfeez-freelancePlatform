@@ -190,7 +190,7 @@ function AddProject() {
   }, [isLoading, error, createdProject]);
 
   return (
-    <div className="page-container">
+    <div className="add-project-page page-container">
       <Container>
         <div className="page-header">
           <h1 className="fw-bold">Post a New Project</h1>

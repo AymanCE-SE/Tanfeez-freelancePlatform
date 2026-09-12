@@ -98,7 +98,7 @@ function extractYoutubeId(url) {
 const youtubeVideoId = extractYoutubeId(service?.video);
 
   return (
-    <div className="service-details-page">
+    <div className="service-details-page service-details-root">
       <Container fluid className="p-0">
         {/* Main Image Gallery */}
         <ImageGallery

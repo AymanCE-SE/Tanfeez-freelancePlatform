@@ -1,4 +1,4 @@
-.login-container {
+.login-page.login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,29 +9,29 @@
   margin-top: 0%;
 }
 
-.logo-container {
+.login-page .logo-container {
   /* margin-bottom: 1.5rem; */
   text-align: center;
   /* margin: 10px auto; */
 }
 
-input::placeholder {
+.login-page input::placeholder {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   opacity: 0.8;
 }
 
-input.form-control.is-valid {
+.login-page input.form-control.is-valid {
   background-image: none !important;
 }
 
-.logo {
+.login-page .logo {
   width: 50%;
   height: 50%;
   object-fit: contain;
 }
 
-.login-card {
+.login-page .login-card {
   background: var(--color-card-bg);
   padding: 3rem;
   border-radius: 12px;
@@ -42,49 +42,49 @@ input.form-control.is-valid {
   margin: 0 auto;
 }
 
-.login-card h2 {
+.login-page .login-card h2 {
   color: var(--color-text);
 }
 
-.form-label {
+.login-page .form-label {
   color: var(--color-text);
 }
 
-.form-control {
+.login-page .form-control {
   background-color: var(--color-input-bg) !important;
   border-color: var(--color-border) !important;
   color: var(--color-text) !important;
 }
 
-.form-control:focus {
+.login-page .form-control:focus {
   background-color: var(--color-input-bg) !important;
   border-color: var(--primary-400) !important;
   box-shadow: 0 0 0 0.2rem var(--primary-100) !important;
 }
 
-.divider {
+.login-page .divider {
   display: flex;
   align-items: center;
   color: var(--color-text-muted);
   margin: 2rem 0;
 }
 
-.divider-line {
+.login-page .divider-line {
   flex: 1;
   height: 1px;
   background-color: var(--color-border);
 }
 
-.divider-text {
+.login-page .divider-text {
   padding: 0 1rem;
   color: var(--color-text-muted);
 }
 
-.social-buttons {
+.login-page .social-buttons {
   margin: 2rem 0;
 }
 
-.signup-prompt a {
+.login-page .signup-prompt a {
   color: var(--primary-500);
   text-decoration: none;
   font-weight: 500;
@@ -94,22 +94,22 @@ input.form-control.is-valid {
   transition: all 0.3s;
 }
 
-.signup-prompt a:hover {
+.login-page .signup-prompt a:hover {
   background-color: var(--primary-500);
   color: var(--color-white);
 }
 
-.invalid-feedback {
+.login-page .invalid-feedback {
   color: var(--danger-500);
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 
-.is-invalid {
+.login-page .is-invalid {
   border-color: var(--danger-500) !important;
 }
 
-.continue-btn {
+.login-page .continue-btn {
   background: var(--primary-500);
   color: var(--color-white);
   font-weight: 500;
@@ -118,43 +118,43 @@ input.form-control.is-valid {
   transition: all 0.3s ease;
 }
 
-.continue-btn:hover {
+.login-page .continue-btn:hover {
   background: var(--primary-600);
   color: var(--color-white);
 }
 
 @media (max-width: 576px) {
-  .login-card {
+  .login-page .login-card {
     padding: 2rem;
   }
 
-  .logo {
+  .login-page .logo {
     width: 130px;
     height: 130px;
   }
 }
 
-.app {
+.login-page.app {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.text-primary {
+.login-page .text-primary {
   color: var(--primary-500) !important;
 }
 
-.btn-success {
+.login-page .btn-success {
   background-color: var(--primary-500) !important;
   border-color: var(--primary-500) !important;
   color: var(--color-white) !important;
 }
 
-.btn-success:hover,
-.btn-success:focus {
+.login-page .btn-success:hover,
+.login-page .btn-success:focus {
   background-color: var(--primary-600) !important;
   border-color: var(--primary-600) !important;
 }
 
-.nav-tabs .nav-link.active {
+.login-page .nav-tabs .nav-link.active {
   color: var(--primary-500) !important;
   border-bottom: 3px solid var(--primary-500) !important;
   border-top: 0 !important;
@@ -162,47 +162,47 @@ input.form-control.is-valid {
   border-right: 0 !important;
 }
 
-.text-success {
+.login-page .text-success {
   color: var(--primary-500) !important;
 }
 
-a {
+.login-page a {
   text-decoration: none;
 }
 
-.signup-page {
+.login-page .signup-page {
   background-color: var(--color-background);
   transition: background 0.3s;
 }
 
 /* Dark mode support */
-[data-theme="dark"] .signup-page {
+[data-theme="dark"] .login-page .signup-page {
   background-color: var(--color-background);
 }
 
-[data-theme="dark"] .btn-success {
+[data-theme="dark"] .login-page .btn-success {
   background-color: var(--primary-400) !important;
   border-color: var(--primary-400) !important;
 }
 
-[data-theme="dark"] .btn-success:hover,
-[data-theme="dark"] .btn-success:focus {
+[data-theme="dark"] .login-page .btn-success:hover,
+[data-theme="dark"] .login-page .btn-success:focus {
   background-color: var(--primary-300) !important;
   border-color: var(--primary-300) !important;
 }
 
-[data-theme="dark"] .text-primary,
-[data-theme="dark"] .text-success {
+[data-theme="dark"] .login-page .text-primary,
+[data-theme="dark"] .login-page .text-success {
   color: var(--primary-400) !important;
 }
 
-[data-theme="dark"] .nav-tabs .nav-link.active {
+[data-theme="dark"] .login-page .nav-tabs .nav-link.active {
   color: var(--primary-400) !important;
   border-bottom: 3px solid var(--primary-400) !important;
 }
 
 /* Dark mode adjustments */
-[data-theme="dark"] {
+[data-theme="dark"] .login-page {
   .login-card {
     background: var(--color-card-bg);
     border-color: var(--color-border);

@@ -1,17 +1,17 @@
 /* Base Layout */
-.page-container {
+.add-project-page.page-container {
   padding: 2rem 0;
   min-height: calc(100vh - 80px);
   background: var(--color-background);
 }
 
-.page-header {
+.add-project-page .page-header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
 /* Card Styles */
-.custom-card {
+.add-project-page .custom-card {
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
@@ -20,20 +20,20 @@
   overflow: hidden;
 }
 
-.card-header-custom {
+.add-project-page .card-header-custom {
   padding: 1rem 1.5rem;
   background: var(--primary-600);
   color: var(--color-text-inverse);
   font-weight: 500;
 }
 
-.card-body-custom {
+.add-project-page .card-body-custom {
   padding: 1.5rem;
 }
 
 /* Form Controls */
-.form-control,
-.form-select {
+.add-project-page .form-control,
+.add-project-page .form-select {
   background: var(--color-input-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text);
@@ -41,20 +41,20 @@
   transition: all 0.2s ease;
 }
 
-.form-control:focus,
-.form-select:focus {
+.add-project-page .form-control:focus,
+.add-project-page .form-select:focus {
   border-color: var(--primary-500);
   box-shadow: 0 0 0 2px var(--primary-100);
 }
 
-.input-group-text {
+.add-project-page .input-group-text {
   background: var(--color-input-bg);
   border-color: var(--color-border);
   color: var(--color-text);
 }
 
 /* Skills & Level Selector */
-.level-dropdown {
+.add-project-page .level-dropdown {
   padding: 0.75rem 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -66,25 +66,25 @@
   align-items: center;
 }
 
-.level-dropdown:hover {
+.add-project-page .level-dropdown:hover {
   border-color: var(--primary-500);
 }
 
-.level-dropdown.active {
+.add-project-page .level-dropdown.active {
   border-color: var(--primary-500);
   box-shadow: 0 0 0 2px var(--primary-100);
 }
 
-.dropdown-icon {
+.add-project-page .dropdown-icon {
   transition: transform 0.2s ease;
   color: var(--color-text-muted);
 }
 
-.dropdown-icon.open {
+.add-project-page .dropdown-icon.open {
   transform: rotate(180deg);
 }
 
-.level-options {
+.add-project-page .level-options {
   position: absolute;
   z-index: 1000;
   width: 100%;
@@ -97,28 +97,28 @@
   overflow-y: auto;
 }
 
-.level-option {
+.add-project-page .level-option {
   padding: 0.75rem 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.level-option:hover {
+.add-project-page .level-option:hover {
   background: var(--color-hover);
 }
 
-.level-option.selected {
+.add-project-page .level-option.selected {
   background: var(--primary-500);
   color: var(--color-text-inverse);
 }
 
 /* Summary Section */
-.sticky-sidebar {
+.add-project-page .sticky-sidebar {
   position: sticky;
   top: 92px;
 }
 
-.summary-item {
+.add-project-page .summary-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -127,18 +127,18 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.summary-item:last-child {
+.add-project-page .summary-item:last-child {
   border-bottom: none;
 }
 
 /* Alert Styles */
-.alert {
+.add-project-page .alert {
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
 }
 
 /* Dark Mode */
-[data-theme="dark"] {
+[data-theme="dark"] .add-project-page {
   .custom-card {
     background: var(--color-card-bg-dark);
     border-color: var(--color-border-dark);

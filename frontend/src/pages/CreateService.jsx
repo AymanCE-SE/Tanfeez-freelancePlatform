@@ -208,7 +208,7 @@ const CreateService = () => {
      };
 
   return (
-    <div className="page-container">
+    <div className="create-service-page page-container">
       <Container>
         <div className="page-header">
           <h1 className="fw-bold">Add a New Service</h1>

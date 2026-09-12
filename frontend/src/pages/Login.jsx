@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Login.css';
 import { loginUser } from '../api/auth';
 import { validateEmail, isFieldEmpty, isPasswordTooShort } from '../utils/validation';
@@ -78,7 +77,7 @@ export default function LoginPage() {
   const handleBlur = () => setTouched(true);
 
   return (
-    <div className="login-container">
+    <div className="login-page login-container">
 
       <div className="login-card">
       <div className="logo-container">
