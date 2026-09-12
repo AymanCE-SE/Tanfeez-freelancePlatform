@@ -5,36 +5,36 @@
     left: 0;
     width: 220px;
     height: 100vh;
-    background-color: #f8f9fa;
+    background-color: var(--color-card-bg);
     padding-top: 20px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid var(--color-border);
   }
   
   /* Main Content */
   .main-content {
     margin-left: 220px; /* Same width as sidebar */
     padding: 20px;
-    background-color: #f1f5f9;
+    background-color: var(--color-background);
     min-height: 100vh;
   }
   .sidebar-link {
-    color: #333;
+    color: var(--color-text-secondary);
     text-decoration: none;
     padding: 10px 20px;
     display: flex;
     align-items: center;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   .sidebar-link:hover {
-    background-color: #e9ecef;
+    background-color: var(--color-dropdown-hover);
   }
   
   .sidebar-link.active {
-    background-color: #dc3545;
-    color: #fff !important;
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse) !important;
   }
     

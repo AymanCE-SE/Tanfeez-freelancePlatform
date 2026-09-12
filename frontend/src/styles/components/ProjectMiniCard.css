@@ -7,7 +7,6 @@
   background: var(--color-card-bg);
   transition: box-shadow 0.2s, transform 0.2s;
   margin: 0 auto;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   color: var(--color-text);
   display: flex;
   flex-direction: column;

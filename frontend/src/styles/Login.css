@@ -134,10 +134,6 @@
   }
 }
 
-.login-page.app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 .login-page .text-primary {
   color: var(--primary-500) !important;
 }

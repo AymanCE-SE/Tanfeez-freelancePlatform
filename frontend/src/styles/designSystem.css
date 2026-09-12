@@ -95,8 +95,8 @@
   --color-primary-hover: var(--primitive-blue-600);
   --color-secondary: var(--primitive-coral-400);
   --color-secondary-hover: var(--primitive-coral-500);
-  --color-btn-primary: var(--primitive-blue-500);
-  --color-btn-primary-hover: var(--primitive-blue-600);
+  --color-btn-primary: var(--primitive-blue-600);
+  --color-btn-primary-hover: var(--primitive-blue-700);
   --color-btn-primary-rgb: 2, 132, 199;
   --color-btn-secondary: var(--primitive-coral-400);
   --color-btn-secondary-hover: var(--primitive-coral-500);
@@ -239,8 +239,8 @@
   --color-primary-hover: var(--primitive-blue-500);
   --color-secondary: var(--primitive-coral-500);
   --color-secondary-hover: var(--primitive-coral-600);
-  --color-btn-primary: var(--primitive-blue-400);
-  --color-btn-primary-hover: var(--primitive-blue-500);
+  --color-btn-primary: var(--primitive-blue-600);
+  --color-btn-primary-hover: var(--primitive-blue-700);
   --color-btn-primary-rgb: 14, 165, 233;
   --color-btn-secondary: var(--primitive-coral-500);
   --color-btn-secondary-hover: var(--primitive-coral-600);

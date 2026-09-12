@@ -5,37 +5,37 @@
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 20px;
-    background-color: #fff;
+    background-color: var(--color-card-bg);
   }
   
   .table th,
   .table td {
     padding: 12px 15px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
   }
   
   /* Table header styling */
   .table thead {
-    background-color: #f1f1f1;
+    background-color: var(--color-bg-tertiary);
   }
   
   .table thead th {
-    color: #333;
+    color: var(--color-text-secondary);
     font-weight: bold;
     text-transform: uppercase;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--color-border);
   }
   
   /* Hover effect for rows */
   .table tbody tr:hover {
-    background-color: #f9f9f9;
+    background-color: var(--color-dropdown-hover);
     cursor: pointer;
   }
   
   /* Alternate row color for better readability */
   .table tbody tr:nth-child(even) {
-    background-color: #f7f7f7;
+    background-color: var(--color-bg-tertiary);
   }
   
   /* Add padding for the table container */
@@ -52,14 +52,14 @@
   
   /* Styling for info button */
   .table .btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+    background-color: var(--info);
+    border-color: var(--info);
   }
   
   /* Styling for delete button */
   .table .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: var(--error);
+    border-color: var(--error);
   }
   
   /* Add spacing between table and other elements */
@@ -69,14 +69,14 @@
   
   /* Button Styles */
   .btn-add {
-    background-color: #198754;
+    background-color: var(--success);
     border: none;
-    color: white;
+    color: var(--color-text-inverse);
     text-transform: uppercase;
   }
   
   .btn-add:hover {
-    background-color: #155d45;
+    background-color: var(--accent-700);
   }
   
   
