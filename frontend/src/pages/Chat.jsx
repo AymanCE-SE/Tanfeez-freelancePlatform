@@ -47,7 +47,15 @@ const Chat = () => {
   const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } =
     useChatSocket(conversationId, currentUser?.id);
 
-  const loadConversations = useCallback(() => getChatRooms().then(setConversations), []);
+  const loadConversations = useCallback(async () => {
+    const rooms = await getChatRooms();
+    if (!Array.isArray(rooms)) {
+      console.error("Chat rooms response must be an array.", rooms);
+      setConversations([]);
+      return;
+    }
+    setConversations(rooms);
+  }, []);
 
   useEffect(() => {
     loadConversations().finally(() => setLoading(false));
@@ -55,7 +63,14 @@ const Chat = () => {
 
   useEffect(() => {
     if (!conversationId) return;
-    getMessages(conversationId).then((msgs) => setHistoryMessages(msgs.map(normalizeRestMessage)));
+    getMessages(conversationId).then((msgs) => {
+      if (!Array.isArray(msgs)) {
+        console.error("Chat messages response must be an array.", msgs);
+        setHistoryMessages([]);
+        return;
+      }
+      setHistoryMessages(msgs.map(normalizeRestMessage));
+    });
   }, [conversationId]);
 
   const messages = useMemo(() => {
@@ -129,15 +144,21 @@ const Chat = () => {
               <Col
                 md={4}
                 className={`border-end conversations-column ${isChatOpenOnMobile ? "d-none d-md-block" : ""}`}>
-                <div className="chat-header">
-                  <h5 className="mb-3 fw-bold text-primary">Messages</h5>
+                <div className="chat-header conversations-header">
+                  <div className="chat-section-heading">
+                    <div>
+                      <span className="chat-eyebrow">Workspace</span>
+                      <h5 className="mb-0 fw-bold">Messages</h5>
+                    </div>
+                    <span className="chat-count">{filteredConversations.length}</span>
+                  </div>
                   <InputGroup>
-                    <InputGroup.Text className="bg-transparent border-end-0">
-                      <Search className="text-muted" />
+                    <InputGroup.Text className="chat-search-icon">
+                      <Search />
                     </InputGroup.Text>
                     <Form.Control
                       placeholder="Search conversations..."
-                      className="border-start-0 bg-transparent"
+                      className="chat-search-input"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -160,12 +181,12 @@ const Chat = () => {
                             action
                             active={isActive}
                             onClick={() => navigate(`/chat/${conversation.id}`)}
-                            className={`conversation-item px-3 py-3 border-bottom ${isActive ? "bg-primary bg-opacity-10" : ""}`}>
+                            className={`conversation-item px-3 py-3 border-bottom ${isActive ? "active" : ""}`}>
                             <div className="d-flex align-items-center">
                               <img src={participant.avatar} alt={participant.name}
                                 className="chat-participant-avatar rounded-circle me-3" width="48" height="48" />
                               <div className="flex-grow-1 min-width-0">
-                              <h6 className="mb-0 text-truncate fw-bold">
+                              <h6 className="mb-0 text-truncate fw-bold conversation-name">
                                 {participant.name}
                                 {conversation.unread_count > 0 && (
                                   <Badge bg="danger" pill className="ms-2">{conversation.unread_count}</Badge>
@@ -233,15 +254,15 @@ const Chat = () => {
                       </div>
                     </div>
                     <div className="chat-input">
-                      <div className="p-2 p-md-3 border-top">
+                      <div className="chat-compose-row">
                         <Form onSubmit={handleSendMessage}>
                           <InputGroup>
-                            <Button variant="light" className="action-button d-none d-sm-flex"><Paperclip /></Button>
+                            <Button variant="link" className="action-button d-none d-sm-flex" aria-label="Attach a file"><Paperclip /></Button>
                             <Form.Control type="text" placeholder="Type a message..."
                               value={messageText} onChange={(e) => setMessageText(e.target.value)}
                               disabled={status !== "open"} />
                             <EmojiPickerButton onEmojiClick={(e) => setMessageText((p) => p + e)} />
-                            <Button variant="success" type="submit" className="action-button ms-1"
+                            <Button variant="primary" type="submit" className="action-button send-button ms-1"
                               disabled={!messageText.trim() || status !== "open"}>
                               <Send size={20} className="text-white" />
                             </Button>

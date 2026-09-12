@@ -28,8 +28,9 @@ const EmojiPickerButton = ({ onEmojiClick }) => {
   return (
     <div className="position-relative" ref={pickerRef}>
       <Button
-        variant="light"
+        variant="link"
         className="action-button"
+        aria-label="Open emoji picker"
         onClick={() => setShowPicker(!showPicker)}>
         <EmojiSmile />
       </Button>
