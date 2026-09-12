@@ -47,7 +47,8 @@ function ProjectDetails() {
   const [selectedProposalId, setSelectedProposalId] = useState(null);
 
   const { projectDetails, isLoading } = useSelector((myStore) => myStore.projectSlice);
-  const { profile, user } = useSelector((myStore) => myStore.userSlice);
+  const { profile } = useSelector((myStore) => myStore.userSlice);
+  const { user } = useSelector((myStore) => myStore.authSlice);
   const { proposals } = useSelector((myStore) => myStore.proposalSlice);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [myRating, setMyRating] = useState(null);
@@ -99,6 +100,12 @@ function ProjectDetails() {
   const isFreelancerOnProject = String(user?.id) === String(projectDetails?.freelancerId);
   const counterpartId = isProjectOwner ? projectDetails?.freelancerId : projectDetails?.user_id;
   const ratingDirection = isProjectOwner ? "client_to_freelancer" : "freelancer_to_client";
+  const canRateProject =
+    projectDetails?.progress === "completed" &&
+    (isProjectOwner || isFreelancerOnProject) &&
+    ratingLoaded &&
+    !myRating &&
+    counterpartId;
 
   const refreshProposalsData = () => {
     dispatch(getProjectByIdAction(id));
@@ -391,7 +398,7 @@ function ProjectDetails() {
             </Col>
           </Row>
           
-          {projectDetails?.progress === "not_started" && user.user_type === "freelancer" && !myProposal && (
+          {projectDetails?.progress === "not_started" && user?.user_type === "freelancer" && !myProposal && (
             <div className="mt-4 d-flex justify-content-end">
               <Button
                 variant="primary"
@@ -404,7 +411,7 @@ function ProjectDetails() {
           )}
           {projectDetails?.progress === "completed" && (isProjectOwner || isFreelancerOnProject) && (
             <div className="mt-4 d-flex justify-content-end align-items-center gap-3">
-              {ratingLoaded && myRating === null && (
+              {canRateProject && (
                 <Button variant="warning" onClick={() => setShowRatingModal(true)}>
                   Rate {isProjectOwner ? "Freelancer" : "Client"}
                 </Button>
@@ -432,7 +439,7 @@ function ProjectDetails() {
         </Card.Body>
       </Card>
 
-      {user.user_type === "freelancer" && (
+      {user?.user_type === "freelancer" && (
         <div className="proposals-section mt-4">
           <Card>
             <Card.Header className="bg-light">
