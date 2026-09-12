@@ -1,0 +1,129 @@
+.marketplace-page {
+  min-height: calc(100vh - 80px);
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+  background: var(--color-background);
+}
+
+.marketplace-intro {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.marketplace-eyebrow {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: var(--primary-600, #0369a1);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.marketplace-title {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+.marketplace-lede {
+  max-width: 34rem;
+  margin: 0.85rem 0 0;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--primary-400, #0ea5e9);
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.marketplace-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  background: var(--color-card-bg);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.marketplace-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.marketplace-search .input-group-text,
+.marketplace-search .form-control {
+  min-height: 2.85rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.marketplace-search .input-group-text { color: var(--color-text-muted); }
+.marketplace-search .form-control::placeholder { color: var(--color-text-muted); opacity: 0.85; }
+.marketplace-search .form-control:focus { box-shadow: none; }
+
+.marketplace-filter-toggle {
+  flex: 0 0 auto;
+  min-height: 2.85rem;
+  border-radius: 0.65rem;
+  font-weight: 700;
+}
+
+.marketplace-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.marketplace-summary strong { color: var(--color-text); }
+
+.marketplace-grid > [class*="col"] { display: flex; }
+.marketplace-grid .service-card,
+.marketplace-grid .project-card { width: 100%; }
+
+.marketplace-pagination { margin-top: 2.5rem !important; }
+.marketplace-pagination .page-link {
+  border-color: var(--color-border);
+  background: var(--color-card-bg);
+  color: var(--color-text);
+}
+.marketplace-pagination .page-item.active .page-link {
+  border-color: var(--primary-500);
+  background: var(--primary-500);
+  color: #fff;
+}
+
+.marketplace-empty {
+  padding: 4rem 1.5rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-card-bg);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.marketplace-empty p { margin: 0; }
+
+[data-theme="dark"] .marketplace-toolbar {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .marketplace-eyebrow {
+  color: var(--primary-300, #38bdf8);
+}
+
+@media (max-width: 767.98px) {
+  .marketplace-toolbar { align-items: stretch; flex-direction: column; }
+  .marketplace-filter-toggle { width: 100%; }
+  .marketplace-summary { align-items: start; flex-direction: column; gap: 0.25rem; }
+}

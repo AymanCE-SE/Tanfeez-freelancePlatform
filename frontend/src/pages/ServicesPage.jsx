@@ -1,11 +1,12 @@
 /** @format */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Row, Col, Form, InputGroup, Button, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ServiceCard from "../components/cards/ServiceCard";
 import { categories } from "../mock/servicesData";
 import "../styles/ServicesPage.css";
+import "../styles/marketplace.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { getAllServicesAction } from "../store/slices/serviceSlice";
@@ -17,9 +18,6 @@ const ServicesPage = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredServices, setFilteredServices] = useState([]);
-  const [selectedTag, setSelectedTag] = useState(""); // Add to your filter state and UI as needed
-  const hasMounted = useRef(false);
   const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
   const goToPage = (page) => {
@@ -52,20 +50,12 @@ const ServicesPage = () => {
   }, [dispatch, currentPage, searchParams]);
 
   useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
     if (currentPage !== 1) {
       goToPage(1);
     }
-  }, [searchTerm, selectedCategory, selectedSubcategory, priceRange, selectedTag]);
+  }, [searchTerm, selectedCategory, selectedSubcategory, priceRange]);
 
-  useEffect(() => {
-    setFilteredServices(services);
-  }, [services]);
-
-  useEffect(() => {
+  const filteredServices = useMemo(() => {
     let filtered = services;
 
     // Search filter: by service_name, description, or tags
@@ -103,18 +93,8 @@ const ServicesPage = () => {
     );
 
     // Tag filter (if you want a separate tag filter)
-    if (selectedTag) {
-      filtered = filtered.filter(
-        (service) =>
-          Array.isArray(service.tags) &&
-          service.tags.some((tag) =>
-            tag.toLowerCase().includes(selectedTag.toLowerCase())
-          )
-      );
-    }
-
-    setFilteredServices(filtered);
-  }, [services, searchTerm, selectedCategory, selectedSubcategory, priceRange, selectedTag]);
+    return filtered;
+  }, [services, searchTerm, selectedCategory, selectedSubcategory, priceRange]);
 
   // Handle search input with Enter key
   const handleSearch = (e) => {
@@ -150,12 +130,16 @@ const ServicesPage = () => {
     }
 
   return (
-    <Container className="py-5">
-      <Row className="mb-4">
-        <Col>
-          <h1 className="mb-4">Available Services</h1>
-          <div className="d-flex gap-3">
-            <InputGroup>
+      <Container className="marketplace-page">
+      <div className="marketplace-intro">
+        <div>
+          <span className="marketplace-eyebrow">Find your next specialist</span>
+          <h1 className="marketplace-title">Services that move work forward.</h1>
+        </div>
+        <p className="marketplace-lede">Browse focused expertise from independent professionals, ready to help you make the next step.</p>
+      </div>
+      <div className="marketplace-toolbar">
+            <InputGroup className="marketplace-search">
               <InputGroup.Text>
                 <Search />
               </InputGroup.Text>
@@ -167,20 +151,23 @@ const ServicesPage = () => {
               />
             </InputGroup>
             <Button
+              className="marketplace-filter-toggle"
               variant="outline-primary"
               onClick={() => setShowFilters(!showFilters)}>
               <Funnel className="me-2" />
               Filters {showFilters ? "Hide" : "Show"}
             </Button>
-          </div>
-        </Col>
-      </Row>
+      </div>
 
       {isLoading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
+        </div>
+      ) : error ? (
+        <div className="marketplace-empty text-danger">
+          <p>{error || "Failed to load services."}</p>
         </div>
       ) : (
         <Row>
@@ -251,18 +238,17 @@ const ServicesPage = () => {
           )}
 
           <Col md={showFilters ? 9 : 12}>
-            <div className="mb-3 text-muted">
-              Found {totalServices} services
+            <div className="marketplace-summary">
+              <span><strong>{filteredServices.length}</strong> services on this page</span>
+              <span>{totalServices} total results</span>
             </div>
 
             {filteredServices.length === 0 ? (
-              <div className="text-center py-5">
-                <p className="text-muted">
-                  No services found matching your criteria.
-                </p>
+              <div className="marketplace-empty">
+                <p>No services found matching your criteria.</p>
               </div>
             ) : (
-              <Row xs={1} md={showFilters ? 2 : 3} className="g-4">
+              <Row xs={1} md={showFilters ? 2 : 3} className="marketplace-grid g-4">
                 {filteredServices.map((service) => (
                   <Col key={service.id}>
                 <ServiceCard service={service} isOwner={user?.id === service.freelancerId} />                  </Col>
@@ -270,7 +256,7 @@ const ServicesPage = () => {
               </Row>
             )}
             {!isLoading && !error && totalServices > 0 && (
-              <Pagination className="justify-content-center mt-4">
+              <Pagination className="marketplace-pagination justify-content-center">
                 <Pagination.Prev
                   disabled={currentPage === 1}
                   onClick={() => goToPage(currentPage - 1)}

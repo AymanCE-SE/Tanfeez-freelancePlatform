@@ -68,14 +68,14 @@ const ServiceCard = ({ service, isOwner }) => {
         </div>
         {/* add service.tags  */}
         <div className="service-tags mb-3">
-          {service.tags?.map((tag, index) => (
-            <Badge key={index} className="tag-badge me-2">
+          {service.tags?.slice(0, 3).map((tag) => (
+            <Badge key={tag} className="tag-badge me-2">
               {tag}
             </Badge>
           ))}
         </div>
         {/* Posted date */}
-        <div className="text-muted mb-2" style={{ fontSize: "0.95rem" }}>
+        <div className="service-posted text-muted mb-2">
           Posted {created_at ? formatDistanceToNow(new Date(created_at), { addSuffix: true }) : "Unknown"}
         </div>
         <div className="service-footer mt-auto">

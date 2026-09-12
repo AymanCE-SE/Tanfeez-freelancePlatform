@@ -1,8 +1,9 @@
 .service-card {
     background: var(--color-card-bg);
     box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-    border-radius: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
     overflow: hidden;
 }
 
@@ -11,9 +12,15 @@
     box-shadow: var(--shadow-md);
 }
 
+.service-card .card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+}
+
 .service-card-image-wrapper {
     position: relative;
-    height: 200px;
+    height: 220px;
     overflow: hidden;
 }
 
@@ -21,11 +28,11 @@
     height: 100%;
     width: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.6s cubic-bezier(.2,.7,.2,1);
 }
 
 .service-card:hover .service-image {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
 .status-badge {
@@ -39,22 +46,46 @@
 
 .service-title {
     color: var(--color-text);
-    font-size: 1.1rem;
-    font-weight: 600;
-    line-height: 1.4;
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.3;
 }
+
+.service-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.service-title-link:hover { color: var(--primary-600); }
 
 .service-description {
     color: var(--color-text-muted);
     font-size: 0.9rem;
     line-height: 1.5;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
+
+.service-card .service-tags { min-height: 1.75rem; }
+
+.service-card .tag-badge {
+    border: 1px solid var(--primary-500, #0284c7);
+    background: var(--primary-500, #0284c7);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.service-posted { font-size: 0.78rem; }
 
 .service-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    min-height: 1.5rem;
+    font-size: 0.82rem;
 }
 
 .rating {
@@ -108,21 +139,14 @@
 
 .price-value {
     font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary-500);
-}
-
-.action-button {
-    padding: 0.5rem 1rem;
-    font-weight: 500;
-    border-radius: 0.5rem;
-
+    font-weight: 750;
+    color: var(--primary-600);
 }
 
 .service-action-btn {
     padding: 0.75rem 1.5rem;
-    font-weight: 500;
-    border-radius: 0.75rem;
+    font-weight: 700;
+    border-radius: 0.6rem;
     width: 100%;
     margin-top: 1rem;
     transition: all 0.2s ease;
@@ -133,22 +157,14 @@
     box-shadow: var(--shadow-sm);
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] .service-card {
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-}
-
-[data-theme="dark"] .service-title {
-    color: var(--color-text);
-}
-
-[data-theme="dark"] .service-description {
-    color: var(--color-text-muted);
-}
-
 [data-theme="dark"] .price-value {
     color: var(--primary-400);
+}
+
+[data-theme="dark"] .service-card .tag-badge {
+    border-color: var(--primary-300, #38bdf8);
+    background: var(--primary-700, #075985);
+    color: var(--primary-100, #bae6fd);
 }
 
 [data-theme="dark"] .service-action-btn.btn-outline-primary {

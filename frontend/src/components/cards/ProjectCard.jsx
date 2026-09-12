@@ -47,15 +47,7 @@ const ProjectCard = ({ project }) => {
             overlay={<Tooltip>{name}</Tooltip>}
           >
             <Card.Title
-              className="project-title mb-0"
-              style={{
-                fontSize: "1.2rem",
-                fontWeight: 600,
-                maxWidth: "70%",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
+              className="project-title project-title-truncated mb-0"
               title={name}
             >
               <Link
@@ -76,17 +68,7 @@ const ProjectCard = ({ project }) => {
           overlay={<Tooltip>{description}</Tooltip>}
         >
           <Card.Text
-            className="project-description mb-3"
-            style={{
-              minHeight: "2.5em",
-              maxHeight: "3.2em",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              cursor: "pointer",
-            }}
+            className="project-description project-description-truncated mb-3"
             title={description}
           >
             {truncate(description, 100)}
@@ -94,15 +76,15 @@ const ProjectCard = ({ project }) => {
         </OverlayTrigger>
 
         <div className="mb-3">
-          <Badge bg="info" className="me-2 text-capitalize">{type}</Badge>
-          <Badge bg="secondary" className="me-2 text-capitalize">{experience_level}</Badge>
+          <Badge bg="info" className="project-tag me-2 text-capitalize">{type}</Badge>
+          <Badge bg="secondary" className="project-tag me-2 text-capitalize">{experience_level}</Badge>
           {location && (
-            <Badge bg="light" text="dark" className="me-2">{location}</Badge>
+            <Badge bg="light" text="dark" className="project-tag location-tag me-2">{location}</Badge>
           )}
         </div>
 
-        <div className="mb-2 d-flex align-items-center">
-          <Cash className="me-2" />
+        <div className="project-budget mb-2 d-flex align-items-center">
+          <Cash className="me-2" aria-hidden="true" />
         <span>
           {type === "hourly"
             ? (project.hourly_rate != null
@@ -114,7 +96,7 @@ const ProjectCard = ({ project }) => {
         </span>
         </div>
         <div className="mb-2">
-          <small className="text-muted">Duration: {duration} days</small>
+          <small className="text-muted">Duration <strong>{duration} days</strong></small>
         </div>
         <div className="mb-3">
           <small className="text-muted">
@@ -130,7 +112,6 @@ const ProjectCard = ({ project }) => {
             variant="primary"
             onClick={handleViewDetails}
             className="w-100"
-            style={{ fontWeight: 500 }}
           >
             View Details
           </Button>

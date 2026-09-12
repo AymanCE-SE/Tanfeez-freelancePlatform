@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Row, Col, Form, InputGroup, Button, Spinner, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ProjectCard from "../components/cards/ProjectCard";
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { getAllProjectAction } from "../store/slices/projectSlice";
 import "../styles/pages/Projects.css";
+import "../styles/marketplace.css";
 
 const Projects = () => {
   const dispatch = useDispatch();
@@ -21,8 +22,6 @@ const Projects = () => {
     level: "all",
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const hasMounted = useRef(false);
   const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
   const goToPage = (page) => {
@@ -35,17 +34,12 @@ const Projects = () => {
   }, [dispatch, currentPage]);
 
   useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
     if (currentPage !== 1) {
       goToPage(1);
     }
   }, [searchTerm, filters]);
 
-  // Filter projects when projectList, filters, or searchTerm changes
-  useEffect(() => {
+  const filteredProjects = useMemo(() => {
     const filtered = (projectList || []).filter((project) => {
       // Search filter
       const matchesSearch =
@@ -91,7 +85,7 @@ const Projects = () => {
       );
     });
 
-    setFilteredProjects(filtered);
+    return filtered;
   }, [projectList, filters, searchTerm]);
   if(localStorage.getItem("authToken") === null) {
     return (
@@ -120,12 +114,16 @@ const Projects = () => {
   }
   return (
 
-    <Container className="py-5">
-      <Row className="mb-4">
-        <Col>
-          <h1 className="mb-4">Available Projects</h1>
-          <div className="d-flex gap-3">
-            <InputGroup>
+    <Container className="marketplace-page">
+      <div className="marketplace-intro">
+        <div>
+          <span className="marketplace-eyebrow">Open opportunities</span>
+          <h1 className="marketplace-title">Projects waiting for the right mind.</h1>
+        </div>
+        <p className="marketplace-lede">Find meaningful briefs, understand the scope, and send your best proposal with confidence.</p>
+      </div>
+      <div className="marketplace-toolbar">
+            <InputGroup className="marketplace-search">
               <InputGroup.Text>
                 <Search />
               </InputGroup.Text>
@@ -136,14 +134,13 @@ const Projects = () => {
               />
             </InputGroup>
             <Button
+              className="marketplace-filter-toggle"
               variant="outline-primary"
               onClick={() => setShowFilters(!showFilters)}>
               <Funnel className="me-2" />
               Filters {showFilters ? "Hide" : "Show"}
             </Button>
-          </div>
-        </Col>
-      </Row>
+      </div>
 
       <Row>
         {showFilters && (
@@ -153,10 +150,10 @@ const Projects = () => {
         )}
 
         <Col md={showFilters ? 9 : 12}>
-          <div className="mb-3 text-muted">
+          <div className="marketplace-summary">
             {isLoading
               ? "Loading projects..."
-              : `Found ${totalProjects} projects`}
+              : <><span><strong>{filteredProjects.length}</strong> projects on this page</span><span>{totalProjects} total results</span></>}
           </div>
 
           {isLoading ? (
@@ -164,18 +161,15 @@ const Projects = () => {
               <Spinner animation="border" />
             </div>
           ) : error ? (
-            <div className="text-danger text-center py-5">
-              {error}
-              Failed to load projects.
+            <div className="marketplace-empty text-danger">
+              {error || "Failed to load projects."}
             </div>
           ) : filteredProjects.length === 0 ? (
-            <div className="text-center py-5">
-              <p className="text-muted">
-                No projects found matching your criteria.
-              </p>
+            <div className="marketplace-empty">
+              <p>No projects found matching your criteria.</p>
             </div>
           ) : (
-            <Row xs={1} md={showFilters ? 2 : 3} className="g-4">
+            <Row xs={1} md={showFilters ? 2 : 3} className="marketplace-grid g-4">
               {filteredProjects.map((project) => (
                 <Col key={project.id}>
                   <ProjectCard project={project} />
@@ -184,7 +178,7 @@ const Projects = () => {
             </Row>
           )}
           {!isLoading && !error && totalProjects > 0 && (
-            <Pagination className="justify-content-center mt-4">
+            <Pagination className="marketplace-pagination justify-content-center">
               <Pagination.Prev
                 disabled={currentPage === 1}
                 onClick={() => goToPage(currentPage - 1)}

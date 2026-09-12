@@ -47,7 +47,7 @@ const ProjectFilters = ({ filters, setFilters }) => {
             }>
             <option value="all">All</option>
             <option value="open">Open</option>
-            <option value="in-progress">In Progress</option>
+            <option value="in_progress">In Progress</option>
             <option value="completed">Completed</option>
           </Form.Select>
         </Form.Group>

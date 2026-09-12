@@ -1,27 +1,73 @@
-.filters-card {
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    position: sticky;
-    top: 1rem;
-}
-
 .project-card {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
-    transition: transform 0.2s ease;
+    border-radius: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .project-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] {
+.project-card .card-body { display: flex; flex-direction: column; padding: 1.35rem; }
 
-    .filters-card,
-    .project-card {
-        background: var(--color-card-bg);
-        border-color: var(--color-border);
-    }
+.project-title {
+    color: var(--color-text);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.project-title-truncated {
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-description {
+    min-height: 3.2em;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.project-description-truncated {
+    display: -webkit-box;
+    line-clamp: 2;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.project-tag {
+    border: 1px solid var(--primary-500, #0284c7);
+    background: var(--primary-500, #0284c7) !important;
+    color: #fff !important;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.project-tag.location-tag {
+    border-color: var(--color-border);
+    background: #fff !important;
+    color: var(--color-text-muted) !important;
+    font-weight: 600;
+}
+
+.project-budget { color: var(--primary-600); font-weight: 700; }
+.project-budget svg { color: var(--primary-500); }
+.project-card .btn { margin-top: auto; border-radius: 0.6rem; font-weight: 700; }
+
+[data-theme="dark"] .project-tag {
+    border-color: var(--primary-300, #38bdf8);
+    background: var(--primary-700, #075985) !important;
+    color: var(--primary-100, #bae6fd) !important;
+}
+
+[data-theme="dark"] .project-tag.location-tag {
+    border-color: var(--color-border);
+    background: var(--color-card-bg) !important;
+    color: var(--color-text-muted) !important;
 }
