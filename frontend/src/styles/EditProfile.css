@@ -42,12 +42,9 @@
 }
 
 /* Dark mode adjustments */
-[data-theme="dark"] {
-
-    .form-control:focus,
-    .form-select:focus {
-        background: var(--color-card-bg);
-        border-color: var(--primary-400);
-        box-shadow: 0 0 0 3px var(--primary-900);
-    }
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background: var(--color-card-bg);
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px var(--primary-900);
 }

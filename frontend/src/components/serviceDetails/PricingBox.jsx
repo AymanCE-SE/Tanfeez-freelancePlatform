@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { createServiceProposal } from '../../api/serviceProposal';
 import { Link } from "react-router-dom";
+import '../../styles/components/ServiceDetailsComponents.css';
 
 export default function PricingBox({ price, serviceId, isOwnService, orderStatus, onOrderSuccess }) {
   const { user } = useSelector((myStore) => myStore.authSlice);
@@ -40,7 +41,7 @@ export default function PricingBox({ price, serviceId, isOwnService, orderStatus
 
   return (
     <>
-      <Card className="shadow-sm p-4 border-0 mb-3" style={{ background: '#f8fffa' }}>
+      <Card className="service-pricing-card shadow-sm p-4 border-0 mb-3">
         <h4 className="fw-bold mb-3 color-inverse">${price} <span className="fw-normal fs-6 text-secondary">USD</span></h4>
         <div className="mb-3 text-muted" style={{ fontSize: '1.01rem' }}>Standard Package</div>
         <ul className="mb-3 ps-3 color-inverse">

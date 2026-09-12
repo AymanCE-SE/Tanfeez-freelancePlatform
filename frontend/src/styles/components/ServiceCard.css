@@ -71,9 +71,9 @@
 .service-card .service-tags { min-height: 1.75rem; }
 
 .service-card .service-card-tag {
-    border: 1px solid var(--primary-500, #0284c7);
-    background: var(--primary-500, #0284c7);
-    color: #fff;
+    border: 1px solid var(--primary-500);
+    background: var(--primary-500);
+    color: var(--color-text-inverse);
     font-size: 0.7rem;
     font-weight: 600;
 }
@@ -149,7 +149,7 @@
     border-radius: 0.6rem;
     width: 100%;
     margin-top: 1rem;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .service-action-btn:hover {
@@ -162,9 +162,9 @@
 }
 
 [data-theme="dark"] .service-card .service-card-tag {
-    border-color: var(--primary-300, #38bdf8);
-    background: var(--primary-700, #075985);
-    color: var(--primary-100, #bae6fd);
+    border-color: var(--primary-300);
+    background: var(--primary-700);
+    color: var(--primary-100);
 }
 
 [data-theme="dark"] .service-action-btn.btn-outline-primary {

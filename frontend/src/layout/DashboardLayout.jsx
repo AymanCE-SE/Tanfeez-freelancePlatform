@@ -6,17 +6,17 @@
   import Projects from "../components/ProjectsTable";
   import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
+import "../styles/sidebar.css";
   
   function DashboardLayout() {
     return (
-      <div >
+      <div className="admin-dashboard-layout">
         <Header />
-      <div style={{ display: "flex" }}>
         <Sidebar />
-        <div style={{ flex: 1, padding: "10px" }}>
+        <main className="admin-main-content">
           <Outlet /> {/* Displays the current route component (e.g., UsersTable) */}
-        </div>
-      </div></div>
+        </main>
+      </div>
     );
   }
   

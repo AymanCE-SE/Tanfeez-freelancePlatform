@@ -106,28 +106,26 @@
 }
 
 /* Dark mode adjustments */
-[data-theme="dark"] {
-    .review-card {
-        background: var(--color-card-bg);
-        border-color: var(--color-border);
-    }
-    
-    .star-rating {
-        color: var(--warning-400);
-    }
+[data-theme="dark"] .review-card {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
+}
 
-    .star-rating.inactive {
-        color: var(--color-text-muted);
-    }
+[data-theme="dark"] .star-rating {
+    color: var(--warning-400);
+}
 
-    .form-control {
-        background: var(--color-card-bg);
-        border-color: var(--color-border);
-    }
+[data-theme="dark"] .star-rating.inactive {
+    color: var(--color-text-muted);
+}
 
-    .form-control:focus {
-        background: var(--color-card-bg);
-        border-color: var(--primary-400);
-        box-shadow: 0 0 0 0.2rem var(--primary-900);
-    }
+[data-theme="dark"] .form-control {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .form-control:focus {
+    background: var(--color-card-bg);
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 0.2rem var(--primary-900);
 }

@@ -21,11 +21,11 @@
 }
 
 .nav-link-custom {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--color-text-inverse) !important;
   font-weight: 500;
   padding: 0.5rem 1.2rem !important;
   position: relative;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
   font-size: 0.95rem;
 }
 
@@ -36,21 +36,21 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background: var(--color-secondary, #e86452);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--color-secondary);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(-50%);
   opacity: 0;
   border-radius: 2px;
 }
 
-.nav-link-custom:hover { color: var(--color-secondary, #e86452) !important; }
+.nav-link-custom:hover { color: var(--color-secondary) !important; }
 
 .nav-link-custom:hover::after {
   width: 70%;
   opacity: 1;
 }
 .nav-link-custom.active {
-  color: var(--color-secondary, #e86452) !important;
+  color: var(--color-secondary) !important;
   font-weight: 700;
 }
 
@@ -59,21 +59,21 @@
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  background: var(--color-btn-primary, var(--primary-500, #0ea5e9));
-  color: white;
+  background: var(--color-btn-primary);
+  color: var(--color-text-inverse);
   padding: 0.6rem 1rem;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.22);
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-md);
 }
 
 .add-action-btn:hover {
-  background: var(--color-btn-primary-hover, var(--primary-600, #0284c7));
-  color: white;
+  background: var(--color-btn-primary-hover);
+  color: var(--color-text-inverse);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-text {
@@ -88,7 +88,7 @@
   width: 20px;
   height: 20px;
   padding: 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-surface-overlay);
   border-radius: 50%;
   font-size: 1rem;
   line-height: 1;
@@ -141,7 +141,7 @@
   justify-content: center;
   top: 2px !important;
   right: 2px !important;
-  background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+  background: linear-gradient(90deg, var(--primitive-error) 0%, var(--primitive-warning) 100%);
   color: var(--color-text-inverse) !important;
   border: 2px solid var(--color-card-bg);
   box-shadow: var(--shadow-sm);
@@ -174,38 +174,36 @@
 .expand-menu-btn:focus-visible,
 .add-action-btn:focus-visible,
 .profile-link:focus-visible {
-  outline: 2px solid var(--color-secondary, #e86452);
+  outline: 2px solid var(--color-secondary);
   outline-offset: 3px;
 }
 
 /* Dark Mode */
-[data-theme="dark"] {
-  .header-component .navbar {
-    background: var(--color-header-bg-dark) !important;
-    border-bottom: 1px solid var(--color-border-dark);
-  }
+[data-theme="dark"] .header-component .navbar {
+  background: var(--color-header-bg-dark) !important;
+  border-bottom: 1px solid var(--color-border-dark);
+}
 
-  .nav-link-custom {
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
+[data-theme="dark"] .nav-link-custom {
+  color: var(--color-text-inverse) !important;
+}
 
-  .nav-link-custom:hover,
-  .nav-link-custom.active {
-    color: var(--primary-300, #7dd3fc) !important;
-  }
+[data-theme="dark"] .nav-link-custom:hover,
+[data-theme="dark"] .nav-link-custom.active {
+  color: var(--primary-300) !important;
+}
 
-  .nav-link-custom::after {
-    background: var(--primary-300, #7dd3fc);
-  }
+[data-theme="dark"] .nav-link-custom::after {
+  background: var(--primary-300);
+}
 
-  .add-action-btn {
-    background: var(--color-btn-primary, var(--primary-500, #0ea5e9));
-    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.18);
-  }
+[data-theme="dark"] .add-action-btn {
+  background: var(--color-btn-primary);
+  box-shadow: var(--shadow-md);
+}
 
-  .add-action-btn:hover {
-    background: var(--color-btn-primary-hover, var(--primary-600, #0284c7));
-  }
+[data-theme="dark"] .add-action-btn:hover {
+  background: var(--color-btn-primary-hover);
 }
 
 /* Responsive Styles */

@@ -110,10 +110,10 @@ const UsersTable = () => {
   };
   return (
 
-    <div className="orders-container p-3">
+    <div className="admin-table-container p-3">
       <div className="text-center mb-4">
         <Button
-          style={{ backgroundColor: "#198754", border: "none" }}
+          className="btn-add"
           onClick={handleShowAdd}
         >
           <FaPlus className="me-1" />
@@ -128,7 +128,7 @@ const UsersTable = () => {
           </Spinner>
         </div>
       ) : (
-        <Table className="orders-table" striped bordered hover responsive>
+        <Table className="admin-table orders-table" striped bordered hover responsive>
           <thead>
             <tr>
               <th>ID</th>
@@ -240,4 +240,3 @@ const UsersTable = () => {
 };
 
 export default UsersTable;
-

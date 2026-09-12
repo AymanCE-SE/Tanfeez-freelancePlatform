@@ -3,6 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
 import Swal from "sweetalert2";
 import { createEngagementRating } from "../../api/rating";
+import "../../styles/components/RatingModal.css";
 
 const RatingModal = ({ show, onHide, direction, ratee, project, service, onSuccess }) => {
   const [rating, setRating] = useState(0);
@@ -42,7 +43,7 @@ const RatingModal = ({ show, onHide, direction, ratee, project, service, onSucce
       <Modal.Header closeButton><Modal.Title>Leave a Rating</Modal.Title></Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          <div className="d-flex justify-content-center gap-2 mb-3" style={{ fontSize: "2rem" }}>
+          <div className="rating-stars d-flex justify-content-center gap-2 mb-3">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
@@ -50,7 +51,7 @@ const RatingModal = ({ show, onHide, direction, ratee, project, service, onSucce
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHoverRating(star)}
                 onMouseLeave={() => setHoverRating(0)}
-                style={{ cursor: "pointer", color: (hoverRating || rating) >= star ? "#f5b301" : "#ddd" }}
+                className={`rating-star ${(hoverRating || rating) >= star ? "active" : ""}`}
               >
                 {(hoverRating || rating) >= star ? <StarFill /> : <Star />}
               </span>

@@ -1,0 +1,12 @@
+.service-pricing-card {
+  background: var(--color-bg-tertiary);
+}
+
+.review-star-rating {
+  color: var(--primitive-warning);
+}
+
+.review-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+}

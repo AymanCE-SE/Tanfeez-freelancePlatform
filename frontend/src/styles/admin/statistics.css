@@ -37,19 +37,19 @@
 }
 
 .border-left-primary::after {
-  background-color: #4e73df;
+  background-color: var(--color-primary);
 }
 
 .border-left-success::after {
-  background-color: #1cc88a;
+  background-color: var(--primitive-success);
 }
 
 .border-left-info::after {
-  background-color: #36b9cc;
+  background-color: var(--primitive-info);
 }
 
 .border-left-warning::after {
-  background-color: #f6c23e;
+  background-color: var(--primitive-warning);
 }
 
 /* Stat Card Icons */
@@ -83,10 +83,10 @@
 .chartjs-tooltip {
   opacity: 1;
   position: absolute;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: var(--color-surface-overlay);
+  color: var(--color-text-inverse);
   border-radius: 3px;
-  transition: all 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, transform 0.1s ease;
   pointer-events: none;
   transform: translate(-50%, 0);
   padding: 4px 8px;
@@ -116,5 +116,5 @@
 
 .legend-label {
   font-size: 0.8rem;
-  color: #5a5c69;
+  color: var(--color-text-secondary);
 }

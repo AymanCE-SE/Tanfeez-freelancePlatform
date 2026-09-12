@@ -10,7 +10,7 @@
 }
 
 .saved-profiles-eyebrow {
-  color: #d9485f;
+  color: var(--color-secondary);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -18,7 +18,7 @@
 }
 
 .saved-profiles-heading h1 {
-  color: #14213d;
+  color: var(--color-text-primary);
   font-weight: 750;
 }
 
@@ -27,18 +27,18 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.65rem 0.9rem;
-  border: 1px solid #f1d7dc;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
-  color: #c63d55;
-  background: #fff7f8;
+  color: var(--color-secondary);
+  background: var(--color-bg-tertiary);
   font-weight: 700;
 }
 
 .saved-profile-card,
 .saved-empty-card {
   border-radius: 0.75rem;
-  background: #fff;
-  box-shadow: 0 12px 30px rgba(20, 33, 61, 0.08);
+  background: var(--color-card-bg);
+  box-shadow: var(--shadow-md);
 }
 
 .saved-profile-card {
@@ -47,7 +47,7 @@
 
 .saved-profile-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 34px rgba(20, 33, 61, 0.13);
+  box-shadow: var(--shadow-lg);
 }
 
 .saved-profile-avatar,
@@ -61,8 +61,8 @@
 .saved-profile-avatar-placeholder {
   display: grid;
   place-items: center;
-  color: #fff;
-  background: #52658f;
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
   font-size: 1.4rem;
 }
 

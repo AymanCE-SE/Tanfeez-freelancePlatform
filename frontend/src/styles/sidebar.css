@@ -1,5 +1,5 @@
 /* Sidebar CSS */
-.sidebar {
+.admin-sidebar {
     position: fixed;
     top: 0;
     left: 0;
@@ -14,13 +14,13 @@
   }
   
   /* Main Content */
-  .main-content {
+  .admin-main-content {
     margin-left: 220px; /* Same width as sidebar */
-    padding: 20px;
+    padding: 10px;
     background-color: var(--color-background);
     min-height: 100vh;
   }
-  .sidebar-link {
+  .admin-sidebar-link {
     color: var(--color-text-secondary);
     text-decoration: none;
     padding: 10px 20px;
@@ -29,11 +29,11 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  .sidebar-link:hover {
+  .admin-sidebar-link:hover {
     background-color: var(--color-dropdown-hover);
   }
   
-  .sidebar-link.active {
+  .admin-sidebar-link.active {
     background-color: var(--color-primary);
     color: var(--color-text-inverse) !important;
   }

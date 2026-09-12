@@ -11,6 +11,6 @@
   align-items: center;
   font-size: 2rem;
   padding: 20px;
-  background-color: #0e61b4;
-  color: white;
+  background-color: var(--color-header-bg);
+  color: var(--color-text-inverse);
 }

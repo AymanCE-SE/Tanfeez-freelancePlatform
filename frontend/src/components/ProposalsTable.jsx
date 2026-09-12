@@ -68,8 +68,8 @@ const ProposalsTable = () => {
   }
 
   return (
-    <div className="proposals-container p-3">
-      <Table striped bordered hover responsive>
+    <div className="admin-table-container p-3">
+      <Table className="admin-table" striped bordered hover responsive>
         <thead>
           <tr>
             <th>ID</th>
