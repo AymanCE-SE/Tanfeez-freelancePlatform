@@ -1,18 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { updateUserProfileAction } from "../../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { getCountries } from "../../api/countries";
 
 const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
     const dispatch = useDispatch();
     const { user, isLoading } = useSelector((myStore) => myStore.userSlice);
+    const [countries, setCountries] = useState([]);
+    const [countriesLoading, setCountriesLoading] = useState(true);
+    const [countriesError, setCountriesError] = useState(false);
 
     useEffect(() => {
         if (user) {
-            setFormData(user);
+            setFormData({ ...user, country: user.country || user.address || "" });
         }
     }, [user]);
+
+    useEffect(() => {
+        getCountries()
+            .then(setCountries)
+            .catch(() => setCountriesError(true))
+            .finally(() => setCountriesLoading(false));
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +33,8 @@ const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
             delete filteredData.client_profile;
             delete filteredData.photo;
             delete filteredData.id; // Exclude id
+            filteredData.address = filteredData.country || "";
+            delete filteredData.country;
             filteredData.birth_date = filteredData.birth_date || null;
 
             await dispatch(updateUserProfileAction(filteredData))
@@ -45,7 +58,13 @@ const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
                     });
                 });
         } catch (err) {
-            setError("Failed to update profile. Please try again.");
+            Swal.fire({
+                icon: "error",
+                title: "Profile Not Updated",
+                text: "Failed to update profile. Please try again.",
+                timer: 3000,
+                showConfirmButton: false,
+            });
         }
     };
 
@@ -132,13 +151,28 @@ const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
             <Row>
                 <Col md={12}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Address</Form.Label>
+                        <Form.Label>Country</Form.Label>
                         <Form.Control
-                            type="text"
-                            name="address"
-                            value={formData.address || ""}
+                            as="select"
+                            name="country"
+                            value={formData.country || ""}
                             onChange={handleChange}
-                        />
+                            disabled={countriesLoading || countriesError}
+                        >
+                            <option value="">
+                                {countriesLoading ? "Loading countries..." : "Select your country"}
+                            </option>
+                            {countries.map((country) => (
+                                <option key={country.code} value={country.name}>
+                                    {country.name}
+                                </option>
+                            ))}
+                        </Form.Control>
+                        {countriesError && (
+                            <Form.Text className="text-danger">
+                                Countries could not be loaded. Please try again later.
+                            </Form.Text>
+                        )}
                     </Form.Group>
                 </Col>
             </Row>
