@@ -7,15 +7,19 @@ import { Link } from "react-router-dom";
 import ProjectCard from "../cards/ProjectCard";
 import "../../styles/components/ProjectsTab.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyProjectsAction } from "../../store/slices/projectSlice";
+import { getMyProjectsAction, getUserProjectsAction } from "../../store/slices/projectSlice";
 
-const ProjectsTab = ({isMyProfile }) => {
-  const {myProjectList} = useSelector((myStore)  => myStore.projectSlice);
+const ProjectsTab = ({ isMyProfile, userId }) => {
+  const { myProjectList, userProjectList } = useSelector((myStore) => myStore.projectSlice);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getMyProjectsAction());
-  },[])
-  const projects = myProjectList;
+    if (isMyProfile) {
+      dispatch(getMyProjectsAction());
+    } else if (userId) {
+      dispatch(getUserProjectsAction(userId));
+    }
+  }, [dispatch, isMyProfile, userId]);
+  const projects = isMyProfile ? myProjectList : userProjectList;
   const hasProjects = projects.length > 0;
 
   return (

@@ -139,6 +139,7 @@ const UserProfile = () => {
           <ServicesTab
             services={profileData.services || []}
             isMyProfile={isMyProfile}
+            userId={profileData.id}
           />
         ),
       },
@@ -151,7 +152,7 @@ const UserProfile = () => {
         eventKey: "projects",
         title: "Projects",
         icon: <Briefcase className="me-2" />,
-        component: <ProjectsTab isMyProfile={isMyProfile} />,
+        component: <ProjectsTab isMyProfile={isMyProfile} userId={profileData.id} />,
       },
       ...commonTabs,
     ];

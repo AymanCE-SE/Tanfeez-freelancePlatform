@@ -1,13 +1,14 @@
 /** @format */
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addProject, getAllProject, getMyProjects, getProjectById } from "../../api/project";
+import { addProject, getAllProject, getMyProjects, getProjectById, getUserProjects } from "../../api/project";
 import apiClient from '../../api/client';
 
 const initialState = {
   projectList: [],
   createdProject: null,
   myProjectList: [],
+  userProjectList: [],
   isLoading: false,
   error: null,
   projectDetails: null,
@@ -49,6 +50,21 @@ export const getMyProjectsAction = createAsyncThunk(
       return rejectWithValue(serializedError);
     }
   });
+
+export const getUserProjectsAction = createAsyncThunk(
+  "project/getUserProjectsAction",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await getUserProjects(userId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue({
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+    }
+  }
+);
 
 
 const getAllProjectAction = createAsyncThunk(
@@ -166,6 +182,21 @@ const projectSlice = createSlice({
         state.myProjectList = action.payload;
       })
       .addCase(getMyProjectsAction.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(getUserProjectsAction.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.userProjectList = [];
+      })
+      .addCase(getUserProjectsAction.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userProjectList = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.results || [];
+      })
+      .addCase(getUserProjectsAction.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })

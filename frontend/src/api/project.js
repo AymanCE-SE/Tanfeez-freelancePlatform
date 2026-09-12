@@ -9,6 +9,15 @@ export const addProject = async (service) => {
     }
 };
 
+export const getUserProjects = async (userId) => {
+    try {
+        const response = await apiClient.get(`project/users/${userId}/`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 export const getAllProject = async (page = 1) => {
     try {
