@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Image, Button, Row, Col, Badge } from "react-bootstrap";
 import {
@@ -12,7 +12,6 @@ import {
   ChatDots,
   Pencil,
   GeoAlt,
-  Envelope,
   Calendar3,
   PersonBadge,
   Camera,
@@ -21,6 +20,7 @@ import "../../styles/UserProfile.css";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyProfileAction, updateUserImageAction } from "../../store/slices/userSlice";
+import { isProfileSaved, removeSavedProfile, saveProfile } from "../../utils/savedProfiles";
 
 const ProfileHeader = ({
   profileData,
@@ -30,7 +30,46 @@ const ProfileHeader = ({
 }) => {
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [saved, setSaved] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
   const dispatch = useDispatch();
+
+  const authUser = useSelector((state) => state.authSlice.user);
+
+  useEffect(() => {
+    setSaved(Boolean(authUser?.id && isProfileSaved(authUser.id, profileData?.id)));
+  }, [authUser?.id, profileData?.id]);
+
+  const handleSave = () => {
+    if (!authUser?.id || !profileData?.id || isMyProfile) return;
+
+    if (saved) {
+      removeSavedProfile(authUser.id, profileData.id);
+      setSaved(false);
+      return;
+    }
+
+    saveProfile(authUser.id, {
+      id: profileData.id,
+      first_name: profileData.first_name,
+      second_name: profileData.second_name,
+      user_type: profileData.user_type,
+      photo: profileData.photo,
+      bio: profileData.bio,
+    });
+    setSaved(true);
+  };
+
+  const handleShare = async () => {
+    const profileUrl = `${window.location.origin}/profile/${profileData.id}`;
+    try {
+      await navigator.clipboard.writeText(profileUrl);
+      setShareMessage("Profile link copied");
+    } catch {
+      setShareMessage(profileUrl);
+    }
+    window.setTimeout(() => setShareMessage(""), 2500);
+  };
 
 
 
@@ -101,12 +140,6 @@ const ProfileHeader = ({
     },
     { icon: Award, text: `${completionRate}% Completion` },
     { icon: Clock, text: `${averageResponse} response` },
-  ];
-
-  const actions = [
-    { icon: Heart, text: "Save", variant: "light" },
-    { icon: Share, text: "Share", variant: "light" },
-    { icon: Envelope, text: "Message", variant: "light" },
   ];
 
   const getRoleBadgeVariant = (user_type) => {
@@ -191,12 +224,17 @@ const ProfileHeader = ({
         </Row>
 
         <div className="d-flex flex-wrap justify-content-center gap-2">
-          {actions.map(({ icon: Icon, text, variant }, idx) => (
-            <Button key={idx} variant={variant} className="action-btn">
-              <Icon size={18} className="me-2" />
-              {text}
+          {!isMyProfile && (
+            <Button variant={saved ? "danger" : "light"} className="action-btn" onClick={handleSave}>
+              <Heart size={18} className="me-2" fill={saved ? "currentColor" : "none"} />
+              {saved ? "Saved" : "Save"}
             </Button>
-          ))}
+          )}
+          <Button variant="light" className="action-btn" onClick={handleShare}>
+            <Share size={18} className="me-2" />
+            Share
+          </Button>
+          {shareMessage && <span className="align-self-center text-success small">{shareMessage}</span>}
 
           {isMyProfile ? (
             <Button

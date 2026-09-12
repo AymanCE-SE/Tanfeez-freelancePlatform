@@ -35,6 +35,7 @@ import Dashboard from "../pages/Dashboard";
 import { ChatbotInterface } from "../pages/ChatBot";
 import { NotificationProvider } from "../context/NotificationContext";
 import ServiceRequests from "../pages/ServiceRequests";
+import SavedProfiles from "../pages/SavedProfiles";
 
 export function MainLayout() {
   return (
@@ -56,6 +57,7 @@ export function MainLayout() {
           <Route path="/services/:id" element={<ServiceDetailsPage />} />
           <Route path="services/:serviceId/requests" element={<ServiceRequests />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="saved" element={<SavedProfiles />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chat/:conversationId" element={<Chat />} />
           <Route path="services" element={<ServicesPage />} />
