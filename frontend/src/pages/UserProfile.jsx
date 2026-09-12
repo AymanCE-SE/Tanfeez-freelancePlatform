@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Container, Tabs, Tab, Alert, Spinner } from "react-bootstrap";
 import {
   Briefcase,
@@ -30,12 +30,13 @@ import { getEngagementRatings, getEngagementRatingSummary } from "../api/rating"
 
 const UserProfile = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { user, profile, isLoading, error } = useSelector(
     (state) => state.userSlice
   );
 
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "about");
   const [reviews, setReviews] = useState([]);
   const profileData = profile;
   const [ratingSummary, setRatingSummary] = useState({ average_rating: 0, ratings_count: 0 });

@@ -58,6 +58,7 @@ export const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoggedIn } = useSelector((myStore) => myStore.authSlice);
+  const { user: authUser } = useSelector((myStore) => myStore.authSlice);
   const { user } = useSelector((state) => state.userSlice);
   const { theme } = useSelector((state) => state.themeSlice);
   const { notifications, unreadCount, markAllRead, markOneRead, messagesUnreadCount } = useNotifications();
@@ -119,6 +120,13 @@ export const Header = () => {
   });
 
   const handleNotificationClick = (notification) => {
+    if (notification.notification_type === "rating_received" && authUser?.id) {
+      toggleDropdown("notifications");
+      if (!notification.is_read) markOneRead(notification.id);
+      navigate(`/profile/${authUser.id}?tab=reviews`);
+      return;
+    }
+
     const buildLink = NOTIFICATION_LINKS[notification.target_type];
     toggleDropdown("notifications");
     if (!notification.is_read) markOneRead(notification.id);
