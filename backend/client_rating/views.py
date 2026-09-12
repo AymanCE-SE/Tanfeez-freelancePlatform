@@ -116,6 +116,7 @@ class FreelancerRatingSummaryView(APIView):
             "ratings_count": stats["count"],
         })
 
+# backend/client_rating/views.py
 class EngagementRatingCreateView(CreateAPIView):
     serializer_class = EngagementRatingSerializer
     permission_classes = [IsAuthenticated]
@@ -125,10 +126,25 @@ class EngagementRatingCreateView(CreateAPIView):
         project = serializer.validated_data.get("project")
         service = serializer.validated_data.get("service")
         ratee = serializer.validated_data.get("ratee")
+
+        # 1) تحقق الصلاحيات الأول
+        if project:
+            valid_pair = (project.clientId, project.freelancerId)
+            if self.request.user not in valid_pair:
+                raise PermissionDenied("You weren't part of this project.")
+        elif not service:
+            raise ValidationError("A rating must reference a project or a service.")
+
+        # 2) منع التكرار
+        if EngagementRating.objects.filter(
+            rater=self.request.user, ratee=ratee, project=project, service=service, is_deleted=False
+        ).exists():
+            raise ValidationError("You already rated this person for this engagement.")
+
+        # 3) الحفظ — مرة واحدة بس
         rating = serializer.save(rater=self.request.user)
-        # Only the actual counterpart in the engagement can rate — the
-        # client of THIS project/service, or the freelancer of it,
-        # matching whichever direction is being submitted.
+
+        # 4) الإشعار — بعد ما نتأكد إن كل حاجة نجحت فعلاً
         target_type = (
             Notification.TargetType.PROJECT if rating.project
             else Notification.TargetType.SERVICE
@@ -143,25 +159,6 @@ class EngagementRatingCreateView(CreateAPIView):
             target_id=target_id,
             target_type=target_type,
         )
-        if project:
-            valid_pair = (project.clientId, project.freelancerId)
-        elif service:
-            # service.freelancerId is the owner; the rater must be a client
-            # who actually had an approved/completed order on this service
-            valid_pair = None
-        else:
-            raise ValidationError("A rating must reference a project or a service.")
-
-        if project and self.request.user not in valid_pair:
-            raise PermissionDenied("You weren't part of this project.")
-
-        if EngagementRating.objects.filter(
-            rater=self.request.user, ratee=ratee, project=project, service=service, is_deleted=False
-        ).exists():
-            raise ValidationError("You already rated this person for this engagement.")
-        
-        serializer.save(rater=self.request.user)
-
 
 class EngagementRatingListView(ListAPIView):
     serializer_class = EngagementRatingSerializer
