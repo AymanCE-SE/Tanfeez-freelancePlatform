@@ -1,434 +1,50 @@
-/* Theme styles for light and dark mode */
+/* Global component theme rules. Token definitions live in designSystem.css. */
 
-/* Light Theme (default) */
-:root {
-    /* Semantic Colors */
-    --color-primary: var(--sapphire-500);
-    --color-secondary: var(--coral-400);
+[data-theme="dark"] .category-link { color: var(--color-text-primary) !important; }
+[data-theme="dark"] .category-link:hover { background-color: var(--color-dropdown-hover); }
 
-    /* Background Colors */
-    --color-background: var(--neutral-200);
-    --color-card-bg: #ffffff;
-    --color-header-bg: var(--sapphire-600);
-    --color-footer-bg: var(--sapphire-700);
-
-    /* Text Colors */
-    --color-text: var(--neutral-900);
-    --color-text-muted: var(--neutral-500);
-    --color-text-inverse: #ffffff;
-
-    /* Border Colors */
-    --color-border: var(--neutral-200);
-
-    /* Input Colors */
-    --color-input-bg: #ffffff;
-    --color-input-border: var(--neutral-200);
-    --color-input-focus: var(--sapphire-400);
-    --color-input-text: var(--neutral-900);
-
-    /* Button Colors */
-    --color-btn-primary: var(--sapphire-500);
-    --color-btn-primary-hover: var(--sapphire-600);
-    --color-btn-secondary: var(--coral-400);
-    --color-btn-secondary-hover: var(--coral-500);
-
-    /* Component colors */
-    --color-card-bg: #ffffff;
-    --color-input-bg: #FFFFFF;
-    --color-dropdown-bg: #FFFFFF;
-    --color-dropdown-text: #1C1818;
-    --color-dropdown-hover: #f3f4f6;
-
-    /* Navbar */
-    --color-navbar-bg: #0765BC;
-    --color-navbar-text: #FFFFFF;
-
-    /* Transitions */
-    --theme-transition: all 0.3s ease;
-
-    --primary-50: #f0f9ff;
-    --primary-100: #e0f2fe;
-    --primary-300: #7dd3fc;
-    --primary-400: #38bdf8;
-    --primary-500: #0ea5e9;
-
-    --success: #22c55e;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-
-    /* Chat Colors */
-    --chat-message-sent-bg: #0091ff;
-    --chat-message-sent-text: #ffffff;
-    --chat-message-received-bg: #f0f2f5;
-    --chat-message-received-text: #1c1e21;
-    --chat-time-text: #65676b;
-    --chat-meta-text: #65676b;
-    --chat-input-bg: #ffffff;
-    --chat-input-text: #1c1e21;
-    --chat-input-placeholder: #65676b;
-    --chat-action-btn-bg: #f0f2f5;
-    --chat-action-btn-text: #65676b;
-    --chat-action-btn-hover-bg: #e4e6eb;
-    --chat-item-hover-bg: rgba(0, 0, 0, 0.04);
-    --chat-item-active-bg: rgba(0, 145, 255, 0.1);
-
-    /* Chat Additional Colors */
-    --chat-messages-bg: var(--color-background);
-    --chat-scroll-thumb: var(--neutral-300);
-    --chat-scroll-track: transparent;
+.client-profile-card {
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-card-bg);
+  transition: var(--theme-transition);
 }
 
-/* Dark Theme */
-[data-theme="dark"] {
-    /* Background Colors */
-    --color-background: #0f172a;
-    --color-card-bg: #1e293b;
-    --color-header-bg: #1e293b;
-    --color-footer-bg: #0f172a;
-
-    /* Text Colors - Made Lighter for Better Readability */
-    --color-text: #f8fafc;
-    --color-text-muted: #cbd5e1;
-    --color-text-inverse: #f1f5f9;
-    --color-link: #38bdf8;
-    --color-link-hover: #7dd3fc;
-
-    /* Border Colors */
-    --color-border: #334155;
-
-    /* Input Colors */
-    --color-input-bg: #1e293b;
-    --color-input-border: #334155;
-    --color-input-text: #f8fafc;
-    --color-input-placeholder: #64748b;
-
-    /* Button Colors */
-    --color-btn-primary: #0ea5e9;
-    --color-btn-primary-hover: #0284c7;
-    --color-btn-secondary: #f43f5e;
-    --color-btn-secondary-hover: #e11d48;
-
-    /* Component Colors */
-    --color-card-bg: #1e293b;
-    --color-dropdown-bg: #1e293b;
-    --color-dropdown-text: #f8fafc;
-    --color-dropdown-hover: #334155;
-
-    /* Chat Colors */
-    --chat-message-sent-bg: #0091ff;
-    --chat-message-sent-text: #ffffff;
-    --chat-message-received-bg: #3a3b3c;
-    --chat-message-received-text: #e4e6eb;
-    --chat-time-text: #b0b3b8;
-    --chat-meta-text: #b0b3b8;
-    --chat-input-bg: #3a3b3c;
-    --chat-input-text: #e4e6eb;
-    --chat-input-placeholder: #b0b3b8;
-    --chat-action-btn-bg: #4e4f50;
-    --chat-action-btn-text: #e4e6eb;
-    --chat-action-btn-hover-bg: #4e4f50;
-    --chat-item-hover-bg: rgba(255, 255, 255, 0.1);
-    --chat-item-active-bg: rgba(0, 145, 255, 0.15);
-
-    /* Chat Additional Colors */
-    --chat-messages-bg: var(--color-card-bg);
-    --chat-scroll-thumb: var(--neutral-700);
-    --chat-scroll-track: transparent;
-
-    /* Adjusted message colors for better contrast */
-    --chat-message-received-bg: #2d3748;
-    --chat-message-received-text: #f7fafc;
-    --chat-message-sent-bg: #0284c7;
-    --chat-input-bg: #2d3748;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+.client-info-grid,
+.user-details-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-/* Apply theme to elements */
-body {
-    background-color: var(--color-background);
-    color: var(--color-text);
-    transition: var(--theme-transition);
+.info-item { display: flex; flex-direction: column; }
+
+.info-label {
+  margin-bottom: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
 }
 
-/* Dark mode specific overrides for text and links */
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-    color: var(--color-sapphire);
+.info-value {
+  color: var(--color-text-primary);
+  font-size: 1rem;
 }
 
-[data-theme="dark"] a {
-    color: var(--color-coral);
+.client-avatar-placeholder {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-input-bg);
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
-[data-theme="dark"] a:hover {
-    color: #FF6A74;
-    /* Lighter coral for hover */
+.detail-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* Card styles */
-.card {
-    background-color: var(--color-card-bg);
-    border-color: var(--color-border);
-    transition: var(--theme-transition);
-}
-
-/* Navbar styles */
-.navbar.bg-dark {
-    background-color: var(--color-navbar-bg) !important;
-    transition: var(--theme-transition);
-}
-
-/* Form controls */
-.form-control,
-.form-select {
-    background-color: var(--color-input-bg);
-    color: var(--color-text);
-    border-color: var(--color-border);
-    transition: var(--theme-transition);
-}
-
-/* Dropdowns */
-.dropdown-menu {
-    background-color: var(--color-dropdown-bg);
-    border-color: var(--color-border);
-    transition: var(--theme-transition);
-}
-
-.dropdown-item {
-    color: var(--color-dropdown-text);
-}
-
-.dropdown-item:hover,
-.dropdown-item:focus {
-    background-color: var(--color-dropdown-hover);
-}
-
-/* Tables */
-table {
-    color: var(--color-text);
-}
-
-/* Modal */
-.modal-content {
-    background-color: var(--color-card-bg);
-    color: var(--color-text);
-}
-
-/* Popover */
-.popover {
-    background-color: var(--color-card-bg);
-    border-color: var(--color-border);
-}
-
-.popover-header {
-    background-color: var(--color-card-bg);
-    color: var(--color-text);
-    border-bottom-color: var(--color-border);
-}
-
-.popover-body {
-    color: var(--color-text);
-}
-
-/* Theme toggle button */
-.theme-toggle-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: none;
-    color: var(--color-navbar-text);
-    cursor: pointer;
-    transition: var(--theme-transition);
-}
-
-.theme-toggle-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Dark mode specific overrides */
-[data-theme="dark"] .text-dark {
-    color: var(--color-text) !important;
-}
-
-[data-theme="dark"] .bg-light {
-    background-color: var(--color-card-bg) !important;
-}
-
-[data-theme="dark"] .border {
-    border-color: var(--color-border) !important;
-}
-
-/* Category dropdown in dark mode */
-[data-theme="dark"] .category-link {
-    color: var(--color-text) !important;
-}
-
-[data-theme="dark"] .category-link:hover {
-    background-color: var(--color-dropdown-hover);
-}
-
-/* Dark mode overrides for specific components */
-[data-theme="dark"] {
-    .navbar {
-        background-color: var(--color-header-bg) !important;
-    }
-
-    .card {
-        background-color: var(--color-card-bg);
-    }
-
-    .form-control {
-        background-color: var(--color-input-bg) !important;
-        color: var(--color-text) !important;
-        border-color: var(--color-border) !important;
-    }
-
-    .form-control::placeholder {
-        color: var(--color-input-placeholder) !important;
-    }
-
-    .dropdown-menu {
-        background-color: var(--color-dropdown-bg);
-        border-color: var(--color-border);
-    }
-
-    .dropdown-item {
-        color: var(--color-dropdown-text);
-    }
-
-    .dropdown-item:hover {
-        background-color: var(--color-dropdown-hover);
-    }
-
-    .modal-content {
-        background-color: var(--color-card-bg);
-        color: var(--color-text);
-    }
-
-    .table {
-        color: var(--color-text);
-    }
-
-    .badge {
-        &.bg-light {
-            background-color: #334155 !important;
-            color: #f8fafc !important;
-        }
-    }
-
-    .btn-light {
-        background-color: #334155 !important;
-        border-color: #475569 !important;
-        color: #f8fafc !important;
-    }
-
-    .text-muted {
-        color: #94a3b8 !important;
-    }
-
-    .border-light {
-        border-color: #334155 !important;
-    }
-}
-
-/* .footer {
-    background: var(--color-background);
-    color: var(--color-text);
-  } */
-
-
-  /* Client Profile Card Styles */
-  .client-profile-card {
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-    background-color: var(--color-card-bg);
-    transition: var(--theme-transition);
-  }
-  
-  .client-info-grid {
-    display: grid;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .info-item {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .info-label {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin-bottom: 0.25rem;
-  }
-  
-  .info-value {
-    font-size: 1rem;
-    color: var(--color-text);
-  }
-  
-  .client-avatar-placeholder {
-    color: var(--color-text-muted);
-    font-weight: 500;
-    background-color: var(--color-input-bg);
-    border: 1px solid var(--color-border);
-  }
-  
-  /* Dark theme overrides */
-  [data-theme="dark"] {
-    .client-profile-card {
-      border-color: var(--color-border);
-      background-color: var(--color-card-bg);
-      box-shadow: var(--shadow-sm);
-    }
-  
-    .info-label {
-      color: var(--color-text-muted);
-    }
-  
-    .info-value {
-      color: var(--color-text);
-    }
-  
-    .client-avatar-placeholder {
-      background-color: var(--color-input-bg);
-      color: var(--color-text-muted);
-      border-color: var(--color-border);
-    }
-  }
-
-
-  .user-details-grid {
-    display: grid;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .detail-item {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 1rem;
-    align-items: center;
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--bs-border-color);
-  }
-  
-  .detail-item:last-child {
-    border-bottom: none;
-  }
-  
-  .detail-item strong {
-    color: var(--bs-gray-700);
-  }
+.detail-item:last-child { border-bottom: 0; }
+.detail-item strong { color: var(--color-text-secondary); }
