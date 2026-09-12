@@ -70,10 +70,10 @@ const ProjectsTable = () => {
   }
 
   return (
-    <div className="projects-container p-3">
+    <div className="admin-table-container p-3">
       <div className="text-center mb-4">
         <Button
-          style={{ backgroundColor: "#198754", border: "none" }}
+          className="btn-add"
           onClick={() => setShowAddModal(true)}
         >
           <FaPlus className="me-1" />
@@ -81,7 +81,7 @@ const ProjectsTable = () => {
         </Button>
       </div>
 
-      <Table striped bordered hover responsive>
+      <Table className="admin-table" striped bordered hover responsive>
         <thead>
           <tr>
             <th>Name</th>

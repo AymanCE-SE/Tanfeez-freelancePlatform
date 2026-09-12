@@ -70,10 +70,10 @@ const ServicesTable = () => {
   }
 
   return (
-    <div className="p-3">
+    <div className="admin-table-container p-3">
       <div className="text-center mb-4">
         <Button
-          style={{ backgroundColor: "#198754", border: "none" }}
+          className="btn-add"
           onClick={() => {/* Add service navigation */ }}
         >
           <FaPlus className="me-1" />
@@ -81,7 +81,7 @@ const ServicesTable = () => {
         </Button>
       </div>
 
-      <Table bordered hover responsive>
+      <Table className="admin-table" bordered hover responsive>
         <thead>
           <tr>
             <th>ID</th>

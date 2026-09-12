@@ -19,7 +19,7 @@
     padding: 0.5rem 0;
     color: var(--color-text);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
   }
   
   .category-btn:hover,
@@ -58,19 +58,17 @@
   }
   
   /* Dark mode adjustments */
-  [data-theme="dark"] {
-    .filters-card {
-      background: var(--color-card-bg);
-      border-color: var(--color-border);
-    }
-  
-    .category-btn,
-    .subcategory-btn {
-      color: var(--color-text);
-    }
-  
-    .category-btn:hover,
-    .subcategory-btn:hover {
-      color: var(--primary-400);
-    }
-  }
+[data-theme="dark"] .filters-card {
+  background: var(--color-card-bg);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .category-btn,
+[data-theme="dark"] .subcategory-btn {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .category-btn:hover,
+[data-theme="dark"] .subcategory-btn:hover {
+  color: var(--primary-400);
+}

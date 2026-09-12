@@ -2,8 +2,8 @@
 .admin-sidebar {
   width: 250px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  background: linear-gradient(180deg, var(--color-primary) 10%, var(--color-primary-hover) 100%);
+  box-shadow: var(--shadow-lg);
   z-index: 1;
   position: sticky;
   top: 0;
@@ -12,11 +12,11 @@
 .sidebar-header {
   padding: 1.5rem 1rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--color-surface-overlay);
 }
 
 .sidebar-header h3 {
-  color: white;
+  color: var(--color-text-inverse);
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0;
@@ -30,19 +30,19 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-inverse);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .admin-sidebar .nav-link:hover {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-inverse);
+  background-color: var(--color-surface-overlay);
 }
 
 .admin-sidebar .nav-link.active {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-inverse);
+  background-color: var(--color-focus-ring);
   font-weight: 700;
 }
 
@@ -53,14 +53,14 @@
   top: 0;
   height: 100%;
   width: 4px;
-  background-color: #fff;
+  background-color: var(--color-card-bg);
 }
 
 .sidebar-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid var(--color-surface-overlay);
 }
 
 /* Responsive Sidebar */

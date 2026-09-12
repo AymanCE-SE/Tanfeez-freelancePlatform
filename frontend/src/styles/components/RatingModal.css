@@ -1,0 +1,12 @@
+.rating-stars {
+  font-size: 2rem;
+}
+
+.rating-star {
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.rating-star.active {
+  color: var(--primitive-warning);
+}

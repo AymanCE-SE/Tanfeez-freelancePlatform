@@ -16,7 +16,7 @@
     background: var(--color-card-bg);
     box-shadow: var(--shadow-sm);
     border-radius: 1rem;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .faq-card:hover,
@@ -68,7 +68,7 @@
     border: none;
     border-radius: 0.5rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .submit-btn:hover {

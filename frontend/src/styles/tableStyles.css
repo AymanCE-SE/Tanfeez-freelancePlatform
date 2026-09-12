@@ -1,26 +1,26 @@
 /* tableStyles.css */
 
 /* General table styling */
-.table {
+.admin-table-container .admin-table {
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 20px;
     background-color: var(--color-card-bg);
   }
   
-  .table th,
-  .table td {
+  .admin-table-container .admin-table th,
+  .admin-table-container .admin-table td {
     padding: 12px 15px;
     text-align: left;
     border: 1px solid var(--color-border);
   }
   
   /* Table header styling */
-  .table thead {
+  .admin-table-container .admin-table thead {
     background-color: var(--color-bg-tertiary);
   }
   
-  .table thead th {
+  .admin-table-container .admin-table thead th {
     color: var(--color-text-secondary);
     font-weight: bold;
     text-transform: uppercase;
@@ -28,54 +28,54 @@
   }
   
   /* Hover effect for rows */
-  .table tbody tr:hover {
+  .admin-table-container .admin-table tbody tr:hover {
     background-color: var(--color-dropdown-hover);
     cursor: pointer;
   }
   
   /* Alternate row color for better readability */
-  .table tbody tr:nth-child(even) {
+  .admin-table-container .admin-table tbody tr:nth-child(even) {
     background-color: var(--color-bg-tertiary);
   }
   
   /* Add padding for the table container */
-  .projects-container {
+  .admin-table-container {
     padding: 20px;
   }
   
   /* Styling buttons inside the table */
-  .table .btn {
+  .admin-table-container .admin-table .btn {
     padding: 6px 12px;
     font-size: 12px;
     text-transform: uppercase;
   }
   
   /* Styling for info button */
-  .table .btn-info {
+  .admin-table-container .admin-table .btn-info {
     background-color: var(--info);
     border-color: var(--info);
   }
   
   /* Styling for delete button */
-  .table .btn-danger {
+  .admin-table-container .admin-table .btn-danger {
     background-color: var(--error);
     border-color: var(--error);
   }
   
   /* Add spacing between table and other elements */
-  .table-container {
+  .admin-table-container {
     margin-top: 30px;
   }
   
   /* Button Styles */
-  .btn-add {
+  .admin-table-container .btn-add {
     background-color: var(--success);
     border: none;
     color: var(--color-text-inverse);
     text-transform: uppercase;
   }
   
-  .btn-add:hover {
+  .admin-table-container .btn-add:hover {
     background-color: var(--accent-700);
   }
   

@@ -98,46 +98,45 @@
 }
 
 /* Dark mode adjustments */
-[data-theme="dark"] {
+[data-theme="dark"] .about-tab h5,
+[data-theme="dark"] .about-tab h6,
+[data-theme="dark"] .about-tab p,
+[data-theme="dark"] .about-tab strong,
+[data-theme="dark"] .info-value,
+[data-theme="dark"] .verification-value,
+[data-theme="dark"] .info-box-title,
+[data-theme="dark"] .verification-box-title,
+[data-theme="dark"] .section-subtitle,
+[data-theme="dark"] .skill-name,
+[data-theme="dark"] .preference-item strong {
+    color: var(--color-text-inverse);
+}
 
-    .about-tab h5,
-    .about-tab h6,
-    .about-tab p,
-    .about-tab strong,
-    .info-value,
-    .verification-value,
-    .info-box-title,
-    .verification-box-title,
-    .section-subtitle,
-    .skill-name,
-    .preference-item strong {
-        color: var(--color-text-inverse);
-    }
+[data-theme="dark"] .about-tab .text-muted,
+[data-theme="dark"] .info-label,
+[data-theme="dark"] .verification-label,
+[data-theme="dark"] small.text-muted {
+    color: var(--color-text-muted) !important;
+    opacity: 0.9;
+}
 
-    .about-tab .text-muted,
-    .info-label,
-    .verification-label,
-    small.text-muted {
-        color: var(--color-text-muted) !important;
-        opacity: 0.9;
-    }
-    .language-title {
-        color: var(--color-text-inverse);
-    }
-    .about-tab .badge {
-        background: var(--color-card-bg);
-        color: var(--color-text-inverse);
-    }
+[data-theme="dark"] .language-title {
+    color: var(--color-text-inverse);
+}
 
-    .verification-icon {
-        color: var(--success-400);
-    }
+[data-theme="dark"] .about-tab .badge {
+    background: var(--color-card-bg);
+    color: var(--color-text-inverse);
+}
 
-    .verification-pending {
-        color: var(--warning-400);
-    }
+[data-theme="dark"] .verification-icon {
+    color: var(--success-400);
+}
 
-    .skill-progress {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+[data-theme="dark"] .verification-pending {
+    color: var(--warning-400);
+}
+
+[data-theme="dark"] .skill-progress {
+    background-color: rgba(255, 255, 255, 0.1);
 }

@@ -21,9 +21,9 @@
 
   .chart-item,
   .main-chart {
-    background: #fff;
+    background: var(--color-card-bg);
     padding: 15px;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     overflow-x: hidden;
     box-sizing: border-box;
   }
@@ -69,7 +69,7 @@
     padding: 20px;
     display: flex;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     transition: transform 0.3s ease;
     min-height: 100px;
   }
@@ -104,7 +104,7 @@
   .card-content p {
     margin: 5px 0 0;
     font-size: clamp(13px, 1.5vw, 14px);
-    color: #666;
+    color: var(--color-text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -112,33 +112,33 @@
 
   /* Card color variants */
   .primary-card {
-    background-color: #e6f7ff;
-    border-left: 4px solid #1890ff;
+    background-color: var(--color-bg-tertiary);
+    border-left: 4px solid var(--color-primary);
   }
 
   .primary-card .card-icon {
-    background-color: #1890ff;
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
   }
 
   .warning-card {
-    background-color: #fffbe6;
-    border-left: 4px solid #faad14;
+    background-color: var(--color-bg-tertiary);
+    border-left: 4px solid var(--primitive-warning);
   }
 
   .warning-card .card-icon {
-    background-color: #faad14;
-    color: white;
+    background-color: var(--primitive-warning);
+    color: var(--color-text-inverse);
   }
 
   .danger-card {
-    background-color: #fff2f0;
-    border-left: 4px solid #ff4d4f;
+    background-color: var(--color-bg-tertiary);
+    border-left: 4px solid var(--primitive-error);
   }
 
   .danger-card .card-icon {
-    background-color: #ff4d4f;
-    color: white;
+    background-color: var(--primitive-error);
+    color: var(--color-text-inverse);
   }
 
   /* Responsive adjustments */
@@ -211,24 +211,24 @@
   .text-muted {
     margin: 5px 0 0;
     font-size: 14px;
-    color: #6c757d; /* Bootstrap's muted color */
+    color: var(--color-text-muted);
     opacity: 0.8;
   }
 
   /* Specific icon colors */
   .stat-card:nth-child(1) .stat-icon {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-primary);
   }
 
   .stat-card:nth-child(2) .stat-icon {
-    background-color: #fff8e1;
-    color: #ffa000;
+    background-color: var(--color-bg-tertiary);
+    color: var(--primitive-warning);
   }
 
   .stat-card:nth-child(3) .stat-icon {
-    background-color: #ffebee;
-    color: #d32f2f;
+    background-color: var(--color-bg-tertiary);
+    color: var(--primitive-error);
   }
 
   /* Responsive adjustments */
@@ -257,4 +257,3 @@
       font-size: 13px;
     }
   }
-

@@ -3,10 +3,11 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Stack from 'react-bootstrap/Stack';
 import { getEngagementRatings } from '../../api/rating';
+import '../../styles/components/ServiceDetailsComponents.css';
 
 function StarRating({ value }) {
   return (
-    <span style={{ color: '#f8a800' }}>
+    <span className="review-star-rating">
       {'★'.repeat(Math.round(value))}{'☆'.repeat(5 - Math.round(value))}
     </span>
   );
@@ -39,7 +40,7 @@ export default function ReviewsSection({ freelancerId, serviceId }) {
             {r.rater_photo ? (
               <Image src={r.rater_photo} roundedCircle width={40} height={40} alt={r.rater_name} />
             ) : (
-              <div className="rounded-circle bg-secondary" style={{ width: 40, height: 40 }} />
+              <div className="review-avatar-placeholder rounded-circle bg-secondary" />
             )}
             <div>
               <div className="fw-semibold text-muted" style={{ fontSize: '1.02rem' }}>
