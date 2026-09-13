@@ -38,13 +38,14 @@
 
 .conversations-list {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--chat-scroll-thumb) transparent;
     scroll-behavior: smooth;
     position: relative;
     border-right: 1px solid var(--color-border);
-    background: var(--color-card-bg);
+    background: var(--chat-list-bg);
 }
 
 .conversation-item {
@@ -53,6 +54,8 @@
     padding: 1rem;
     border: none;
     margin-bottom: 0.25rem;
+    background: transparent !important;
+    color: var(--color-text-primary) !important;
 }
 
 .conversation-item:hover {
@@ -285,6 +288,16 @@
     overflow: hidden;
 }
 
+.chat-wrapper > .card-body {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.chat-wrapper .row {
+    min-height: 0;
+}
+
 .chat-messages::-webkit-scrollbar,
 .conversations-list::-webkit-scrollbar {
     width: 6px;
@@ -308,7 +321,8 @@
     flex-direction: column;
     height: 100%;
     min-width: 0;
-    background: var(--color-card-bg);
+    min-height: 0;
+    background: var(--chat-list-bg);
 }
 
 /* Messages Column */
@@ -317,6 +331,7 @@
     flex-direction: column;
     height: 100%;
     min-width: 0;
+    min-height: 0;
     background: var(--chat-messages-bg);
 }
 
