@@ -9,6 +9,11 @@
   transition: var(--theme-transition);
 }
 
+.header-component {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .logo-text {
   font-weight: 700;
   font-size: 24px;

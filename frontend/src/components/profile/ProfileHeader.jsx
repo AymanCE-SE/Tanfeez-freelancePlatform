@@ -226,7 +226,7 @@ const ProfileHeader = ({
         <div className="d-flex flex-wrap justify-content-center gap-2">
           {!isMyProfile && (
             <Button variant={saved ? "danger" : "light"} className="action-btn" onClick={handleSave}>
-              <Heart size={18} className="me-2" fill={saved ? "currentColor" : "none"} />
+              <Heart size={18} className="me-2" fill={saved ? "currentColor" : undefined} />
               {saved ? "Saved" : "Save"}
             </Button>
           )}

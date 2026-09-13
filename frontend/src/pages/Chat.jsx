@@ -93,6 +93,12 @@ const Chat = () => {
   }, [loadConversations, messageEventTick]);
 
   useEffect(() => {
+    if (liveMessages.length > 0) {
+      loadConversations();
+    }
+  }, [liveMessages.length, loadConversations]);
+
+  useEffect(() => {
     if (readMessageIds.size > 0) {
       loadConversations();
       refreshMessagesUnreadCount();
