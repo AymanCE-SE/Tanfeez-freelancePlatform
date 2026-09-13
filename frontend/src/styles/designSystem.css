@@ -142,6 +142,7 @@
   --chat-action-btn-hover-bg: var(--color-dropdown-hover);
   --chat-item-hover-bg: var(--color-dropdown-hover);
   --chat-item-active-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --chat-list-bg: var(--color-card-bg);
   --chat-messages-bg: var(--color-bg-primary);
   --chat-scroll-thumb: var(--primitive-neutral-300);
   --chat-scroll-track: transparent;
@@ -289,6 +290,7 @@
   --chat-action-btn-hover-bg: var(--color-dropdown-hover);
   --chat-item-hover-bg: var(--color-dropdown-hover);
   --chat-item-active-bg: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --chat-list-bg: color-mix(in srgb, var(--primitive-blue-900) 28%, var(--color-card-bg));
   --chat-messages-bg: var(--color-bg-secondary);
   --chat-scroll-thumb: var(--primitive-neutral-700);
   --chat-scroll-track: transparent;
