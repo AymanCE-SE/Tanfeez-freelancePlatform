@@ -365,8 +365,10 @@
     background: var(--chat-messages-bg);
 }
 
-.chat-wrapper .conversations-column.d-md-block {
-    display: flex !important;
+@media (min-width: 768px) {
+    .chat-wrapper .conversations-column.d-md-block {
+        display: flex !important;
+    }
 }
 
 .chat-messages {
@@ -518,6 +520,9 @@
 .conversation-item.active {
     border-left-color: var(--color-primary);
     background: var(--chat-item-active-bg) !important;
+    border-color: var(--color-border) !important;
+    border-left-color: var(--color-primary) !important;
+    border-radius: 0 !important;
 }
 
 .conversation-item.active .conversation-name {
