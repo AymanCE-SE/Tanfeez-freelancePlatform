@@ -55,9 +55,9 @@ class CreateServiceProposalView(generics.CreateAPIView):
         send_notification(
             recipient=service.freelancerId,
             notification_type=Notification.NotificationType.NEW_PROPOSAL,
-            target_type=Notification.TargetType.SERVICE,   
             message=f"You have a new order on '{service.service_name}'",
             target_id=service.id,
+            target_type=Notification.TargetType.SERVICE,   
         )
 
     def create(self, request, *args, **kwargs):
@@ -160,12 +160,12 @@ class UpdateOwnServiceProposalView(generics.UpdateAPIView):
             send_notification(
                 recipient=proposal.service.freelancerId,
                 notification_type=Notification.NotificationType.PRICE_UPDATED,
-                target_type=Notification.TargetType.SERVICE,
                 message=(
                     f"The client updated the offer for '{proposal.service.service_name}' "
                     f"to ${proposal.price_offer}."
                 ),
                 target_id=proposal.service.id,
+                target_type=Notification.TargetType.SERVICE,
             )
 
 

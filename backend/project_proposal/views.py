@@ -128,6 +128,7 @@ class ApproveProposalView(APIView):
             notification_type=Notification.NotificationType.PROPOSAL_APPROVED,
             message=f"Your proposal on '{project.name}' was approved!",
             target_id=project.id,
+            target_type=Notification.TargetType.PROJECT,   
         )
 
         return Response({
