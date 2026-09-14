@@ -5,6 +5,7 @@ from .models import ServiceProposal
 class ServiceProposalSerializer(serializers.ModelSerializer):
     client_name = serializers.SerializerMethodField()
     client_user_id = serializers.SerializerMethodField()
+    client_photo = serializers.SerializerMethodField()
     chatroom_id = serializers.SerializerMethodField()
 
     class Meta:
@@ -18,6 +19,14 @@ class ServiceProposalSerializer(serializers.ModelSerializer):
 
     def get_client_user_id(self, obj):
         return obj.client.uid_id
+
+    def get_client_photo(self, obj):
+        user = obj.client.uid
+        if not user.photo:
+            return None
+        request = self.context.get("request")
+        url = user.photo.url
+        return request.build_absolute_uri(url) if request else url
 
     def get_chatroom_id(self, obj):
         from chatroom.models import ChatRoom

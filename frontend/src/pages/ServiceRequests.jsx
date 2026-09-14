@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Card, Badge, Row, Col } from "react-bootstrap";
 import { BsPersonCircle, BsClock, BsChatDots } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
@@ -90,12 +90,29 @@ const ServiceRequests = () => {
               <Card className="request-card shadow-sm h-100">
                 <Card.Body>
                   <div className="d-flex align-items-center mb-3">
-                    <BsPersonCircle size={38} className="me-3 text-primary" />
+                    <Link to={`/profile/${request.client_user_id}`} className="me-3">
+                      {request.client_photo ? (
+                        <img
+                          src={request.client_photo}
+                          alt={request.client_name}
+                          className="rounded-circle"
+                          width="38"
+                          height="38"
+                          style={{ objectFit: "cover" }}
+                        />
+                      ) : (
+                        <BsPersonCircle size={38} className="text-primary" />
+                      )}
+                    </Link>
                     <div>
-                      <div className="fw-bold">{request.client_name}</div>
-                      <Badge bg={request.is_completed ? "secondary" : request.is_approved ? "success" : "warning"}>
-                        {request.is_completed ? "Completed" : request.is_approved ? "Accepted" : "Pending"}
-                      </Badge>
+                      <Link to={`/profile/${request.client_user_id}`} className="fw-bold text-decoration-none text-dark">
+                        {request.client_name}
+                      </Link>
+                      <div>
+                        <Badge bg={request.is_completed ? "secondary" : request.is_approved ? "success" : "warning"}>
+                          {request.is_completed ? "Completed" : request.is_approved ? "Accepted" : "Pending"}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
 
