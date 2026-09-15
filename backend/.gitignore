@@ -12,6 +12,7 @@ media/
 venv/
 env/
 *.env
+settings.py.prod
 
 # Django-related
 *.sqlite3

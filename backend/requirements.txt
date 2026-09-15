@@ -55,3 +55,9 @@ uritemplate==4.1.1
 urllib3==2.4.0
 zope.interface==7.2
 whitenoise==6.7.0
+
+daphne
+channels
+channels-redis
+cloudinary
+django-cloudinary-storage

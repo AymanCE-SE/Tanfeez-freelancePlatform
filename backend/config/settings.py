@@ -155,7 +155,9 @@ AUTH_USER_MODEL = "user.CustomUser"
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = config("CORS_ALLOW_ALL_ORIGINS", cast=bool, default=False)
-
+CORS_ALLOWED_ORIGINS = [
+    config("FRONTEND_URL", default="https://tanfeez-freelance-platform.vercel.app"),
+]
 # DRF + JWT
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
