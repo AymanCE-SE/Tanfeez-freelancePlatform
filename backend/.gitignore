@@ -13,6 +13,8 @@ venv/
 env/
 *.env
 settings.py.prod
+settings.py.dev
+
 
 # Django-related
 *.sqlite3

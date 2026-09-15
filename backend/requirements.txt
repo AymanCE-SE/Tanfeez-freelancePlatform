@@ -61,3 +61,4 @@ channels
 channels-redis
 cloudinary
 django-cloudinary-storage
+dj-database-url
