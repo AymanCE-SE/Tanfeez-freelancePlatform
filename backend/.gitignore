@@ -14,7 +14,7 @@ env/
 *.env
 settings.py.prod
 settings.py.dev
-
+requirements.txt.dev
 
 # Django-related
 *.sqlite3
