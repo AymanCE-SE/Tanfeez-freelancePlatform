@@ -15,5 +15,4 @@ COPY . .
 EXPOSE 8080
 
 # The command to start your ASGI server (Daphne)
-# Replace 'your_project_name' with your actual Django core folder name
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "your_project_name.asgi:application"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "config.asgi:application"]
