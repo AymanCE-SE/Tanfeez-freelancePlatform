@@ -213,7 +213,7 @@ CHANNEL_LAYERS = {
     }
 }
 
-GEMINI_API_KEY = config("GEMINI_API_KEY")
+GEMINI_API_KEY = config("GEMINI_API_KEY", default="dummy_gemini_key")
 
 # Configure Cloudinary for Media Storage
 CLOUDINARY_STORAGE = {
