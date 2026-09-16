@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     "channels",
     "cloudinary_storage",
     ###
-    "rest_framework",
     "corsheaders",
+    "rest_framework",
     "user",
     "freelancer",
     "client",
@@ -63,10 +63,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware", 
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -223,3 +223,8 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+#Testing linesprint("========== DJANGO SETTINGS BOOT LOG ==========")
+print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS)
+print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS)
+print("==============================================")
