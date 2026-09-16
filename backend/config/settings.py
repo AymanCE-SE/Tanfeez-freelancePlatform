@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': config("DATABASE_NAME", default="dummy_db"),
         'USER': config("DATABASE_USER", default="dummy_user"),
         'PASSWORD': config("DATABASE_PASSWORD", default="dummy_pass"),
-        'HOST': config("DATABASE_HOST", default=""),       
+        'HOST': config("DATABASE_HOST", default="localhost"),
         'PORT': config("DATABASE_PORT", default="5432"),
         "OPTIONS": {
             "sslmode": "require",
@@ -229,4 +229,9 @@ print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS, flush=True)
 print("3. CLOUDINARY_CLOUD_NAME:", config("CLOUDINARY_CLOUD_NAME", default="not_found"), flush=True)
 print("4. DATABASE_NAME (os.environ):", os.environ.get("DATABASE_NAME", "not_found"), flush=True)
 print("4. DATABASE_NAME (config):", config("DATABASE_NAME", default="not_found"), flush=True)
+print("==============================================", flush=True)
+required_env_vars = ["DATABASE_HOST", "DATABASE_USER", "DATABASE_PASSWORD", "DATABASE_NAME"]
+missing = [v for v in required_env_vars if not config(v, default="")]
+if missing:
+    print(f"⚠️ WARNING: missing env vars: {missing}", flush=True)
 print("==============================================", flush=True)
