@@ -99,12 +99,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DATABASE_NAME"),
-        "USER": config("DATABASE_USERNAME"),
-        "PASSWORD": config("DATABASE_PASSWORD"),
-        "HOST": config("DATABASE_HOSTNAME", default="localhost"),
-        "PORT": config("DATABASE_PORT", default="5432"),
+'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config("DATABASE_NAME", default="dummy_db"),
+        'USER': config("DATABASE_USER", default="dummy_user"),
+        'PASSWORD': config("DATABASE_PASSWORD", default="dummy_pass"),
+        'HOST': config("DATABASE_HOST", default="localhost"),
+        'PORT': config("DATABASE_PORT", default="5432"),
         "OPTIONS": {
             "sslmode": "require",
         },
@@ -217,9 +217,9 @@ GEMINI_API_KEY = config("GEMINI_API_KEY")
 
 # Configure Cloudinary for Media Storage
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default='dummy_cloud_name'),
+    'API_KEY': config('CLOUDINARY_API_KEY', default='dummy_api_key'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='dummy_api_secret'),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
