@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': config("DATABASE_NAME", default="dummy_db"),
         'USER': config("DATABASE_USER", default="dummy_user"),
         'PASSWORD': config("DATABASE_PASSWORD", default="dummy_pass"),
-        'HOST': config("DATABASE_HOST", default="localhost"),
+        'HOST': config("DATABASE_HOST"),
         'PORT': config("DATABASE_PORT", default="5432"),
         "OPTIONS": {
             "sslmode": "require",
