@@ -224,9 +224,9 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 #Testing linesprint("========== DJANGO SETTINGS BOOT LOG ==========")
-print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS,flush=True)
-print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS,flush=True)
+print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS, flush=True)
+print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS, flush=True)
 print("3. CLOUDINARY_CLOUD_NAME:", config("CLOUDINARY_CLOUD_NAME", default="not_found"), flush=True)
-print("4. DATABASE_NAME:", os.environ.get("DATABASE_NAME"),flush=True)
-print("4. DATABASE_NAME:", config("DATABASE_NAME"),flush=True)
-print("==============================================",flush=True)
+print("4. DATABASE_NAME (os.environ):", os.environ.get("DATABASE_NAME", "not_found"), flush=True)
+print("4. DATABASE_NAME (config):", config("DATABASE_NAME", default="not_found"), flush=True)
+print("==============================================", flush=True)
