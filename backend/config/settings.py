@@ -225,6 +225,6 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 #Testing linesprint("========== DJANGO SETTINGS BOOT LOG ==========")
-print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS)
-print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS)
-print("==============================================")
+print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS,flush=True)
+print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS,flush=True)
+print("==============================================",flush=True)
