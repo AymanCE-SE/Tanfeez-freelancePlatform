@@ -26,7 +26,16 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-dummy-key-for-static-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=False)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="XHR 
+GET
+https://tanfeezbackend-hjdy8dwm.b4a.run/api/project/latest/
+CORS Missing Allow Origin
+XHR 
+GET
+https://tanfeezbackend-hjdy8dwm.b4a.run/api/service/latest/
+CORS Missing Allow Origin
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://tanfeezbackend-hjdy8dwm.b4a.run/api/project/latest/. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 404. 
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://tanfeezbackend-hjdy8dwm.b4a.run/api/service/latest/. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 404. ")
 
 
 # Application definition

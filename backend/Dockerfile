@@ -14,4 +14,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8080
 
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8080", "config.asgi:application"]
+CMD python manage.py migrate --noinput && daphne -b 0.0.0.0 -p 8080 config.asgi:application
