@@ -221,7 +221,15 @@ CLOUDINARY_STORAGE = {
     'API_KEY': config('CLOUDINARY_API_KEY', default='dummy_api_key'),
     'API_SECRET': config('CLOUDINARY_API_SECRET', default='dummy_api_secret'),
 }
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 #Testing linesprint("========== DJANGO SETTINGS BOOT LOG ==========")
 print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS, flush=True)

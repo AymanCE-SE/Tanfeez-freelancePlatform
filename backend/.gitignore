@@ -39,6 +39,7 @@ test-results/
 # Operating system files
 .DS_Store  # macOS
 Thumbs.db  # Windows
+requirementssss.txt
 
 # Migrations
 # .migrations/
