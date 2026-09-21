@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deleteUser, getAllUsers, getMyClientProfile, getMyFreelancerProfile, getMyProfile, updateClientProfile, updateFreelancerProfile, updateUserImage, updateUserProfile } from "../../api/user";
 import { getUserProfile } from "../../api/auth";
 import adminService from "../../api/adminService";
-
+import { resolveMediaUrl } from "../../utils/resolveMediaUrl";
 
 const saveUserToLocalStorage = (user) => {
     localStorage.setItem('user', JSON.stringify(user));
@@ -235,7 +235,8 @@ const userSlice = createSlice(
             }).addCase(updateUserImageAction.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
-                const photoUrl = `${apiOrigin}${action.payload.photo}`;
+                // const photoUrl = `${apiOrigin}${action.payload.photo}`;
+                const photoUrl = resolveMediaUrl(action.payload.photo, apiOrigin);                           
                 if (state.user) state.user.photo = photoUrl;
                 if (state.profile) state.profile.photo = photoUrl; // <-- Add this line
             }).addCase(updateUserImageAction.rejected, (state, action) => {

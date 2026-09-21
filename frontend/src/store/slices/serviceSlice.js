@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addService, getAllServices, getMyServices, getServiceById, updateService, getServicesByTag, getUserServices } from "../../api/service";
 import apiClient, { apiOrigin } from '../../api/client';
-
+import { resolveMediaUrl } from "../../utils/resolveMediaUrl";
 const initialState = {
     services: [],
     myServices: [],
@@ -256,7 +256,8 @@ const serviceSlice = createSlice(
                         photo: service.photo ?
                             (service.photo.startsWith('http') ?
                                 service.photo :
-                                `${apiOrigin}${service.photo}`
+                                // `${apiOrigin}${service.photo}`
+                                resolveMediaUrl(service.photo, apiOrigin)
                             ) : null
                     }));
                             state.totalServices = payload.count || 0;
