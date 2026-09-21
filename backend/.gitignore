@@ -41,10 +41,10 @@ test-results/
 Thumbs.db  # Windows
 
 # Migrations
-.migrations/
-migrations/
-**/migrations/
-__pycache__
-*.pyc
-*.pyo
-*.pyd
+# .migrations/
+# migrations/
+# **/migrations/
+# __pycache__
+# *.pyc
+# *.pyo
+# *.pyd
