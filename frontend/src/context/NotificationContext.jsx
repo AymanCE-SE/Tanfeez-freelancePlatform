@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { useNotificationSocket } from "../hooks/useNotificationSocket";
+// import { useNotificationSocket } from "../hooks/useNotificationSocket";
+import { useNotificationRealtime } from "../hooks/useNotificationRealtime";
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from "../api/notifications";
 import { getUnreadMessagesCount } from "../api/chatroom";
 
@@ -8,7 +9,7 @@ const NotificationContext = createContext(null);
 
 export const NotificationProvider = ({ children }) => {
   const currentUser = useSelector((state) => state.authSlice.user);
-  const { notifications: rawEvents, setNotifications, status } = useNotificationSocket(currentUser?.id);
+  const { notifications: rawEvents, setNotifications, status } = useNotificationRealtime(currentUser?.id);
   const [loaded, setLoaded] = useState(false);
   const [messagesUnreadCount, setMessagesUnreadCount] = useState(0);
   const [messageEventTick, setMessageEventTick] = useState(0);
@@ -36,6 +37,15 @@ export const NotificationProvider = ({ children }) => {
       setLoaded(true);
     });
   }, [currentUser?.id, loaded]);
+
+    useEffect(() => {
+    if (import.meta.env.VITE_REALTIME_MODE === "polling" && currentUser?.id) {
+      const interval = setInterval(() => {
+        getUnreadMessagesCount().then(setMessagesUnreadCount);
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [currentUser?.id]);
 
   useEffect(() => {
     if (currentUser?.id) {

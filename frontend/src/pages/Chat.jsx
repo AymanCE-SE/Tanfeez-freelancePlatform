@@ -13,8 +13,9 @@ import Message from "../components/chat/Message";
 import ChatHeader from "../components/chat/ChatHeader";
 import EmojiPickerButton from "../components/chat/EmojiPickerButton";
 import { getChatRooms, getMessages } from "../api/chatroom";
-import { useChatSocket } from "../hooks/useChatSocket";
+// import { useChatSocket } from "../hooks/useChatSocket";
 import { useNotifications } from "../context/NotificationContext";
+import { useChatRealtime } from "../hooks/useChatRealtime";
 
 const normalizeRestMessage = (m) => ({
   id: m.id, content: m.text, senderId: m.sender, timestamp: m.timestamp, isRead: m.is_read,
@@ -45,7 +46,7 @@ const Chat = () => {
   const isChatOpenOnMobile = Boolean(conversationId);
   const { refreshMessagesUnreadCount, messageEventTick } = useNotifications();
   const { liveMessages, presence, readMessageIds, sendMessage, markAsRead, status } =
-    useChatSocket(conversationId, currentUser?.id);
+    useChatRealtime(conversationId, currentUser?.id);
 
   const loadConversations = useCallback(async () => {
     const rooms = await getChatRooms();
