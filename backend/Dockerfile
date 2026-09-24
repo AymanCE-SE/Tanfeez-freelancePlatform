@@ -14,4 +14,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8080
 
-CMD python manage.py migrate --noinput && daphne -b 0.0.0.0 -p $PORT config.asgi:application
+CMD python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
