@@ -32,7 +32,6 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="")
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -201,7 +200,6 @@ SIMPLE_JWT = {
 }
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-ASGI_APPLICATION = "config.asgi.application"
 
 # Configure Redis for Channels
 CHANNEL_LAYERS = {
