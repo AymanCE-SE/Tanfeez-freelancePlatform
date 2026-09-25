@@ -1,7 +1,5 @@
 Django==5.2
 gunicorn==21.2.0
-channels==4.2.2
-channels-redis==4.1.0
 cloudinary==1.46.2
 django-cloudinary-storage==0.3.0
 djangorestframework==3.16.0

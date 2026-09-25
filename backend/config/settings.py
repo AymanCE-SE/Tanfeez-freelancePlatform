@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "channels",
     "cloudinary_storage",
     ###
     "corsheaders",
@@ -201,15 +200,7 @@ SIMPLE_JWT = {
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Configure Redis for Channels
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [config("REDIS_URL", default="redis://localhost:6379")],  
-        }
-    }
-}
+
 
 GEMINI_API_KEY = config("GEMINI_API_KEY", default="dummy_gemini_key")
 
