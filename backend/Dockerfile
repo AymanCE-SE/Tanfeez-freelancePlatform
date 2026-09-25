@@ -5,11 +5,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir gunicorn==21.2.0   
 
-# Copy everything into /app (matching WORKDIR)
 COPY . /app/
 
-# Bring back collectstatic so your static assets are ready for production
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8080
