@@ -29,7 +29,7 @@ def get_gemini_response(prompt: str, history: list = None):
     # For simplicity, using a basic model. Choose the one that fits your needs.
     # model = genai.GenerativeModel('gemini-pro')
     # For chat, use start_chat
-    model = genai.GenerativeModel('gemini-1.5-flash') # Or 'gemini-pro'
+    model = genai.GenerativeModel('gemini-3.1-flash-lite') # Or 'gemini-pro'
 
     try:
         if history:
