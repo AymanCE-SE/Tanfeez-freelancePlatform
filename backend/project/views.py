@@ -38,7 +38,7 @@ class ProjectCreateView(generics.CreateAPIView):
 class ProjectListView(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         return (
@@ -99,7 +99,7 @@ class ProjectDeleteView(generics.DestroyAPIView):
 
 class ProjectsByCurrentClientView(generics.ListAPIView):
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         user = self.request.user

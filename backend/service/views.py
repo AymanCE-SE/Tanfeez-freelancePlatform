@@ -38,7 +38,7 @@ class CreateServiceView(generics.CreateAPIView):
 class ServiceListView(generics.ListAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceRetriveDeleteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         """
@@ -126,7 +126,7 @@ class ServiceDeleteView(APIView):
 #  List Services by Tags
 class ServiceByTagView(generics.ListAPIView):
     serializer_class = ServiceRetriveDeleteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         tag = self.request.query_params.get("tag")
@@ -153,7 +153,7 @@ class MyServicesView(generics.ListAPIView):
 #  List Services by Given User ID
 class ServicesByUserIdView(generics.ListAPIView):
     serializer_class = ServiceRetriveDeleteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         user_id = self.kwargs.get("user_id")
