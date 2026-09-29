@@ -56,7 +56,8 @@
   .service-details-root .main-image-container {
     position: relative;
     width: 100%;
-    height: 500px;
+    aspect-ratio: 16 / 9;
+    max-height: 500px;
     overflow: hidden;
     border-radius: var(--radius-lg);
     margin-bottom: 1rem;
@@ -79,11 +80,11 @@
     overflow-x: auto;
     padding: 0.5rem 0;
     scrollbar-width: thin;
-  }
+}
   
   .service-details-root .thumbnail-wrapper {
-    flex: 0 0 100px;
-    height: 70px;
+    flex: 0 0 clamp(64px, 18vw, 100px);
+    aspect-ratio: 4 / 3;
     border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
@@ -228,12 +229,12 @@
 
   /* Responsive */
   @media (max-width: 991.98px) {
-    .service-details-root .sticky-sidebar {
+    /* .service-details-root .sticky-sidebar {
       position: static;
       margin-top: 2rem;
-    }
+    } */
 
-    .service-details-root .main-image-container {
+    /* .service-details-root .main-image-container {
       height: 300px;
-    }
+    } */
   }
