@@ -208,9 +208,16 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [config("REDIS_URL", default="redis://localhost:6379")],  
-        }
-    }
+            "hosts": [{
+                "address": config("REDIS_URL", default="redis://localhost:6379"),
+                "retry_on_timeout": True,
+                "health_check_interval": 10,
+                "socket_keepalive": True,
+                "socket_connect_timeout": 5,
+                "socket_timeout": 5,
+            }],
+        },
+    },
 }
 
 GEMINI_API_KEY = config("GEMINI_API_KEY", default="dummy_gemini_key")
