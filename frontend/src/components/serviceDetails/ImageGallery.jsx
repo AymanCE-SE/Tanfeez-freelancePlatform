@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useState } from "react";
 import { Image, Modal } from "react-bootstrap";
 import { FiZoomIn, FiChevronLeft, FiChevronRight } from "react-icons/fi";
@@ -62,6 +60,7 @@ const allImages = [mainImage, ...galleryImages];
         show={showModal}
         onHide={() => setShowModal(false)}
         size="xl"
+        fullscreen="md-down"   
         centered
         className="gallery-modal">
         <Modal.Header closeButton />
@@ -70,11 +69,7 @@ const allImages = [mainImage, ...galleryImages];
             <button className="nav-button prev" onClick={handlePrevious}>
               <FiChevronLeft />
             </button>
-            <Image
-              src={selectedImage}
-              alt="Full size image"
-              className="modal-image"
-            />
+            <Image src={selectedImage} alt="Full size image" className="modal-image" />
             <button className="nav-button next" onClick={handleNext}>
               <FiChevronRight />
             </button>
