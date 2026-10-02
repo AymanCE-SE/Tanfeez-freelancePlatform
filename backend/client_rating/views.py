@@ -5,7 +5,7 @@ from rest_framework.generics import (
     DestroyAPIView,
     ListAPIView,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied, NotFound
@@ -162,7 +162,7 @@ class EngagementRatingCreateView(CreateAPIView):
 
 class EngagementRatingListView(ListAPIView):
     serializer_class = EngagementRatingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         ratee_id = self.kwargs["user_id"]
