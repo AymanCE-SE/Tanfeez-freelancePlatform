@@ -63,7 +63,7 @@ const allImages = [mainImage, ...galleryImages];
         fullscreen="md-down"   
         centered
         className="gallery-modal">
-        <Modal.Header closeButton />
+        <Modal.Header closeButton className="border-0" />
         <Modal.Body>
           <div className="modal-image-container">
             <button className="nav-button prev" onClick={handlePrevious}>

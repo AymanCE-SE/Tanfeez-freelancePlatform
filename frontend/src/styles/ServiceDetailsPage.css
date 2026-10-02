@@ -140,12 +140,17 @@
   }
   
   /* Modal Styles */
-  .service-details-root .gallery-modal .modal-content {
-    background: transparent;
+  .gallery-modal {
+    background-color: rgba(0, 0, 0, 0.8); 
+    border: none;
+  }
+
+  .gallery-modal .modal-content {
+    background: none;
     border: none;
   }
   
-  .service-details-root .modal-image-container {
+  .gallery-modal .modal-image-container {
     position: relative;
     display: flex;
     align-items: center;
@@ -154,18 +159,18 @@
     min-height: 50vh;
   }
   
-  .service-details-root .modal-image {
+  .gallery-modal .modal-image {
     max-height: 85vh;
     max-width: calc(100% - 5rem); 
     object-fit: contain;
   }
   
-  .service-details-root .gallery-modal .btn-close {
+  .gallery-modal .btn-close {
   filter: invert(1) grayscale(100%) brightness(2);
   opacity: 0.9;
 }
 
-  .service-details-root .nav-button {
+  .gallery-modal .nav-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -183,10 +188,10 @@
     z-index: 2;
   }
   
-  .service-details-root .nav-button.prev { left: 0.5rem; }
-  .service-details-root .nav-button.next { right: 0.5rem; }
+  .gallery-modal .nav-button.prev { left: 0.5rem; }
+  .gallery-modal .nav-button.next { right: 0.5rem; }
 
-  .service-details-root .nav-button:hover {
+  .gallery-modal .nav-button:hover {
     background: var(--color-surface-overlay);
     transform: translateY(-50%) scale(1.1);
   }
@@ -229,11 +234,11 @@
     border-color: var(--primary-400);
   }
 
-  [data-theme="dark"] .service-details-root .nav-button {
+  [data-theme="dark"] .gallery-modal .nav-button {
     background: var(--color-surface-overlay);
   }
 
-  [data-theme="dark"] .service-details-root .nav-button:hover {
+  [data-theme="dark"] .gallery-modal .nav-button:hover {
     background: var(--color-focus-ring);
   }
 
