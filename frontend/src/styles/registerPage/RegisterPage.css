@@ -35,6 +35,26 @@ a {
   transition: background 0.3s;
 }
 
+/* Role selection cards use Bootstrap's .card-title class, whose default
+   color does not inherit our dark-theme text token. */
+.role-card {
+  cursor: pointer;
+}
+
+.role-card .card-title {
+  color: var(--color-text-primary) !important;
+}
+
+.role-card .card-text {
+  color: var(--color-text-secondary);
+}
+
+.role-card:hover {
+  border-color: var(--primary-400) !important;
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-2px);
+}
+
 /* Dark mode support */
 [data-theme="dark"] .signup-page {
   background-color: var(--color-background);

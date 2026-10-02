@@ -434,7 +434,92 @@ a:hover { color: var(--color-primary-hover); }
 .nav-tabs .nav-link { color: var(--color-text-secondary) !important; }
 .nav-tabs .nav-link.active { color: var(--color-primary) !important; border-bottom-color: var(--color-primary) !important; }
 
-.alert { border-radius: var(--radius-md) !important; }
+.alert {
+  border-radius: var(--radius-md) !important;
+  border-width: 1px;
+}
+
+.alert-success {
+  --bs-alert-color: #14532d;
+  --bs-alert-bg: #dcfce7;
+  --bs-alert-border-color: #86efac;
+  --bs-alert-link-color: #14532d;
+}
+
+.alert-danger {
+  --bs-alert-color: #7f1d1d;
+  --bs-alert-bg: #fee2e2;
+  --bs-alert-border-color: #fca5a5;
+  --bs-alert-link-color: #7f1d1d;
+}
+
+.alert-warning {
+  --bs-alert-color: #78350f;
+  --bs-alert-bg: #fef3c7;
+  --bs-alert-border-color: #fcd34d;
+  --bs-alert-link-color: #78350f;
+}
+
+.alert-info {
+  --bs-alert-color: #0c4a6e;
+  --bs-alert-bg: #e0f2fe;
+  --bs-alert-border-color: #7dd3fc;
+  --bs-alert-link-color: #0c4a6e;
+}
+
+[data-theme="dark"] .alert-success {
+  --bs-alert-color: #bbf7d0;
+  --bs-alert-bg: #14532d;
+  --bs-alert-border-color: #22c55e;
+  --bs-alert-link-color: #dcfce7;
+}
+
+[data-theme="dark"] .alert-danger {
+  --bs-alert-color: #fecaca;
+  --bs-alert-bg: #7f1d1d;
+  --bs-alert-border-color: #ef4444;
+  --bs-alert-link-color: #fee2e2;
+}
+
+[data-theme="dark"] .alert-warning {
+  --bs-alert-color: #fef3c7;
+  --bs-alert-bg: #78350f;
+  --bs-alert-border-color: #f59e0b;
+  --bs-alert-link-color: #fffbeb;
+}
+
+[data-theme="dark"] .alert-info {
+  --bs-alert-color: #dbeafe;
+  --bs-alert-bg: #0c4a6e;
+  --bs-alert-border-color: #38bdf8;
+  --bs-alert-link-color: #e0f2fe;
+}
+
+/* SweetAlert2 dialogs use the same tokens as Bootstrap alerts. */
+.tanfeez-swal {
+  background: var(--color-card-bg) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.tanfeez-swal-title,
+.tanfeez-swal-content { color: var(--color-text-primary) !important; }
+
+.tanfeez-swal-confirm,
+.tanfeez-swal-cancel,
+.tanfeez-swal-deny {
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1rem;
+  font-weight: 600;
+}
+
+.tanfeez-swal-confirm { background: var(--color-btn-primary); color: var(--color-text-inverse); }
+.tanfeez-swal-confirm:hover { background: var(--color-btn-primary-hover); }
+.tanfeez-swal-cancel { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+.tanfeez-swal-deny { background: var(--error); color: var(--color-text-inverse); }
 .badge { border-radius: var(--radius-full) !important; }
 .progress { background-color: var(--color-bg-tertiary) !important; }
 .progress-bar { background-color: var(--color-primary) !important; }

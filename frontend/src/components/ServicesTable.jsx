@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Button, Spinner, Badge } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import '../styles/tableStyles.css';
 import { getAllServicesAction, deleteServiceAction } from "../store/slices/adminSlice";
 import ServiceDetailsModal from "./ServiceDetailsModal";

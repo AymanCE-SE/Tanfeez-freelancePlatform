@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Modal, Button, Form, Spinner, Badge } from "react-bootstrap";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectAction } from "../store/slices/projectSlice";

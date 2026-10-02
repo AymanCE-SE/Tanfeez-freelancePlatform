@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SelectRole from '../components/registerPage/SelectRole';
 import RegisterForm from '../components/registerPage/RegisterForm';
+import '../styles/registerPage/RegisterPage.css';
 
 export function RegisterPage() {
     const [role, setRole] = useState(null); // State to store the selected role

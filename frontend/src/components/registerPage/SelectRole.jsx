@@ -11,7 +11,6 @@ export default function SelectRole({ setRole }) {
                     <Card
                         className="text-center shadow-sm role-card"
                         onClick={() => setRole('client')} // Save the selected role
-                        style={{ cursor: 'pointer' }}
                     >
                         <Card.Body>
                             <Card.Title className="fs-4 fw-bold">I'm a Client</Card.Title>
@@ -27,7 +26,6 @@ export default function SelectRole({ setRole }) {
                     <Card
                         className="text-center shadow-sm role-card"
                         onClick={() => setRole('freelancer')} // Save the selected role
-                        style={{ cursor: 'pointer' }}
                     >
                         <Card.Body>
                             <Card.Title className="fs-4 fw-bold">I'm a Freelancer</Card.Title>

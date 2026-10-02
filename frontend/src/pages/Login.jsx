@@ -6,7 +6,7 @@ import { validateEmail, isFieldEmpty, isPasswordTooShort } from '../utils/valida
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from "../store/slices/authSlice";
 import { getMyProfileAction, updateFreelancerProfileAction } from '../store/slices/userSlice';
-import Swal from 'sweetalert2';
+import Swal from '../utils/swal';
 
 
 

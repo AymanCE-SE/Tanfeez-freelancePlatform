@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table, Button, Spinner, Badge } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import { getAllProposalsAction, deleteProposalAction } from "../store/slices/adminSlice";
 import ProposalDetailsModal from "./ProposalDetailsModal";
 

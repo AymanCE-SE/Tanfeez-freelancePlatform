@@ -232,9 +232,9 @@
 
 /* Alerts */
 .create-service-page .alert-warning {
-  background-color: var(--warning);
-  color: var(--color-text);
-  border: none;
+  background-color: var(--bs-alert-bg);
+  color: var(--bs-alert-color);
+  border-color: var(--bs-alert-border-color);
 }
 
 /* Placeholders */

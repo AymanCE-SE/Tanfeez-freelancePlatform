@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { updateUserProfileAction } from "../../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
+import Swal from "../../utils/swal";
 import { getCountries } from "../../api/countries";
 
 const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {

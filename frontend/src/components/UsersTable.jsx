@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Modal, Button, Form, Spinner, Badge } from "react-bootstrap";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import withReactContent from "sweetalert2-react-content";
 import { FaPlus } from "react-icons/fa";
 // import axios from "axios"; // Uncomment when using API

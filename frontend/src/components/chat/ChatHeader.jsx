@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { Search, ThreeDots, ArrowLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import Swal from "../../utils/swal";
 import { updateServiceProposal } from "../../api/serviceProposal";
 
 const formatLastSeen = (isoString) => {

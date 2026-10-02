@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { FiUpload, FiDollarSign, FiX, FiImage, FiInfo, FiYoutube, FiTag } from 'react-icons/fi';
 import '../styles/CreateService.css';
-import Swal from 'sweetalert2';
+import Swal from '../utils/swal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addServiceAction, updateServiceAction, getServiceByIdAction } from '../store/slices/serviceSlice';

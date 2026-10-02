@@ -13,7 +13,7 @@ import {
   getMyFreelancerProfileAction,
   updateFreelancerProfileAction,
 } from "../../store/slices/userSlice";
-import Swal from "sweetalert2";
+import Swal from "../../utils/swal";
 import { fetchSkills, createSkill } from "../../api/skill";
 
 const FreelancerTab = ({ navigate, id }) => {

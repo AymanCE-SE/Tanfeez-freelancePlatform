@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
-import Swal from "sweetalert2";
+import Swal from "../../utils/swal";
 import { createEngagementRating } from "../../api/rating";
 import "../../styles/components/RatingModal.css";
 

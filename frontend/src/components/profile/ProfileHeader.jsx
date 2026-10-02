@@ -21,6 +21,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyProfileAction, updateUserImageAction } from "../../store/slices/userSlice";
 import { isProfileSaved, removeSavedProfile, saveProfile } from "../../utils/savedProfiles";
+import Swal from "../../utils/swal";
 
 const ProfileHeader = ({
   profileData,
@@ -88,12 +89,20 @@ const ProfileHeader = ({
       const maxSize = 5 * 1024 * 1024; // 5MB
 
       if (!validTypes.includes(file.type)) {
-        alert("Please upload a valid image file (JPEG, PNG, or WebP)");
+        Swal.fire({
+          icon: "error",
+          title: "Invalid image format",
+          text: "Please upload a JPEG, PNG, or WebP image.",
+        });
         return;
       }
 
       if (file.size > maxSize) {
-        alert("File size should be less than 5MB");
+        Swal.fire({
+          icon: "error",
+          title: "Image is too large",
+          text: "Choose an image smaller than 5 MB.",
+        });
         return;
       }
 

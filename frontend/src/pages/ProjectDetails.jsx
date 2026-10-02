@@ -28,7 +28,7 @@ import {
   getProposalsByProjectAction,
 } from "../store/slices/proposalSlice";
 import { getMyProposals, getPublicProposalsByProject } from "../api/proposal";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import RatingModal from "../components/rating/RatingModal";
 import { getMyEngagementRating } from "../api/rating";
 

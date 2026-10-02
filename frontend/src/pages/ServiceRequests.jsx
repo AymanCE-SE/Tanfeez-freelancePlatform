@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Card, Badge, Row, Col } from "react-bootstrap";
 import { BsPersonCircle, BsClock, BsChatDots } from "react-icons/bs";
 import { formatDistanceToNow } from "date-fns";
-import Swal from "sweetalert2";
+import Swal from "../utils/swal";
 import { getServiceProposalsByService, approveServiceProposal, completeServiceProposal } from "../api/serviceProposal";
 import { getServiceByIdAction } from "../store/slices/serviceSlice";
 import { useDispatch, useSelector } from "react-redux";

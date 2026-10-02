@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyClientProfileAction, updateClientProfileAction } from "../../store/slices/userSlice";
-import Swal from "sweetalert2";
+import Swal from "../../utils/swal";
 
 
 const ClientTab = ({ navigate, id }) => {

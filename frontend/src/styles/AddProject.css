@@ -138,7 +138,6 @@
 }
 
 /* Dark Mode */
-[data-theme="dark"] .add-project-page {
 [data-theme="dark"] .add-project-page .add-project-card {
   background: var(--color-card-bg-dark);
   border-color: var(--color-border-dark);

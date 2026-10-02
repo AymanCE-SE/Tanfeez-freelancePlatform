@@ -4,7 +4,7 @@ import { validateEmail, isFieldEmpty, isPasswordTooShort } from '../../utils/val
 import { useDispatch, useSelector } from 'react-redux';
 import { registerAction } from "../../store/slices/authSlice";
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from '../../utils/swal';
 
 export default function RegisterForm({ role }) {
     const navigate = useNavigate();
