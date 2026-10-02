@@ -100,7 +100,6 @@
 /* Dark mode adjustments */
 [data-theme="dark"] .about-tab h5,
 [data-theme="dark"] .about-tab h6,
-[data-theme="dark"] .about-tab p,
 [data-theme="dark"] .about-tab strong,
 [data-theme="dark"] .info-value,
 [data-theme="dark"] .verification-value,
@@ -109,15 +108,32 @@
 [data-theme="dark"] .section-subtitle,
 [data-theme="dark"] .skill-name,
 [data-theme="dark"] .preference-item strong {
-    color: var(--color-text-inverse);
+    color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .about-tab p,
+[data-theme="dark"] .about-tab span,
+[data-theme="dark"] .about-tab small {
+    color: var(--color-text-secondary);
 }
 
 [data-theme="dark"] .about-tab .text-muted,
+[data-theme="dark"] .about-tab-empty,
+[data-theme="dark"] .about-tab-empty p,
 [data-theme="dark"] .info-label,
 [data-theme="dark"] .verification-label,
 [data-theme="dark"] small.text-muted {
     color: var(--color-text-muted) !important;
-    opacity: 0.9;
+    opacity: 1;
+}
+
+[data-theme="dark"] .about-tab-empty {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .about-tab-empty a {
+    color: var(--primitive-blue-200);
 }
 
 [data-theme="dark"] .language-title {
@@ -126,7 +142,13 @@
 
 [data-theme="dark"] .about-tab .badge {
     background: var(--color-card-bg);
-    color: var(--color-text-inverse);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .about-tab .badge.bg-info {
+    background: var(--primitive-blue-800) !important;
+    color: var(--primitive-blue-50) !important;
 }
 
 [data-theme="dark"] .verification-icon {

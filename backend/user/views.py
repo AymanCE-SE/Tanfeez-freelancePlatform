@@ -94,8 +94,6 @@ class UserDetailByIdView(generics.RetrieveAPIView):
     lookup_field = "id"
 
     def get_serializer_class(self):
-        if self.request.user.is_authenticated:
-            return UserOutSerializer
         return PublicUserSerializer
 
 

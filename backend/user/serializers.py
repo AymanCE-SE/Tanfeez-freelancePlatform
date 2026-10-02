@@ -165,7 +165,7 @@ class UserOutSerializer(serializers.ModelSerializer):
 
         total_projects = projects.count()
         if total_projects == 0:
-            return 0
+            return None
 
         completed_projects = projects.filter(progress=Progress.COMPLETED).count()
         return round((completed_projects / total_projects) * 100)
@@ -192,7 +192,7 @@ class UserOutSerializer(serializers.ModelSerializer):
                 waiting_since = waiting_since or message.timestamp
 
         if not response_seconds:
-            return "N/A"
+            return None
 
         average_seconds = sum(response_seconds) / len(response_seconds)
         if average_seconds < 60:
@@ -225,6 +225,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
 
     client_profile = serializers.SerializerMethodField()
     freelancer_profile = serializers.SerializerMethodField()
+    has_contact_info = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
@@ -237,9 +238,13 @@ class PublicUserSerializer(serializers.ModelSerializer):
             "user_type",
             "bio",
             "address",
+            "has_contact_info",
             "client_profile",
             "freelancer_profile",
         ]
+
+    def get_has_contact_info(self, obj):
+        return bool(obj.phone or obj.email)
 
     def get_client_profile(self, obj):
         profile = getattr(obj, "client_profile", None)

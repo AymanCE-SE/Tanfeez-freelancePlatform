@@ -1,173 +1,161 @@
 /** @format */
 
 import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  Badge,
-} from "react-bootstrap";
-import {
-  PatchCheck,
-} from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
+import { Card, Badge, Row, Col } from "react-bootstrap";
+import { PatchCheck } from "react-bootstrap-icons";
 import "../../styles/components/AboutTab.css";
-let profile = {};
 
-const AboutTab = ({ profileData, isProfileOwner, userRole }) => {
-  let role = profileData.user_type || userRole;
+const hasValue = (value) => value !== null && value !== undefined && String(value).trim() !== "";
+const asList = (value) => Array.isArray(value) ? value : [];
 
-
-  if (role === "freelancer") {
-    profile = profileData.freelancer_profile || {};
-  } else if (role === "client") {
-    profile = profileData.client_profile || {};
-  } else if (role === "admin") {
-    profile = { permissions: profileData.permissions || [] };
-  }
-
-  const {
-    bio = "",
-    skills = [],
-    languages_list = [],
-    // skills_list = skills_list.map(({ skill_name }) => skill_name),
-    qualities_list = [],
-    educations = [],
-    certifications = [],
-    company = "",
-    permissions = [],
-  } = profile;
-  const renderFreelancerInfo = () => (
-    <>
-      <Card className="mb-4">
-        <Card.Body>
-          <h6 className="mt-4 mb-3">Skills</h6>
-          <div className="d-flex flex-wrap gap-2">
-          {skills.map(({ skill_name, id }) => (
-            <Badge key={id} bg="light" text="dark">
-              {skill_name}
-            </Badge>
-          ))}
-          </div>
-
-          <h6 className="mt-4 mb-3">Languages</h6>
-          {languages_list.map((language, index) => (
-          <div key={index} className="mb-2 text-muted">
-            <span className="fw-medium">{language}</span>
-          </div>
-          ))}
-        </Card.Body>
-      </Card>
-
-      <Card className="mb-4">
-        <Card.Body>
-          <h5 className="mb-3">Professional Qualities</h5>
-          <Row xs={1} md={2} className="g-3 mb-4">
-            {qualities_list.map((quality, index) => (
-              <Col key={index}>
-                <div className="quality-item">
-                  <div className="d-flex align-items-center">
-                    <PatchCheck className="text-primary me-2" size={20} />
-                    <span>{quality}</span>
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        </Card.Body>
-      </Card>
-
-      <Card className="mb-4">
-  <Card.Body>
-    <h5 className="mb-3">Education</h5>
-    <Row xs={1} md={2} className="g-3">
-      {educations.map((edu, index) => (
-        <Col key={index}>
-          <Card className="h-100 border-light shadow-sm">
-            <Card.Body>
-              <h6 className="fw-semibold">{edu.degree}</h6>
-              <p className="mb-1 text-muted">{edu.school}</p>
-              <small className="text-muted">{edu.year}</small>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  </Card.Body>
-</Card>
-
-<Card className="mb-4">
-  <Card.Body>
-    <h5 className="mb-3">Certifications</h5>
-    <Row xs={1} md={2} className="g-3">
-      {certifications.map((cert, index) => (
-        <Col key={index}>
-          <Card className="h-100 border-light shadow-sm">
-            <Card.Body>
-              <h6 className="fw-semibold">{cert.name}</h6>
-              <p className="mb-1 text-muted">{cert.issuer}</p>
-              <small className="text-muted">{cert.year}</small>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  </Card.Body>
-</Card>
-
-    </>
+const AboutTab = ({ profileData = {}, isProfileOwner, userRole }) => {
+  const role = profileData.user_type || userRole;
+  const profile = role === "freelancer"
+    ? profileData.freelancer_profile || {}
+    : role === "client"
+      ? profileData.client_profile || {}
+      : {};
+  const bio = hasValue(profileData.bio) ? profileData.bio.trim() : "";
+  const skills = asList(profile.skills).filter((skill) => hasValue(skill?.skill_name));
+  const languages = asList(profile.languages_list).filter(hasValue);
+  const qualities = asList(profile.qualities_list).filter(hasValue);
+  const educations = asList(profile.educations).filter((item) =>
+    [item.degree, item.school, item.year].some(hasValue)
   );
+  const certifications = asList(profile.certifications).filter((item) =>
+    [item.name, item.issuer, item.year].some(hasValue)
+  );
+  const company = hasValue(profile.company) ? profile.company.trim() : "";
+  const permissions = asList(profileData.permissions).filter(hasValue);
 
-  const renderRoleSpecificInfo = () => {
-    switch (role) {
-      case "freelancer":
-        return renderFreelancerInfo();
+  const hasRoleDetails = role === "freelancer"
+    ? skills.length + languages.length + qualities.length + educations.length + certifications.length > 0
+    : role === "client"
+      ? Boolean(company)
+      : role === "admin" && permissions.length > 0;
 
-      case "client":
-        return (
-          <Card className="mb-4">
-            <Card.Body>
-              <h5 className="mb-3">Company Information</h5>
-              <p>
-                <strong>Company:</strong> {company}
-              </p>
-              <p>
-                {/* <strong>Industry:</strong> {industry} */}
-              </p>
-            </Card.Body>
-          </Card>
-        );
-
-      case "admin":
-        return (
-          <Card className="mb-4">
-            <Card.Body>
-              <h5 className="mb-3">Administrative Access</h5>
-              <div className="d-flex flex-wrap gap-2">
-                {permissions.map((permission, index) => (
-                  <Badge key={index} bg="info">
-                    {permission.replace("_", " ").toUpperCase()}
-                  </Badge>
-                ))}
-              </div>
-            </Card.Body>
-          </Card>
-        );
-
-      default:
-        return null;
-    }
-  };
+  if (!bio && !hasRoleDetails) {
+    return (
+      <Card className="about-tab-empty">
+        <Card.Body>
+          <p className="mb-2">No profile details have been added yet.</p>
+          {isProfileOwner && (
+            <Link to={`/profile/edit/${profileData.id}`}>Complete your profile</Link>
+          )}
+        </Card.Body>
+      </Card>
+    );
+  }
 
   return (
     <div className="about-tab">
-      {/* <Card className="mb-4">
-        <Card.Body>
-          <h5 className="mb-3">About Me</h5>
-          <p>{bio}</p>
-        </Card.Body>
-      </Card> */}
+      {bio && (
+        <Card>
+          <Card.Body>
+            <h5>About</h5>
+            <p className="about-bio">{bio}</p>
+          </Card.Body>
+        </Card>
+      )}
 
-      {renderRoleSpecificInfo()}
+      {skills.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Skills</h5>
+            <div className="d-flex flex-wrap gap-2">
+              {skills.map(({ skill_name, id }) => (
+                <Badge key={id || skill_name} bg="light" text="dark">{skill_name}</Badge>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
+      )}
+
+      {languages.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Languages</h5>
+            <p className="about-inline-list">{languages.join(" · ")}</p>
+          </Card.Body>
+        </Card>
+      )}
+
+      {qualities.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Professional qualities</h5>
+            <Row xs={1} md={2} className="g-3">
+              {qualities.map((quality, index) => (
+                <Col key={`${quality}-${index}`}>
+                  <div className="d-flex align-items-center gap-2">
+                    <PatchCheck className="text-primary" size={20} aria-hidden="true" />
+                    <span>{quality}</span>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          </Card.Body>
+        </Card>
+      )}
+
+      {educations.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Education</h5>
+            <div className="about-record-list">
+              {educations.map((item, index) => (
+                <div className="about-record" key={`${item.degree || item.school}-${index}`}>
+                  {hasValue(item.degree) && <h6>{item.degree}</h6>}
+                  {hasValue(item.school) && <p>{item.school}</p>}
+                  {hasValue(item.year) && <small>{item.year}</small>}
+                </div>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
+      )}
+
+      {certifications.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Certifications</h5>
+            <div className="about-record-list">
+              {certifications.map((item, index) => (
+                <div className="about-record" key={`${item.name || item.issuer}-${index}`}>
+                  {hasValue(item.name) && <h6>{item.name}</h6>}
+                  {hasValue(item.issuer) && <p>{item.issuer}</p>}
+                  {hasValue(item.year) && <small>{item.year}</small>}
+                </div>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
+      )}
+
+      {company && (
+        <Card>
+          <Card.Body>
+            <h5>Company</h5>
+            <p className="about-inline-list">{company}</p>
+          </Card.Body>
+        </Card>
+      )}
+
+      {permissions.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Administrative access</h5>
+            <div className="d-flex flex-wrap gap-2">
+              {permissions.map((permission) => (
+                <Badge key={permission} bg="info">
+                  {permission.replaceAll("_", " ").toUpperCase()}
+                </Badge>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
+      )}
     </div>
   );
 };

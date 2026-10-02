@@ -15,6 +15,7 @@ import {
   Calendar3,
   PersonBadge,
   Camera,
+  LockFill,
 } from "react-bootstrap-icons";
 import "../../styles/UserProfile.css";
 import axios from "axios";
@@ -129,27 +130,39 @@ const ProfileHeader = ({
 
   const {
     photo = "/avatar.png",
-    first_name = "User",
-    second_name = "User",
+    first_name = "",
+    second_name = "",
+    user_name = "",
     user_type = "Freelancer",
-    address = "Not specified",
-    completionRate = 0,
-    averageResponse = "N/A",
+    address = "",
+    completionRate,
+    averageResponse,
     client_profile = null,
     freelancer_profile = null,
   } = profileData || {};
 
-  // Safe destructuring with null checks
-  const clientCreatedAt = client_profile?.created_at || "2025-01-01";
-  const freelancerCreatedAt = freelancer_profile?.created_at || "2024-01-01";
-  const stats = [
-    {
-      icon: Star,
-      text: `${averageRating.toFixed(1)} (${numberOfReviews} reviews)`,
-    },
-    { icon: Award, text: `${completionRate}% Completion` },
-    { icon: Clock, text: `${averageResponse} response` },
-  ];
+  const displayName = [first_name, second_name].filter(Boolean).join(" ") || user_name || "Tanfeez member";
+  const bio = typeof profileData.bio === "string" ? profileData.bio.trim() : "";
+  const publicAddress = typeof address === "string" ? address.trim() : "";
+  const hasContactInfo = profileData.has_contact_info ?? Boolean(profileData.phone || profileData.email);
+  const memberSinceValue = user_type.toLowerCase() === "client"
+    ? client_profile?.created_at
+    : freelancer_profile?.created_at;
+  const memberSinceDate = memberSinceValue ? new Date(memberSinceValue) : null;
+  const memberSince = memberSinceDate && !Number.isNaN(memberSinceDate.getTime())
+    ? new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short" }).format(memberSinceDate)
+    : null;
+  const stats = [];
+
+  if (numberOfReviews > 0 && Number.isFinite(Number(averageRating))) {
+    stats.push({ icon: Star, text: `${Number(averageRating).toFixed(1)} (${numberOfReviews} reviews)` });
+  }
+  if (completionRate !== null && completionRate !== undefined && completionRate !== "" && Number.isFinite(Number(completionRate))) {
+    stats.push({ icon: Award, text: `${completionRate}% Completion` });
+  }
+  if (typeof averageResponse === "string" && averageResponse.trim() && averageResponse !== "N/A") {
+    stats.push({ icon: Clock, text: `${averageResponse} response` });
+  }
 
   const getRoleBadgeVariant = (user_type) => {
     switch (user_type.toLowerCase()) {
@@ -172,7 +185,7 @@ const ProfileHeader = ({
             src={photo == null ? '/avatar.png' : photo}
             roundedCircle
             className="profile-avatar"
-            alt={`${first_name} ${second_name}`}
+            alt={displayName}
           />
           {isMyProfile && (
             <>
@@ -194,7 +207,7 @@ const ProfileHeader = ({
         </div>
 
         <h2 className="fw-bold mb-1">
-          {first_name} {second_name}
+          {displayName}
           <Badge
             bg={getRoleBadgeVariant(user_type)}
             className="ms-2 role-badge text-capitalize"
@@ -204,33 +217,45 @@ const ProfileHeader = ({
             {user_type === "none" ? "Admin" : user_type}
           </Badge>
         </h2>
-        {  <div className="text-muted mb-3"> {profileData.bio }</div>}
+        {bio && <div className="text-muted mb-3">{bio}</div>}
 
-        <div className="d-flex justify-content-center gap-3 mb-4">
-          <span className="profile-badge">
-            <GeoAlt size={18} className="me-2" />
-            {address}
-          </span>
-          <span className="profile-badge">
-            <Calendar3 size={18} className="me-2" />
-            Member since {new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short" }).format(
-              new Date(user_type.toLowerCase() === "client" ? clientCreatedAt : freelancerCreatedAt)
+        {(publicAddress || memberSince || hasContactInfo) && (
+          <div className="d-flex flex-wrap justify-content-center gap-3 mb-4">
+            {publicAddress && (
+              <span className="profile-badge">
+                <GeoAlt size={18} className="me-2" />
+                {publicAddress}
+              </span>
             )}
-          </span>
-        </div>
+            {memberSince && (
+              <span className="profile-badge">
+                <Calendar3 size={18} className="me-2" />
+                Member since {memberSince}
+              </span>
+            )}
+            {hasContactInfo && (
+              <span className="profile-badge">
+                <LockFill size={18} className="me-2" />
+                Contact details provided
+              </span>
+            )}
+          </div>
+        )}
 
-        <Row className="justify-content-center mb-4">
-          <Col xs={12} md={8}>
-            <div className="d-flex flex-wrap justify-content-center gap-3">
-              {stats.map(({ icon: Icon, text }, idx) => (
-                <span key={idx} className="profile-badge">
-                  <Icon size={18} className="me-2" />
-                  {text}
-                </span>
-              ))}
-            </div>
-          </Col>
-        </Row>
+        {stats.length > 0 && (
+          <Row className="justify-content-center mb-4">
+            <Col xs={12} md={8}>
+              <div className="d-flex flex-wrap justify-content-center gap-3">
+                {stats.map(({ icon: Icon, text }) => (
+                  <span key={text} className="profile-badge">
+                    <Icon size={18} className="me-2" />
+                    {text}
+                  </span>
+                ))}
+              </div>
+            </Col>
+          </Row>
+        )}
 
         <div className="d-flex flex-wrap justify-content-center gap-2">
           {!isMyProfile && (
