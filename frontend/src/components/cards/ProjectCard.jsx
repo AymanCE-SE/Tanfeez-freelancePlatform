@@ -5,15 +5,7 @@ import { Card, Badge, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Cash } from "react-bootstrap-icons";
 import { formatDistanceToNow } from "date-fns";
-
-// Map progress to badge color
-const progressColor = {
-  not_started: "secondary",
-  in_progress: "info",
-  completed: "success",
-  cancelled: "danger",
-  open: "primary",
-};
+import { getProjectStatus } from "../../utils/projectStatus";
 
 const truncate = (text, maxLength) =>
   text && text.length > maxLength ? text.slice(0, maxLength - 1) + "…" : text;
@@ -27,12 +19,13 @@ const ProjectCard = ({ project, variant = "marketplace" }) => {
     budget,
     created_at,
     duration,
-    status,
+    progress,
     client_id, // <-- use 'client_id' from API
     type,
     experience_level,
     location,
   } = project;
+  const projectStatus = getProjectStatus(progress);
 
   const handleViewDetails = () => {
     navigate(`/project/${id}`);
@@ -58,8 +51,8 @@ const ProjectCard = ({ project, variant = "marketplace" }) => {
               </Link>
             </Card.Title>
           </OverlayTrigger>
-          <Badge bg={progressColor[status] || "secondary"} className="text-capitalize">
-            {status.replace("_", " ")}
+          <Badge bg={projectStatus.color} className="text-capitalize">
+            {projectStatus.label}
           </Badge>
         </div>
 

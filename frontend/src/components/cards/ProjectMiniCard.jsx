@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { getProjectStatus } from "../../utils/projectStatus";
 import "../../styles/components/ProjectMiniCard.css";
 
 function truncate(str, n) {
@@ -16,8 +17,9 @@ const ProjectMiniCard = ({ project }) => {
     created_at,
     experience_level,
     location,
-    status,
+    progress,
   } = project;
+  const projectStatus = getProjectStatus(progress);
 
   return (
     <Card className="project-mini-card shadow-sm border-0">
@@ -28,8 +30,8 @@ const ProjectMiniCard = ({ project }) => {
               {truncate(name, 32)}
             </Link>
           </h6>
-          <Badge bg={status === "open" ? "success" : "secondary"} className="mini-status-badge">
-            {status}
+          <Badge bg={projectStatus.color} className="mini-status-badge">
+            {projectStatus.label}
           </Badge>
         </div>
         <div className="mini-meta mb-2">
