@@ -87,31 +87,6 @@ const Projects = () => {
 
     return filtered;
   }, [projectList, filters, searchTerm]);
-  if(localStorage.getItem("authToken") === null) {
-    return (
-      <Container className="py-5 vh-100 d-flex align-items-center justify-content-center">
-        <Row className="mb-4 ">
-          <Col>
-            <h1 className="mb-4">Available Projects</h1>
-            <div className="text-center py-5">
-              <p className="text-muted">Please login to view projects.</p>
-            </div>
-            <div className="text-center">
-              <p className="text-muted">You can login from the top right corner.</p>
-            </div>
-            <Button 
-              variant="primary"
-              // make button in center
-              style={{ display: "block", margin: "0 auto" }}
-              className="mt-3 px-4 py-2 fs-5 rounded-3 align-items-center"
-              onClick={() => window.location.href = "/login"}>
-              Login
-            </Button>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
   return (
 
     <Container className="marketplace-page">

@@ -66,7 +66,9 @@ class LatestProjectsView(generics.ListAPIView):
 class ProjectRetrieveView(generics.RetrieveAPIView):
     queryset = Project.objects.select_related("clientId").prefetch_related("skills")
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    # Projects are part of the public marketplace.  Mutating endpoints below
+    # remain authenticated and enforce ownership separately.
+    permission_classes = [permissions.AllowAny]
 
 
 class ProjectUpdateView(generics.UpdateAPIView):
