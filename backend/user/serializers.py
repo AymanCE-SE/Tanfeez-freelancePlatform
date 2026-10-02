@@ -218,3 +218,41 @@ class UserOutSerializer(serializers.ModelSerializer):
             from client.serializers import ClientOutSerializer
             return ClientOutSerializer(obj.client_profile).data
         return None
+
+
+class PublicUserSerializer(serializers.ModelSerializer):
+    """Public marketplace identity without private contact information."""
+
+    client_profile = serializers.SerializerMethodField()
+    freelancer_profile = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "first_name",
+            "second_name",
+            "user_name",
+            "photo",
+            "user_type",
+            "bio",
+            "address",
+            "client_profile",
+            "freelancer_profile",
+        ]
+
+    def get_client_profile(self, obj):
+        profile = getattr(obj, "client_profile", None)
+        if not profile:
+            return None
+        return {"company": profile.company, "created_at": profile.created_at}
+
+    def get_freelancer_profile(self, obj):
+        profile = getattr(obj, "freelancer_profile", None)
+        if not profile:
+            return None
+        return {
+            "experience_level": profile.experience_level,
+            "is_verified": profile.is_verified,
+            "created_at": profile.created_at,
+        }

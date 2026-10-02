@@ -55,6 +55,9 @@ function ProjectDetails() {
   const [ratingLoaded, setRatingLoaded] = useState(false);
   const isProjectOwner =
     String(user?.id) === String(projectDetails?.user_id) && projectDetails?.id === Number(id);
+  const clientName = [profile?.first_name, profile?.second_name]
+    .filter(Boolean)
+    .join(" ") || "Client";
 
   const selectedProposal = proposals?.find((p) => p.id === selectedProposalId) || null;
 
@@ -344,24 +347,12 @@ function ProjectDetails() {
                       </div>
                     )}
                     <div>
-                      <h6 className="mb-0">{`${profile?.first_name} ${profile?.second_name}`}</h6>
-                      <small className="text-muted">@{profile?.user_name}</small>
+                      <h6 className="mb-0">{clientName}</h6>
+                      {profile?.user_name && <small className="text-muted">@{profile.user_name}</small>}
                     </div>
                   </div>
 
                   <div className="client-info-grid">
-                    <div className="info-item">
-                      <span className="info-label">Email:</span>
-                      <span className="info-value">{profile?.email}</span>
-                    </div>
-
-                    {profile?.phone && (
-                      <div className="info-item">
-                        <span className="info-label">Phone:</span>
-                        <span className="info-value">{profile.phone}</span>
-                      </div>
-                    )}
-
                     {profile?.client_profile?.company && (
                       <div className="info-item">
                         <span className="info-label">Company:</span>
@@ -382,6 +373,12 @@ function ProjectDetails() {
                         <span className="info-value">
                           {new Date(profile.client_profile.created_at).toLocaleDateString()}
                         </span>
+                      </div>
+                    )}
+
+                    {!profile && (
+                      <div className="info-item">
+                        <span className="info-value">Loading client information...</span>
                       </div>
                     )}
                   </div>

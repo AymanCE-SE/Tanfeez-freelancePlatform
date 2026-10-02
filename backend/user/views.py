@@ -7,6 +7,7 @@ from client.models import Client  # Import Client from client.models
 from .serializers import (
     UserCreateSerializer,
     UserOutSerializer,
+    PublicUserSerializer,
     UserLoginSerializer,
     UserPasswordUpdateSerializer,
     UserPhotoUpdateSerializer,
@@ -86,12 +87,16 @@ class UserMeView(generics.RetrieveAPIView):
 
 
 class UserDetailByIdView(generics.RetrieveAPIView):
-    """View to get user by ID (admin or special access)"""
+    """View a marketplace profile, omitting private contact details for guests."""
 
     queryset = CustomUser.objects.filter(is_deleted=False)
-    serializer_class = UserOutSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     lookup_field = "id"
+
+    def get_serializer_class(self):
+        if self.request.user.is_authenticated:
+            return UserOutSerializer
+        return PublicUserSerializer
 
 
 class UserListView(generics.ListAPIView):

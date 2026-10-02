@@ -49,7 +49,11 @@ const UserProfile = () => {
   }, [profileData?.id, profileData?.user_type]);
   
   useEffect(() => {
-    dispatch(getMyProfileAction());
+    // Guests can view public profiles; only request the private "me" endpoint
+    // when an access token is available.
+    if (localStorage.getItem("authToken")) {
+      dispatch(getMyProfileAction());
+    }
   }, [dispatch]);
 
   useEffect(() => {
