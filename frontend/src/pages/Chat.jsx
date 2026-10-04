@@ -6,7 +6,7 @@ import {
 } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Search, ChatDots, Send, Paperclip } from "react-bootstrap-icons";
+import { Search, ChatDots, Send } from "react-bootstrap-icons";
 import "../styles/components/Chat.css";
 import DateDivider from "../components/chat/DateDivider";
 import Message from "../components/chat/Message";
@@ -263,7 +263,6 @@ const Chat = () => {
                       <div className="chat-compose-row">
                         <Form onSubmit={handleSendMessage}>
                           <InputGroup>
-                            <Button variant="link" className="action-button d-none d-sm-flex" aria-label="Attach a file"><Paperclip /></Button>
                             <Form.Control type="text" placeholder="Type a message..."
                               value={messageText} onChange={(e) => setMessageText(e.target.value)}
                               disabled={status !== "open"} />

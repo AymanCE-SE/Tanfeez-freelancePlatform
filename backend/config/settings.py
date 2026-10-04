@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import Csv, config
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -237,16 +236,3 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-#Testing linesprint("========== DJANGO SETTINGS BOOT LOG ==========")
-print("1. CORS_ALLOW_ALL_ORIGINS is set to:", CORS_ALLOW_ALL_ORIGINS, flush=True)
-print("2. The allowed frontend URL is:", CORS_ALLOWED_ORIGINS, flush=True)
-print("3. CLOUDINARY_CLOUD_NAME:", config("CLOUDINARY_CLOUD_NAME", default="not_found"), flush=True)
-print("4. DATABASE_NAME (os.environ):", os.environ.get("DATABASE_NAME", "not_found"), flush=True)
-print("4. DATABASE_NAME (config):", config("DATABASE_NAME", default="not_found"), flush=True)
-print("==============================================", flush=True)
-required_env_vars = ["DATABASE_HOST", "DATABASE_USER", "DATABASE_PASSWORD", "DATABASE_NAME"]
-missing = [v for v in required_env_vars if not config(v, default="")]
-if missing:
-    print(f"⚠️ WARNING: missing env vars: {missing}", flush=True)
-print("==============================================", flush=True)
