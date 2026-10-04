@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Spinner, Badge } from "react-bootstrap";
+import { Table, Button, Badge } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "../utils/swal";
 import { getAllProposalsAction, deleteProposalAction } from "../store/slices/adminSlice";
 import ProposalDetailsModal from "./ProposalDetailsModal";
+import LoadingPreview from "./common/LoadingPreview";
 
 import '../styles/tableStyles.css';
 
@@ -58,13 +59,7 @@ const ProposalsTable = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center p-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <div className="admin-table-container p-3"><LoadingPreview variant="table" count={6} label="Loading proposals" /></div>;
   }
 
   return (

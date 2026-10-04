@@ -15,6 +15,7 @@ import { fetchUserProfile } from "../store/slices/userSlice";
 import { getMyServiceProposals } from "../api/serviceProposal";
 import { getMyEngagementRating } from "../api/rating";
 import RatingModal from "../components/rating/RatingModal";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 
 export function ServiceDetailsPage() {
@@ -81,10 +82,8 @@ export function ServiceDetailsPage() {
 
   if (isLoading) {
     return (
-      <Container className="py-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+      <Container className="py-5">
+        <LoadingPreview variant="detail" label="Loading service details" />
       </Container>
     );
   }

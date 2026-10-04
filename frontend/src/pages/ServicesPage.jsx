@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Container, Row, Col, Form, InputGroup, Button, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ServiceCard from "../components/cards/ServiceCard";
+import LoadingPreview from "../components/common/LoadingPreview";
 import { categories } from "../mock/servicesData";
 import "../styles/ServicesPage.css";
 import "../styles/marketplace.css";
@@ -136,11 +137,7 @@ const ServicesPage = () => {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <LoadingPreview variant="cards" count={6} label="Loading services" />
       ) : error ? (
         <div className="marketplace-empty text-danger">
           <p>{error || "Failed to load services."}</p>

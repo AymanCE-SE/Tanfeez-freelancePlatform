@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import LoadingPreview from '../common/LoadingPreview';
 import {
   Chart as ChartJS, CategoryScale, LinearScale,
   BarElement, Title, Tooltip, Legend
@@ -37,7 +38,7 @@ export default function BarChart() {
       .catch(err => console.error("Failed to load bar chart data:", err));
   }, []);
 
-  if (!chartData) return <p>Loading bar chart...</p>;
+  if (!chartData) return <div style={{ height: '200px' }}><LoadingPreview variant="chart" label="Loading bar chart" /></div>;
 
   return <div style={{ height: '200px' }}><Bar data={chartData} options={options} /></div>;
 }

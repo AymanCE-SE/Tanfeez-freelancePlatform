@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import LoadingPreview from '../common/LoadingPreview';
 import {
   Chart as ChartJS, CategoryScale, LinearScale,
   PointElement, LineElement, Tooltip
@@ -34,7 +35,7 @@ export default function SmallLineChart() {
       .catch(err => console.error("Failed to load small line chart data:", err));
   }, []);
 
-  if (!chartData) return <p>Loading small chart...</p>;
+  if (!chartData) return <div style={{ height: '100px' }}><LoadingPreview variant="chart" label="Loading small chart" /></div>;
 
   return <div style={{ height: '100px' }}><Line data={chartData} options={options} /></div>;
 }

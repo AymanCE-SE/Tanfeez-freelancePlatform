@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import ServiceMiniCard from "../cards/ServiceMiniCard";
+import LoadingPreview from "../common/LoadingPreview";
 import { getLatestServicesAction } from "../../store/slices/serviceSlice";
 import { homeSliderSettings } from "./sliderSettings";
 import "slick-carousel/slick/slick.css";
@@ -15,8 +16,7 @@ export function LatestServicesSlider() {
     dispatch(getLatestServicesAction());
   }, [dispatch]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!Array.isArray(latestServices) || latestServices.length === 0) return <div className="alert alert-info p-2 m-4 text-center">No recent services found.</div>;
+  if (!isLoading && (!Array.isArray(latestServices) || latestServices.length === 0)) return <div className="alert alert-info p-2 m-4 text-center">No recent services found.</div>;
 
   return (
     <section className="latest-services-slider home-latest-section">
@@ -28,11 +28,15 @@ export function LatestServicesSlider() {
         </div>
         <span className="home-section-rule" />
       </div>
-      <Slider {...homeSliderSettings}>
-        {latestServices.map((service) => (
-          <ServiceMiniCard key={service.id} service={service} />
-        ))}
-      </Slider>
+      {isLoading ? (
+        <LoadingPreview variant="cards" count={3} label="Loading latest services" />
+      ) : (
+        <Slider {...homeSliderSettings}>
+          {latestServices.map((service) => (
+            <ServiceMiniCard key={service.id} service={service} />
+          ))}
+        </Slider>
+      )}
     </section>
   );
 }

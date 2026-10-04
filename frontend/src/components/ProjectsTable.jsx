@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Modal, Button, Form, Spinner, Badge } from "react-bootstrap";
+import { Table, Modal, Button, Form, Badge } from "react-bootstrap";
 import Swal from "../utils/swal";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { getAllProjectAction } from "../store/slices/projectSlice";
 import { deleteProjectAction } from "../store/slices/adminSlice";
 import '../styles/tableStyles.css';
 import ProjectDetailsModal from "./ProjectDetailsModal";
+import LoadingPreview from "./common/LoadingPreview";
 
 const ProjectsTable = () => {
   const dispatch = useDispatch();
@@ -60,13 +61,7 @@ const ProjectsTable = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center p-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <div className="admin-table-container p-3"><LoadingPreview variant="table" count={6} label="Loading projects" /></div>;
   }
 
   return (

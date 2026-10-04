@@ -14,7 +14,9 @@ const ProjectMiniCard = ({ project }) => {
     name,
     description,
     budget,
+    hourly_rate,
     created_at,
+    type,
     experience_level,
     location,
     progress,
@@ -42,7 +44,11 @@ const ProjectMiniCard = ({ project }) => {
           {truncate(description, 48)}
         </div>
         <div className="mini-footer d-flex justify-content-between align-items-center">
-          <span className="mini-price">{budget ? `$${budget}` : "N/A"}</span>
+          <span className="mini-price">
+            {type === "hourly"
+              ? (hourly_rate != null ? `$${hourly_rate}/hr` : "Hourly rate not set")
+              : (budget != null ? `$${budget}` : "Budget not set")}
+          </span>
           <span className="mini-date">{created_at && new Date(created_at).toLocaleDateString()}</span>
         </div>
       </Card.Body>

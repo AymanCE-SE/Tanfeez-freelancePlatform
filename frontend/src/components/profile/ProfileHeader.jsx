@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useRef, useState } from "react";
+import LoadingPreview from "../common/LoadingPreview";
 import { Link } from "react-router-dom";
 import { Container, Image, Button, Row, Col, Badge } from "react-bootstrap";
 import {
@@ -125,7 +126,7 @@ const ProfileHeader = ({
   };
 
   if (!profileData) {
-    return <div className="profile-header text-center py-5">Loading...</div>;
+    return <LoadingPreview variant="list" count={1} label="Loading profile header" />;
   }
 
   const {

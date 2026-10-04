@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import LoadingPreview from '../common/LoadingPreview';
 import {
   Chart as ChartJS, ArcElement, Tooltip, Legend
 } from 'chart.js';
@@ -35,7 +36,7 @@ export default function DoughnutChart() {
       .catch(err => console.error("Failed to load doughnut chart data:", err));
   }, []);
 
-  if (!chartData) return <p>Loading doughnut chart...</p>;
+  if (!chartData) return <div style={{ height: '250px' }}><LoadingPreview variant="chart" label="Loading doughnut chart" /></div>;
 
   return (
     <div style={{ height: '250px' }}>

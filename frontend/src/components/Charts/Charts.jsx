@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import LoadingPreview from '../common/LoadingPreview';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -117,7 +118,7 @@ function Charts() {
       .catch((err) => console.error("Failed to load line chart data:", err));
   }, []);
 
-  if (!chartData) return <p>Loading chart...</p>;
+  if (!chartData) return <div className="chart-container" style={{ width: '100%', height: '400px', margin: '20px auto' }}><LoadingPreview variant="chart" label="Loading chart" /></div>;
 
   return (
     <div className="chart-container" style={{ width: '100%', height: '400px', margin: '20px auto' }}>

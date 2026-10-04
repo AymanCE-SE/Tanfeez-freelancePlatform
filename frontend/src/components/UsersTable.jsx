@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Modal, Button, Form, Spinner, Badge } from "react-bootstrap";
+import { Table, Modal, Button, Form, Badge } from "react-bootstrap";
 import Swal from "../utils/swal";
 import withReactContent from "sweetalert2-react-content";
 import { FaPlus } from "react-icons/fa";
@@ -8,6 +8,7 @@ import '../styles/tableStyles.css'; // Add this line at the top of your componen
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsersAction, deleteUserAction } from "../store/slices/userSlice";
 import UserDetailsModal from './UserDetailsModal';
+import LoadingPreview from "./common/LoadingPreview";
 
 const MySwal = withReactContent(Swal);
 
@@ -122,11 +123,7 @@ const UsersTable = () => {
       </div>
 
       {isLoading ? (
-        <div className="text-center">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
+        <LoadingPreview variant="table" count={6} label="Loading users" />
       ) : (
         <Table className="admin-table orders-table" striped bordered hover responsive>
           <thead>

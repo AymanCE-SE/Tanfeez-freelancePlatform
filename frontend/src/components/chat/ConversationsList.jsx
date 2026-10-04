@@ -1,6 +1,7 @@
 import React from "react";
 import { ListGroup, Badge } from "react-bootstrap";
 import { ChatDots } from "react-bootstrap-icons";
+import LoadingPreview from "../common/LoadingPreview";
 
 const ConversationsList = ({
   loading,
@@ -13,11 +14,7 @@ const ConversationsList = ({
   return (
     <div className="conversations-list">
       {loading && conversations.length === 0 ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <LoadingPreview variant="list" count={4} label="Loading conversations" />
       ) : conversations.length > 0 ? (
         <ListGroup variant="flush">
           {conversations.map((conversation) => {

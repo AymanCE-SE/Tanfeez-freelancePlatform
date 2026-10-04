@@ -31,6 +31,7 @@ import { getMyProposals, getPublicProposalsByProject } from "../api/proposal";
 import Swal from "../utils/swal";
 import RatingModal from "../components/rating/RatingModal";
 import { getMyEngagementRating } from "../api/rating";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -120,11 +121,9 @@ function ProjectDetails() {
 
   if (isLoading) {
     return (
-      <div className="text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
+      <Container className="py-5">
+        <LoadingPreview variant="detail" label="Loading project details" />
+      </Container>
     );
   }
 
@@ -378,7 +377,7 @@ function ProjectDetails() {
 
                     {!profile && (
                       <div className="info-item">
-                        <span className="info-value">Loading client information...</span>
+                        <LoadingPreview variant="inline" label="Loading client information" />
                       </div>
                     )}
                   </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Container, Tabs, Tab, Alert, Spinner } from "react-bootstrap";
+import { Container, Tabs, Tab, Alert } from "react-bootstrap";
 import {
   Briefcase,
   PersonFill,
@@ -27,6 +27,7 @@ import {
   getMyProfileAction,
 } from "../store/slices/userSlice";
 import { getEngagementRatings, getEngagementRatingSummary } from "../api/rating";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -82,14 +83,10 @@ const UserProfile = () => {
   }
 }, [profileData?.id, profileData?.user_type]);
 
-  // Show a spinner while loading
   if (isLoading) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" role="status" variant="primary">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <p className="mt-3">Loading user profile...</p>
+      <Container className="py-5">
+        <LoadingPreview variant="profile" label="Loading user profile" />
       </Container>
     );
   }

@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import ServiceCard from "../cards/ServiceCard";
+import LoadingPreview from "../common/LoadingPreview";
 import { Plus } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyServicesAction, getUserServicesAction, clearServices } from "../../store/slices/serviceSlice";
@@ -31,13 +32,7 @@ const ServicesTab = ({ isMyProfile, userId }) => {
   const displayServices = isMyProfile ? myServices : services;
 
   if (isLoading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingPreview variant="cards" count={3} label="Loading services" />;
   }
 
   return (

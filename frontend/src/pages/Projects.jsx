@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Container, Row, Col, Form, InputGroup, Button, Spinner, Pagination } from "react-bootstrap";
+import { Container, Row, Col, Form, InputGroup, Button, Pagination } from "react-bootstrap";
 import { Search, Funnel } from "react-bootstrap-icons";
 import ProjectCard from "../components/cards/ProjectCard";
 import ProjectFilters from "../components/projects/ProjectFilters";
+import LoadingPreview from "../components/common/LoadingPreview";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { getAllProjectAction } from "../store/slices/projectSlice";
@@ -127,14 +128,12 @@ const Projects = () => {
         <Col md={showFilters ? 9 : 12}>
           <div className="marketplace-summary">
             {isLoading
-              ? "Loading projects..."
+              ? <LoadingPreview variant="inline" label="Loading project count" />
               : <><span><strong>{filteredProjects.length}</strong> projects on this page</span><span>{totalProjects} total results</span></>}
           </div>
 
           {isLoading ? (
-            <div className="text-center py-5">
-              <Spinner animation="border" />
-            </div>
+            <LoadingPreview variant="cards" count={6} label="Loading projects" />
           ) : error ? (
             <div className="marketplace-empty text-danger">
               {error || "Failed to load projects."}

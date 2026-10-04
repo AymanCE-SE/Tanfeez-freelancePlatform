@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import ProjectMiniCard from "../cards/ProjectMiniCard";
+import LoadingPreview from "../common/LoadingPreview";
 import { getLatestProjectsAction } from "../../store/slices/projectSlice";
 import { homeSliderSettings } from "./sliderSettings";
 import "slick-carousel/slick/slick.css";
@@ -15,8 +16,7 @@ export function LatestProjectsSlider() {
     dispatch(getLatestProjectsAction());
   }, [dispatch]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!Array.isArray(latestProjects) || latestProjects.length === 0) return <div className="alert alert-info p-2 m-4 text-center">No recent projects found.</div>;
+  if (!isLoading && (!Array.isArray(latestProjects) || latestProjects.length === 0)) return <div className="alert alert-info p-2 m-4 text-center">No recent projects found.</div>;
 
   return (
     <section className="latest-projects-slider home-latest-section">
@@ -28,11 +28,15 @@ export function LatestProjectsSlider() {
         </div>
         <span className="home-section-rule" />
       </div>
-      <Slider {...homeSliderSettings}>
-        {latestProjects.map((project) => (
-          <ProjectMiniCard key={project.id} project={project} />
-        ))}
-      </Slider>
+      {isLoading ? (
+        <LoadingPreview variant="cards" count={3} label="Loading latest projects" />
+      ) : (
+        <Slider {...homeSliderSettings}>
+          {latestProjects.map((project) => (
+            <ProjectMiniCard key={project.id} project={project} />
+          ))}
+        </Slider>
+      )}
     </section>
   );
 }

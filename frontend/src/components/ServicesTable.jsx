@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Button, Spinner, Badge } from "react-bootstrap";
+import { Table, Button, Badge } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
 import Swal from "../utils/swal";
 import '../styles/tableStyles.css';
 import { getAllServicesAction, deleteServiceAction } from "../store/slices/adminSlice";
 import ServiceDetailsModal from "./ServiceDetailsModal";
+import LoadingPreview from "./common/LoadingPreview";
 
 const ServicesTable = () => {
   const dispatch = useDispatch();
@@ -60,13 +61,7 @@ const ServicesTable = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center p-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <div className="admin-table-container p-3"><LoadingPreview variant="table" count={6} label="Loading services" /></div>;
   }
 
   return (

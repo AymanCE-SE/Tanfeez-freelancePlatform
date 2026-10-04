@@ -19,6 +19,7 @@ import UserTab from "../components/EditProfile/UserTab";
 import FreelancerTab from "../components/EditProfile/FreelancerTab";
 import ClientTab from "../components/EditProfile/ClientTab";
 import { useSelector } from "react-redux";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 const EditProfile = () => {
   const { id } = useParams();
@@ -46,11 +47,8 @@ const EditProfile = () => {
 
   if (isLoading) {
     return (
-      <Container className="py-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <p className="mt-3">Loading profile...</p>
+      <Container className="py-5">
+        <LoadingPreview variant="profile" label="Loading profile" />
       </Container>
     );
   }

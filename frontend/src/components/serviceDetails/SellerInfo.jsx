@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../../store/slices/userSlice";
 import { Link } from "react-router-dom";
 import { GeoAlt } from "react-bootstrap-icons";
+import LoadingPreview from "../common/LoadingPreview";
 
 export default function SellerInfo({ id }) {
   const dispatch = useDispatch();
@@ -19,13 +20,7 @@ export default function SellerInfo({ id }) {
   }, [id, dispatch]);
 
   if (isLoading) {
-    return (
-      <div className="text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingPreview variant="list" count={1} label="Loading seller profile" />;
   }
 
   // Add check for profile existence

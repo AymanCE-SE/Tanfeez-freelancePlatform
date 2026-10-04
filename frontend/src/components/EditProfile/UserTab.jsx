@@ -4,6 +4,7 @@ import { updateUserProfileAction } from "../../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "../../utils/swal";
 import { getCountries } from "../../api/countries";
+import LoadingPreview from "../common/LoadingPreview";
 
 const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
     const dispatch = useDispatch();
@@ -152,22 +153,26 @@ const UserTab = ({ setFormData, formData, handleChange, navigate, id }) => {
                 <Col md={12}>
                     <Form.Group className="mb-3">
                         <Form.Label>Country</Form.Label>
-                        <Form.Control
-                            as="select"
-                            name="country"
-                            value={formData.country || ""}
-                            onChange={handleChange}
-                            disabled={countriesLoading || countriesError}
-                        >
-                            <option value="">
-                                {countriesLoading ? "Loading countries..." : "Select your country"}
-                            </option>
-                            {countries.map((country) => (
-                                <option key={country.code} value={country.name}>
-                                    {country.name}
-                                </option>
-                            ))}
-                        </Form.Control>
+                        {countriesLoading ? (
+                            <div className="form-control d-flex align-items-center">
+                                <LoadingPreview variant="inline" label="Loading countries" />
+                            </div>
+                        ) : (
+                            <Form.Control
+                                as="select"
+                                name="country"
+                                value={formData.country || ""}
+                                onChange={handleChange}
+                                disabled={countriesError}
+                            >
+                                <option value="">Select your country</option>
+                                {countries.map((country) => (
+                                    <option key={country.code} value={country.name}>
+                                        {country.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        )}
                         {countriesError && (
                             <Form.Text className="text-danger">
                                 Countries could not be loaded. Please try again later.

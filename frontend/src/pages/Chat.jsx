@@ -15,6 +15,7 @@ import EmojiPickerButton from "../components/chat/EmojiPickerButton";
 import { getChatRooms, getMessages } from "../api/chatroom";
 import { useChatSocket } from "../hooks/useChatSocket";
 import { useNotifications } from "../context/NotificationContext";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 const normalizeRestMessage = (m) => ({
   id: m.id, content: m.text, senderId: m.sender, timestamp: m.timestamp, isRead: m.is_read,
@@ -172,9 +173,7 @@ const Chat = () => {
                 </div>
                 <div className="conversations-list">
                   {loading ? (
-                    <div className="text-center py-5">
-                      <div className="spinner-border text-primary" role="status" />
-                    </div>
+                    <LoadingPreview variant="list" count={4} label="Loading conversations" />
                   ) : filteredConversations.length > 0 ? (
                     <ListGroup variant="flush">
                       {filteredConversations.map((conversation) => {

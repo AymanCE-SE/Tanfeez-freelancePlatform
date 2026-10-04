@@ -8,6 +8,7 @@ import { getServiceProposalsByService, approveServiceProposal, completeServicePr
 import { getServiceByIdAction } from "../store/slices/serviceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/ServiceRequests.css";
+import LoadingPreview from "../components/common/LoadingPreview";
 
 const ServiceRequests = () => {
   const { serviceId } = useParams();
@@ -58,8 +59,8 @@ const ServiceRequests = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status" />
+      <div className="service-requests-page-container py-4">
+        <LoadingPreview variant="cards" count={2} label="Loading service requests" />
       </div>
     );
   }
