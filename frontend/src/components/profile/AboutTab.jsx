@@ -8,6 +8,13 @@ import "../../styles/components/AboutTab.css";
 
 const hasValue = (value) => value !== null && value !== undefined && String(value).trim() !== "";
 const asList = (value) => Array.isArray(value) ? value : [];
+const formatBirthDate = (value) => {
+  if (!hasValue(value)) return "";
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" }).format(date);
+};
 
 const AboutTab = ({ profileData = {}, isProfileOwner, userRole }) => {
   const role = profileData.user_type || userRole;
@@ -28,12 +35,19 @@ const AboutTab = ({ profileData = {}, isProfileOwner, userRole }) => {
   );
   const company = hasValue(profile.company) ? profile.company.trim() : "";
   const permissions = asList(profileData.permissions).filter(hasValue);
+  const birthDate = formatBirthDate(profileData.birth_date);
+  const experienceLevels = { junior: "Junior", mid: "Mid-level", senior: "Senior" };
+  const experienceLevel = experienceLevels[profile.experience_level] || "";
+  const profileDetails = [
+    birthDate && { label: "Date of birth", value: birthDate },
+    experienceLevel && { label: "Experience level", value: experienceLevel },
+  ].filter(Boolean);
 
-  const hasRoleDetails = role === "freelancer"
+  const hasRoleDetails = profileDetails.length > 0 || (role === "freelancer"
     ? skills.length + languages.length + qualities.length + educations.length + certifications.length > 0
     : role === "client"
-      ? Boolean(company)
-      : role === "admin" && permissions.length > 0;
+      ? Boolean(company) || languages.length > 0
+      : role === "admin" && permissions.length > 0);
 
   if (!bio && !hasRoleDetails) {
     return (
@@ -55,6 +69,24 @@ const AboutTab = ({ profileData = {}, isProfileOwner, userRole }) => {
           <Card.Body>
             <h5>About</h5>
             <p className="about-bio">{bio}</p>
+          </Card.Body>
+        </Card>
+      )}
+
+      {profileDetails.length > 0 && (
+        <Card>
+          <Card.Body>
+            <h5>Profile details</h5>
+            <Row xs={1} sm={2} className="g-3">
+              {profileDetails.map(({ label, value }) => (
+                <Col key={label}>
+                  <div className="about-detail">
+                    <span className="about-detail-label">{label}</span>
+                    <span className="about-detail-value">{value}</span>
+                  </div>
+                </Col>
+              ))}
+            </Row>
           </Card.Body>
         </Card>
       )}

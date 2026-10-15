@@ -238,6 +238,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
             "user_type",
             "bio",
             "address",
+            "birth_date",
             "has_contact_info",
             "client_profile",
             "freelancer_profile",
@@ -250,7 +251,12 @@ class PublicUserSerializer(serializers.ModelSerializer):
         profile = getattr(obj, "client_profile", None)
         if not profile:
             return None
-        return {"company": profile.company, "created_at": profile.created_at}
+        languages = [language.strip() for language in (profile.languages or "").split(",") if language.strip()]
+        return {
+            "company": profile.company,
+            "languages_list": languages,
+            "created_at": profile.created_at,
+        }
 
     def get_freelancer_profile(self, obj):
         profile = getattr(obj, "freelancer_profile", None)
@@ -260,4 +266,26 @@ class PublicUserSerializer(serializers.ModelSerializer):
             "experience_level": profile.experience_level,
             "is_verified": profile.is_verified,
             "created_at": profile.created_at,
+            "skills": [
+                {"id": skill.id, "skill_name": skill.skill_name}
+                for skill in profile.skills.all()
+            ],
+            "languages_list": [
+                language.strip()
+                for language in (profile.languages or "").split(",")
+                if language.strip()
+            ],
+            "qualities_list": [
+                quality.strip()
+                for quality in (profile.qualities or "").split(",")
+                if quality.strip()
+            ],
+            "educations": [
+                {"degree": education.degree, "school": education.school, "year": education.year}
+                for education in profile.educations.all()
+            ],
+            "certifications": [
+                {"name": certification.name, "issuer": certification.issuer, "year": certification.year}
+                for certification in profile.certifications.all()
+            ],
         }

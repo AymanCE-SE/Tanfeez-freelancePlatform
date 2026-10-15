@@ -28,7 +28,12 @@ const ClientTab = ({ navigate, id }) => {
 
   useEffect(() => {
     if (client) {
-      setFormData(client);
+      setFormData({
+        ...client,
+        languages: Array.isArray(client.languages_list)
+          ? client.languages_list.join(", ")
+          : client.languages || "",
+      });
     }
   }, [client]);
 
@@ -37,6 +42,10 @@ const ClientTab = ({ navigate, id }) => {
     try {
       const filteredData = {
         company: formData.company,
+        languages_list: (formData.languages || "")
+          .split(",")
+          .map((language) => language.trim())
+          .filter(Boolean),
       };
       await dispatch(updateClientProfileAction(filteredData)).unwrap().then(() => {
         Swal.fire({
@@ -74,6 +83,22 @@ const ClientTab = ({ navigate, id }) => {
               value={formData.company || ""}
               onChange={handleChange}
             />
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>Languages</Form.Label>
+            <Form.Control
+              type="text"
+              name="languages"
+              value={formData.languages || ""}
+              onChange={handleChange}
+              placeholder="English, Arabic"
+              aria-describedby="client-languages-help"
+            />
+            <Form.Text id="client-languages-help" muted>
+              Separate each language with a comma.
+            </Form.Text>
           </Form.Group>
         </Col>
       </Row>

@@ -30,6 +30,11 @@ class Client(models.Model):
         blank=True,
         help_text="Name of the client's company."
     )
+    languages = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Languages the client speaks (comma-separated)."
+    )
     is_deleted = models.BooleanField(
         default=False,
         help_text="Soft delete flag for the client."
